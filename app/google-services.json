@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "895403221232",
+    "firebase_url": "https://cottonclub-c84cd.firebaseio.com",
+    "project_id": "cottonclub-c84cd",
+    "storage_bucket": "cottonclub-c84cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895403221232:android:4bfbb4911712ea6fc7a235",
+        "android_client_info": {
+          "package_name": "com.cottonclub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "895403221232-i9s2uhf6op8d6dbo8s84e1vps20q0kmk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cottonclub",
+            "certificate_hash": "02e3b93e8054a5ff241c4a7d227936bfb1bf363e"
+          }
+        },
+        {
+          "client_id": "895403221232-qbqecquinuhc53kblme4e8jia4sqeaka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuzlDwoyvVol-_i7Jeo1Rxm7dcCfuotbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "895403221232-qbqecquinuhc53kblme4e8jia4sqeaka.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
