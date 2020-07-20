@@ -2,5 +2,22 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#008577</color>
+    <color name="colorRed">#DB2523</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorPurple">#6A1799</color>
+    <color name="colorDarkPurple">#691E99</color>
+    <color name="colorBlue">#4E9AEE</color>
+    <color name="colorGrey">#E7E7E7</color>
+    <color name="colorTransperentWhite">#4DFFFFFF</color>
+    <color name="colorTransperentBlack">#4D000000</color>
+    <color name="colorTransperent">#00000000</color>
+    <color name="colorPrimaryText">#292929</color>
+    <color name="colorUnreadNotification">#59B439FA</color>
+    <color name="colorGreyDark">#767676</color>
+    <color name="colorSideBackground">#211d41</color>
+    <color name="colorGradient">#73fd103e</color>
+    <color name="colorGreen">#228B22</color>
+
 </resources>

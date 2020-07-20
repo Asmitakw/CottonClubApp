@@ -1,3 +1,66 @@
 <resources>
-    <string name="app_name">CottonClub</string>
+    <string name="app_name">Cotton Club</string>
+    <string name="title_activity_base">Base</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Create Order</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Alter Request</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="create_order">Create Order</string>
+    <string name="create_job_card">Create Job Card</string>
+    <string name="admin">Admin</string>
+    <string name="alter_request">Create Alter Request</string>
+    <string name="view_job_card">View Job Card</string>
+    <string name="view_order">View Order</string>
+    <string name="date_time_of_generation_order"><![CDATA[Date & Time of Generating Order:]]></string>
+    <string name="party_name">Party Name</string>
+    <string name="select_brand">Select Brand</string>
+    <string name="design_number">Design Number</string>
+    <string name="order_number">Order Number</string>
+    <string name="delivery_date">Delivery Date</string>
+    <string name="select_size">Select Size</string>
+    <string name="please_enter_party_name">Please enter Party Name</string>
+    <string name="please_enter_brand_name">Please select Brand Name</string>
+    <string name="please_enter_design_number">Please enter Design Number</string>
+    <string name="please_enter_order_number">Please enter Order Number</string>
+    <string name="please_select_delivery_date">Please select Delivery Date</string>
+    <string name="please_select_size">Please select size</string>
+    <string name="ok">OK</string>
+    <string name="order_created_successfully">Order Create Successfully!</string>
+
+    <string-array name="brand">
+        <item>Kids Magic</item>
+        <item>BBaby</item>
+        <item>Cotton Blue</item>
+    </string-array>
+
+    <string-array name="kidsMagicSizes">
+        <item>2–6</item>
+        <item>8–16</item>
+        <item>20–36</item>
+    </string-array>
+
+    <string-array name="bBabySizes">
+        <item>N/B</item>
+        <item>0/6</item>
+        <item>6/9</item>
+        <item>9/12</item>
+    </string-array>
+
+    <string-array name="cottonBlueSizes">
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+        <item>XXL</item>
+    </string-array>
+
 </resources>

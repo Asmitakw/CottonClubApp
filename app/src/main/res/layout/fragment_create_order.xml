@@ -1,0 +1,231 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:orientation="vertical">
+
+    <com.cottonclub.custom_views.CustomTextView
+        style="@style/CustomMediumText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/date_time_of_generation_order" />
+
+    <com.cottonclub.custom_views.CustomTextView
+        android:id="@+id/tvDateOrderCreation"
+        style="@style/CustomMediumText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_calendar"
+        android:text="20th July 2020"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_party" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etPartyName"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:hint="@string/party_name"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_tag" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etBrandName"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:hint="@string/select_brand"
+            android:singleLine="true"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_design" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etDesignNumber"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:hint="@string/design_number"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_order_number" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etOrderNumber"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:hint="@string/order_number"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_delivery_date" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etDeliveryDate"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:hint="@string/delivery_date"
+            android:singleLine="true"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_sizes" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etSelectSize"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:hint="@string/select_size"
+            android:singleLine="true"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <com.cottonclub.custom_views.CustomButtonRegular
+        android:id="@+id/btnCreateOrder"
+        style="@style/Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_eighty"
+        android:background="@drawable/rounded_button"
+        android:text="@string/create_order"
+        android:textAllCaps="true"
+        android:textSize="20sp" />
+
+
+</LinearLayout>

@@ -8,4 +8,58 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="CustomLargeText" parent="android:style/Widget.TextView">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">3dp</item>
+
+    </style>
+
+    <style name="CustomMediumText" parent="android:style/Widget.TextView">
+        <item name="android:textColor">@color/colorGreyDark</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+
+    </style>
+
+    <style name="MediumBlackText" parent="android:style/Widget.TextView">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+    </style>
+
+    <style name="EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+
+    </style>
+
+    <style name="Button" parent="Widget.AppCompat.Button">
+        <item name="android:layout_marginLeft">25dp</item>
+        <item name="android:layout_marginRight">25dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
+
+    <style name="CustomDialog" parent="android:Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>
