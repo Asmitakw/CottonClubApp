@@ -36,6 +36,94 @@
     <string name="please_select_size">Please select size</string>
     <string name="ok">OK</string>
     <string name="order_created_successfully">Order Create Successfully!</string>
+    <string name="quantity">Quantity</string>
+    <string name="job_card_number">Job Card Number</string>
+    <string name="fabric_type">Fabric Type</string>
+    <string name="master_name">Master Name</string>
+    <string name="fabric_consumed">Fabric Consumed</string>
+    <string name="cutting_issue_date">Cutting Issue Date</string>
+    <string name="please_enter_quantity">Please enter Quantity</string>
+    <string name="please_enter_job_card_number">Please enter Job Card Number</string>
+    <string name="please_enter_fabric_type">Plase enter Fabric Type</string>
+    <string name="please_enter_fabric_consumed">Please enter Fabric consumed</string>
+    <string name="please_enter_master_name">Please enter Master Name</string>
+    <string name="please_enter_cutting_issue_date">Please enter Cutting Issue Date</string>
+    <string name="job_card_created_successfully">Job Card created Successfully!</string>
+    <string name="alter_quantity">Alter Quantity</string>
+    <string name="create_alter_request">Create Alter Request</string>
+    <string name="please_enter_alter_quantity">Please enter Alter Quantity</string>
+    <string name="alter_request_created_successfully">Alter request created successfully!</string>
+    <string name="view_alter_request">View Alter Request</string>
+    <string name="colon">:</string>
+    <string name="brand_name">Brand Name</string>
+    <string name="date_time_of_generation_job_card"><![CDATA[Date & Time of Genrating Job Card:]]></string>
+    <string name="share">Share</string>
+    <string name="cotton_club_app">Cotton Club Application</string>
+    <string name="menu_logout">Logout</string>
+    <string name="please_enter_user_id">Please enter your User ID</string>
+    <string name="login">Login</string>
+    <string name="do_want_to_logout_from_application">Do you want to Logout from the Application?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="logout">Logout</string>
+    <string name="view">View</string>
+    <string name="more">More</string>
+    <string name="create">Create</string>
+    <string name="type">Select Type</string>
+    <string name="sizes">Sizes</string>
+    <string name="size_s">S</string>
+    <string name="size_m">M</string>
+    <string name="size_l">L</string>
+    <string name="size_xl">XL</string>
+    <string name="size_xxl">XXL</string>
+    <string name="size_xxxl">XXXL</string>
+    <string name="size_NB">NB</string>
+    <string name="size_03">0/3</string>
+    <string name="size_3_6">3/6</string>
+    <string name="size_69">6/9</string>
+    <string name="size_912">9/12</string>
+    <string name="please_enter_valid_quantity_number">Please enter valid Quantity</string>
+    <string name="no_of_pieces">No. of pieces</string>
+    <string name="tot_no_pieces">Total No. of pieces</string>
+    <string name="size_1">1</string>
+    <string name="size_2">2</string>
+    <string name="size_3">3</string>
+    <string name="size_4">4</string>
+    <string name="size_5">5</string>
+    <string name="size_6">6</string>
+    <string name="size_8">8</string>
+    <string name="size_10">10</string>
+    <string name="size_12">12</string>
+    <string name="size_14">14</string>
+    <string name="size_16">16</string>
+    <string name="size_20">20</string>
+    <string name="size_22">22</string>
+    <string name="size_24">24</string>
+    <string name="size_26">26</string>
+    <string name="size_28">28</string>
+    <string name="size_30">30</string>
+    <string name="size_32">32</string>
+    <string name="size_34">34</string>
+    <string name="size_36">36</string>
+    <string name="quantity_100">100</string>
+    <string name="size_0">0</string>
+    <string name="zero">0</string>
+    <string name="please_select_type">Please select Type</string>
+    <string name="boys_tee_8_6">8*6 Boys T-shirt</string>
+    <string name="boys_tee_2_6">2*6 Boys T-shirt</string>
+    <string name="girls_tee_20_36">20*36 GirlsTop</string>
+    <string name="kms">1–5 Kids Magic Suit</string>
+    <string name="girls_romper">Girls Romper</string>
+    <string name="boys_romper">Boys Romper</string>
+    <string name="boys_top">Boys Top</string>
+    <string name="frock">Frock</string>
+    <string name="girls_top">Girls Top</string>
+    <string name="girls_trouser">Girls Trouser</string>
+    <string name="boys_night_suit">Boys Night Suit</string>
+    <string name="girls_night_suit">Girls Night Suit</string>
+    <string name="boys_trouser">Boys Trouser</string>
+    <string name="baba_suit">Baba Suit</string>
+
 
     <string-array name="brand">
         <item>Kids Magic</item>
@@ -61,6 +149,16 @@
         <item>L</item>
         <item>XL</item>
         <item>XXL</item>
+    </string-array>
+
+    <string-array name="type">
+        <item>Full sleeves</item>
+        <item>Half sleeves</item>
+    </string-array>
+
+    <string-array name="pant">
+        <item>2*6 Pant</item>
+        <item>8*16 Pant</item>
     </string-array>
 
 </resources>

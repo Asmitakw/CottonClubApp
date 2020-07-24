@@ -8,6 +8,11 @@ public class OrderItem {
     private String orderNumber;
     private String deliveryDate;
     private String selectSize;
+    private String orderDate;
+    private String quantity;
+    private String totalPieces;
+    private String type;
+    private SizeListItem sizeItem;
 
     public String getPartyName() {
         return partyName;
@@ -63,5 +68,45 @@ public class OrderItem {
 
     public void setOrderCreationDate(String orderCreationDate) {
         this.orderCreationDate = orderCreationDate;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getTotalPieces() {
+        return totalPieces;
+    }
+
+    public void setTotalPieces(String totalPieces) {
+        this.totalPieces = totalPieces;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public SizeListItem getSizeItem() {
+        return sizeItem;
+    }
+
+    public void setSizeItem(SizeListItem sizeItem) {
+        this.sizeItem = sizeItem;
     }
 }

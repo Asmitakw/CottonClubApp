@@ -26,8 +26,14 @@
     </style>
 
     <style name="CustomMediumText" parent="android:style/Widget.TextView">
-        <item name="android:textColor">@color/colorGreyDark</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">@dimen/medium_text_size</item>
+
+    </style>
+
+    <style name="CustomSmallText" parent="android:style/Widget.TextView">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
 
     </style>
 
@@ -40,6 +46,13 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+
+    </style>
+
+    <style name="CustomEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:textSize">@dimen/medium_text_size</item>
 
     </style>

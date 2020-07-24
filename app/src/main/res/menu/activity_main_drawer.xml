@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/create_item"
-        android:title="Create">
+        android:title="@string/create">
         <menu>
 
             <item
@@ -31,7 +31,7 @@
 
     <item
         android:id="@+id/view_item"
-        android:title="View">
+        android:title="@string/view">
         <menu>
             <item
                 android:id="@+id/nav_view_order"
@@ -41,7 +41,24 @@
                 android:id="@+id/nav_view_job_card"
                 android:icon="@drawable/ic_view_job_card"
                 android:title="@string/view_job_card" />
+
+            <item
+                android:id="@+id/nav_view_alter_request"
+                android:icon="@drawable/ic_view_alter_request"
+                android:title="@string/view_alter_request" />
         </menu>
     </item>
+
+    <item
+        android:id="@+id/logout"
+        android:title="@string/more">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/menu_logout" />
+        </menu>
+    </item>
+
 
 </menu>

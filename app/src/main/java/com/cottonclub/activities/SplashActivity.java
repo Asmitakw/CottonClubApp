@@ -25,11 +25,11 @@ public class SplashActivity extends AppCompatActivity {
 
     private void startSplash() {
 
-       // updateAppLanguage(AppSession.getInstance().getLanguage(SplashActivity.this));
+        // updateAppLanguage(AppSession.getInstance().getLanguage(SplashActivity.this));
 
-        Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+        Intent mainIntent = new Intent(SplashActivity.this, LoginActivity.class);
         startActivity(mainIntent);
-      //  overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
+        //  overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
         finish();
 
         /*if (AppSession.getInstance().getLoginStatus(SplashActivity.this)) {

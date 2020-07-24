@@ -1,5 +1,7 @@
 package com.cottonclub.activities;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.cottonclub.R;
@@ -9,6 +11,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.cottonclub.fragments.ui.home.HomeFragment;
+import com.cottonclub.interfaces.DialogListener;
+import com.cottonclub.utilities.Helper;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -17,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -44,9 +50,30 @@ public class MainActivity extends AppCompatActivity {
         tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
 
         //Hide view conditionally using following
-        /*Menu menu = navigationView.getMenu();
-        MenuItem target = menu.findItem(R.id.nav_create_order);
-        target.setVisible(false);*/
+        // target.setVisible(false);
+
+        Menu menu = navigationView.getMenu();
+        MenuItem nav_logout = menu.findItem(R.id.nav_logout);
+        nav_logout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Helper.showOkCancelDialog(MainActivity.this, getString(R.string.do_want_to_logout_from_application), getString(R.string.yes), getString(R.string.no), new DialogListener() {
+                    @Override
+                    public void onButtonClicked(int type) {
+                        if (Dialog.BUTTON_POSITIVE == type) {
+                            //AppSession.getInstance().clearSharedPreference(BaseActivity.this);
+                            //AppSession.getInstance().saveLoginStatus(BaseActivity.this, false);
+                            Intent mainIntent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(mainIntent);
+                            //overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
+                            finish();
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+
 
         tvLoggedInAs.setText("Logged in as: Admin");
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

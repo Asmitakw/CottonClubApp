@@ -7,37 +7,43 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.cottonclub.activities.ui.home.HomeFragment"
+        android:name="com.cottonclub.fragments.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_create_order"
-        android:name="com.cottonclub.activities.ui.create_order.CreateOrderFragment"
+        android:name="com.cottonclub.fragments.ui.create_order.CreateOrderFragment"
         android:label="@string/create_order"
         tools:layout="@layout/fragment_create_order" />
 
     <fragment
         android:id="@+id/nav_job_card"
-        android:name="com.cottonclub.activities.ui.create_job_card.CreateJobCardFragment"
+        android:name="com.cottonclub.fragments.ui.create_job_card.CreateJobCardFragment"
         android:label="@string/create_job_card"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_create_job_card" />
 
     <fragment
         android:id="@+id/nav_alter_request"
-        android:name="com.cottonclub.activities.ui.alter_request.AlterRequestFragment"
+        android:name="com.cottonclub.fragments.ui.alter_request.AlterRequestFragment"
         android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        tools:layout="@layout/fragment_alter_request" />
 
     <fragment
         android:id="@+id/nav_view_order"
-        android:name="com.cottonclub.activities.ui.view_order.ViewOrderFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
+        android:name="com.cottonclub.fragments.ui.view_order.ViewOrderFragment"
+        android:label="@string/view_order"
+        tools:layout="@layout/fragment_view_order" />
 
     <fragment
         android:id="@+id/nav_view_job_card"
-        android:name="com.cottonclub.activities.ui.view_job_card.ViewJobCardFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+        android:name="com.cottonclub.fragments.ui.view_job_card.ViewJobCardFragment"
+        android:label="@string/view_job_card"
+        tools:layout="@layout/fragment_view_order" />
+
+    <fragment
+        android:id="@+id/nav_view_alter_request"
+        android:name="com.cottonclub.fragments.ui.view_alter_request.ViewAlterRequestFragment"
+        android:label="@string/view_alter_request"
+        tools:layout="@layout/fragment_view_order" />
 </navigation>
