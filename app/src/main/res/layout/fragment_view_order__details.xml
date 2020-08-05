@@ -1,10 +1,15 @@
-<androidx.recyclerview.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rvViewOrder"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:scrollbarFadeDuration="@integer/google_play_services_version"
-    android:scrollbarSize="2dp"
-    android:scrollbarThumbHorizontal="@color/colorAccent"
-    android:scrollbars="horizontal" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+
+    <com.cottonclub.custom_views.CustomTextView
+        android:id="@+id/etOrderNumber"
+        style="@style/CustomMediumText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order Number: 36" />
+
+
+</LinearLayout>

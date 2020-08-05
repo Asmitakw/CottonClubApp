@@ -8,13 +8,13 @@ import android.widget.TextView;
 
 
 import com.cottonclub.R;
+import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.OrderItem;
 import com.cottonclub.utilities.Constants;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -24,14 +24,19 @@ import androidx.recyclerview.widget.RecyclerView;
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     private List<OrderItem> orderList;
     private Context context;
+    private RecyclerViewClickListener recyclerViewClickListener;
 
-    public OrderAdapter(Context context, List<OrderItem> orderList) {
+    public OrderAdapter(Context context, List<OrderItem> orderList,
+                        RecyclerViewClickListener recyclerViewClickListener) {
         this.orderList = orderList;
         this.context = context;
+        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvViewDOCMonth, tvViewDOCDate, tvOrderNumber, tvBrand, tvDesignNumber, tvDeliveryDate;
+        TextView tvViewDOCMonth, tvViewDOCDate, tvOrderNumber, tvBrand, tvPartyName, tvDesignNumber,
+                tvDeliveryDate;
+        CardView cvViewOrderDetails;
 
         //set onclick listener to the entire view
         public ViewHolder(View view) {
@@ -41,7 +46,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             tvOrderNumber = view.findViewById(R.id.tvOrderNumber);
             tvBrand = view.findViewById(R.id.tvBrand);
             tvDesignNumber = view.findViewById(R.id.tvDesignNumber);
+            tvPartyName = view.findViewById(R.id.tvPartyName);
             tvDeliveryDate = view.findViewById(R.id.tvDeliveryDate);
+            cvViewOrderDetails = view.findViewById(R.id.cvViewOrderDetails);
         }
 
     }
@@ -56,7 +63,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final OrderItem orderItem = orderList.get(position);
         String date = orderItem.getOrderDate();
 
@@ -69,10 +76,20 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getOrderNumber()));
         holder.tvBrand.setText(String.format("%s%s%s%s", context.getString(R.string.brand_name)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getBrandName()));
+        holder.tvPartyName.setText(String.format("%s%s%s%s", context.getString(R.string.party_name)
+                , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getPartyName()));
         holder.tvDesignNumber.setText(String.format("%s%s%s%s", context.getString(R.string.design_number)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getDesignNumber()));
         holder.tvDeliveryDate.setText(String.format("%s%s%s%s", context.getString(R.string.delivery_date)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getDeliveryDate()));
+
+        holder.cvViewOrderDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewClickListener.onClick(view, position);
+
+            }
+        });
     }
 
 

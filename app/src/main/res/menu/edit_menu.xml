@@ -2,9 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/edit_menu"
         android:orderInCategory="0"
         android:title="edit"
         android:icon="@drawable/ic_edit_white"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/cancel_menu"
+        android:orderInCategory="0"
+        android:title="edit"
+        android:visible="false"
+        android:icon="@drawable/ic_close"
         app:showAsAction="always" />
 </menu>

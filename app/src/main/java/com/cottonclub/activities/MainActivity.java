@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private TextView tvLoggedInAs;
+    public Menu customizedMenu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

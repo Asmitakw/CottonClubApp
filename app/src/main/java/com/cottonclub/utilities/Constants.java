@@ -19,7 +19,8 @@ public class Constants {
     public static String NUMERIC = "Numeric";
     public static String GT = "GT";
     public static String PANT = "P";
-    public static String KMS = "KMS";
+    public static String KMSB = "KMS(B)";
+    public static String KMSG = "KMS(G)";
 
 
 }

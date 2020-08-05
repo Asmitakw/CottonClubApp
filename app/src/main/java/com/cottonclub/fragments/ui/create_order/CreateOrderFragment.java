@@ -3,6 +3,7 @@ package com.cottonclub.fragments.ui.create_order;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,10 +16,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cottonclub.R;
+import com.cottonclub.activities.MainActivity;
+import com.cottonclub.interfaces.DialogListener;
 import com.cottonclub.models.OrderItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Constants;
@@ -30,13 +34,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 
 public class CreateOrderFragment extends Fragment implements View.OnClickListener {
 
@@ -53,24 +59,32 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
     private String selectedDesignType;
     private String[] typeArray;
     private String[] pantArray;
+    private String[] kidsMagicDesignTypeArray;
+    private String[] bBabyDesignTypeArray;
+    private String[] cottonBlueDesignTypeArray;
     private Dialog mDialog;
     private DatePickerDialog datePickerDialog;
     private LinearLayout llBBabyS3XLParent, llBBabyNB912Parent, llKidsMagicMN,
-            llKidsMagicNumeric, llKidsMagicGT, llKMS, llSizeS;
+            llKidsMagicNumeric, llKidsMagicGT, llKMS, llSizeS, llKMSGirls;
     private EditText etKidsMagicMNSize2, etKidsMagicMNSize3, etKidsMagicMNSize4, etKidsMagicMNSize5,
             etKidsMagicMNSize6, etKidsMagicNumeric8, etKidsMagicNumeric10,
             etKidsMagicNumeric12, etKidsMagicNumeric14, etKidsMagicNumeric16, etKidsMagicGT20,
             etKidsMagicGT22, etKidsMagicGT24, etKidsMagicGT26, etKidsMagicGT28, etKidsMagicGT30,
             etKidsMagicGT32, etKidsMagicGT34, etKidsMagicGT36, etKMS1, etKMS2, etKMS3, etKMS4, etKMS5,
+            etKMSG1, etKMSG2, etKMSG3, etKMSG4, etKMSG5,
             etTotalNumberPieces, etBbabySizeS, etBbabySizeM, etBbabySizeL, etBbabySizeXL, etBbabySizeXXL,
-            etBbabySizeXXXL, etBbabyNB, etBbaby03, etBbaby36, etBbaby69, etBbaby912;
+            etBbabySizeXXXL, etBbabyNB, etBbaby03, etBbaby36, etBbaby69, etBbaby912, etDesignCode;
     private boolean isKidsMagicP = false;
     private boolean isSizeChartVisible = false;
+    private boolean isClicked = false;
     private TextWatcher textWatcher;
     private View viewS;
     private SizeListItem sizeListItem;
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference orderRef = mRootRef.child("Orders");
+    private ImageView ivPartyNameList;
+
+    private ArrayList<OrderItem> partyList = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -90,10 +104,22 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         if (pantArray == null)
             pantArray = getResources().getStringArray(R.array.pant);
 
+        if (kidsMagicDesignTypeArray == null)
+            kidsMagicDesignTypeArray = getResources().getStringArray(R.array.kidsMagicDesignType);
+
+        if (bBabyDesignTypeArray == null)
+            bBabyDesignTypeArray = getResources().getStringArray(R.array.bBabyDesignType);
+
+        if (cottonBlueDesignTypeArray == null)
+            cottonBlueDesignTypeArray = getResources().getStringArray(R.array.cottonBlueDesignType);
+
         tvDateOrderCreation = view.findViewById(R.id.tvDateOrderCreation);
         tvDateOrderCreation.setText(Helper.getCurrentTime());
 
         etPartyName = view.findViewById(R.id.etPartyName);
+
+        ivPartyNameList = view.findViewById(R.id.ivPartyNameList);
+        ivPartyNameList.setOnClickListener(this);
 
         etBrandName = view.findViewById(R.id.etBrandName);
         etBrandName.setOnClickListener(this);
@@ -152,6 +178,12 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         etKMS4 = view.findViewById(R.id.etKMS4);
         etKMS5 = view.findViewById(R.id.etKMS5);
 
+        etKMSG1 = view.findViewById(R.id.etKMSG1);
+        etKMSG2 = view.findViewById(R.id.etKMSG2);
+        etKMSG3 = view.findViewById(R.id.etKMSG3);
+        etKMSG4 = view.findViewById(R.id.etKMSG4);
+        etKMSG5 = view.findViewById(R.id.etKMSG5);
+
         btnCreateOrder = view.findViewById(R.id.btnCreateOrder);
         llBBabyS3XLParent = view.findViewById(R.id.llBBabyS3XLParent);
         llBBabyNB912Parent = view.findViewById(R.id.llBBabyNB912Parent);
@@ -161,6 +193,8 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         llKidsMagicGT = view.findViewById(R.id.llKidsMagicGT);
         llKMS = view.findViewById(R.id.llKMS);
 
+        llKMSGirls = view.findViewById(R.id.llKMSGirls);
+
         etSelectType = view.findViewById(R.id.etSelectType);
 
         llSizeS = view.findViewById(R.id.llSizeS);
@@ -169,8 +203,12 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         orderItem = new OrderItem();
 
         etQuantity = view.findViewById(R.id.etQuantity);
+        etDesignCode = view.findViewById(R.id.etDesignCode);
+        etDesignCode.setOnClickListener(this);
         setDefaultSizeByQuantity();
         setUiByBrand();
+
+
     }
 
     private void setDefaultSizeByQuantity() {
@@ -211,12 +249,19 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                     etKidsMagicGT34.addTextChangedListener(textWatcher);
                     etKidsMagicGT36.addTextChangedListener(textWatcher);
 
-                    //KMS
+                    //KMSB Boys
                     etKMS1.addTextChangedListener(textWatcher);
                     etKMS2.addTextChangedListener(textWatcher);
                     etKMS3.addTextChangedListener(textWatcher);
                     etKMS4.addTextChangedListener(textWatcher);
                     etKMS5.addTextChangedListener(textWatcher);
+
+                    //KMSB Girls
+                    etKMSG1.addTextChangedListener(textWatcher);
+                    etKMSG2.addTextChangedListener(textWatcher);
+                    etKMSG3.addTextChangedListener(textWatcher);
+                    etKMSG4.addTextChangedListener(textWatcher);
+                    etKMSG5.addTextChangedListener(textWatcher);
 
                     //BBaby
                     etBbabySizeS.addTextChangedListener(textWatcher);
@@ -266,13 +311,26 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                     etKMS4.setText(getDefaultQuantity);
                     etKMS5.setText(getDefaultQuantity);
 
+                    etKMSG1.setText(getDefaultQuantity);
+                    etKMSG2.setText(getDefaultQuantity);
+                    etKMSG3.setText(getDefaultQuantity);
+                    etKMSG4.setText(getDefaultQuantity);
+                    etKMSG5.setText(getDefaultQuantity);
+
                     //BBaby S-3XL
                     etBbabySizeM.setText(getDefaultQuantity);
                     etBbabySizeL.setText(getDefaultQuantity);
                     etBbabySizeXL.setText(getDefaultQuantity);
                     etBbabySizeXXL.setText(getDefaultQuantity);
+
                     //Default Value for 3XL will always be 0 until manually entered
-                    etBbabySizeXXXL.setText(getString(R.string.zero));
+                    // only for Cotton Blue
+
+                    if (selectedBrand.equals(Constants.COTTON_BLUE)) {
+                        etBbabySizeXXXL.setText(getString(R.string.zero));
+                    } else {
+                        etBbabySizeXXXL.setText(getDefaultQuantity);
+                    }
 
                     if (etQuantity.getText().toString().length() > 1 || etQuantity.getText().toString().length() == 1) {
                         int getQuantity = Integer.parseInt(etQuantity.getText().toString());
@@ -400,12 +458,60 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                                     Integer.parseInt(etKidsMagicGT20.getText().toString().trim());
 
                             etTotalNumberPieces.setText(getString(R.string.tot_no_pieces) + ":"
-                                    + Constants.EMPTY_STRING + String.valueOf(answer));
+                                    + Constants.EMPTY_STRING + (answer));
 
                         } else {
                             etTotalNumberPieces.setText("");
                         }
-                    } else if (selectedDesignType.equals(Constants.KMS)) {
+                    } else if (selectedDesignType.equals(Constants.PANT)) {
+                        //2*6 Pant
+                        if (etSelectSize.getText().toString().equals(getString(R.string.pant_2_6))) {
+                            if (!TextUtils.isEmpty(etKidsMagicMNSize2.getText().toString().trim())
+                                    || !TextUtils.isEmpty(etKidsMagicMNSize3.getText().toString().trim())
+                                    || !TextUtils.isEmpty(etKidsMagicMNSize4.getText().toString().trim())
+                                    || !TextUtils.isEmpty(etKidsMagicMNSize5.getText().toString().trim())
+                                    || !TextUtils.isEmpty(etKidsMagicMNSize6.getText().toString().trim())) {
+
+
+                                int answer = Integer.parseInt(etKidsMagicMNSize2.getText().toString().trim()) +
+                                        Integer.parseInt(etKidsMagicMNSize3.getText().toString().trim()) +
+                                        Integer.parseInt(etKidsMagicMNSize4.getText().toString().trim()) +
+                                        Integer.parseInt(etKidsMagicMNSize5.getText().toString().trim()) +
+                                        Integer.parseInt(etKidsMagicMNSize6.getText().toString().trim());
+
+                                etTotalNumberPieces.setText(getString(R.string.tot_no_pieces) + ":"
+                                        + Constants.EMPTY_STRING + String.valueOf(answer));
+
+
+                            } else {
+                                etTotalNumberPieces.setText("");
+                            }
+                        }
+                        //8*16 Pant
+                        else if (etSelectSize.getText().toString().equals(getString(R.string.pant_8_16))) {
+                            if (!TextUtils.isEmpty(etKidsMagicNumeric8.getText().toString().trim())
+                                    || !TextUtils.isEmpty(etKidsMagicNumeric10.getText().toString().trim())
+                                    || !TextUtils.isEmpty(etKidsMagicNumeric12.getText().toString().trim())
+                                    || !TextUtils.isEmpty(etKidsMagicNumeric14.getText().toString().trim())
+                                    || !TextUtils.isEmpty(etKidsMagicNumeric16.getText().toString().trim())) {
+
+
+                                int answer = Integer.parseInt(etKidsMagicNumeric8.getText().toString().trim()) +
+                                        Integer.parseInt(etKidsMagicNumeric10.getText().toString().trim()) +
+                                        Integer.parseInt(etKidsMagicNumeric12.getText().toString().trim()) +
+                                        Integer.parseInt(etKidsMagicNumeric14.getText().toString().trim()) +
+                                        Integer.parseInt(etKidsMagicNumeric16.getText().toString().trim());
+
+                                etTotalNumberPieces.setText(getString(R.string.tot_no_pieces) + ":"
+                                        + Constants.EMPTY_STRING + String.valueOf(answer));
+
+
+                            } else {
+                                etTotalNumberPieces.setText("");
+                            }
+                        }
+
+                    } else if (selectedDesignType.equals(Constants.KMSB)) {
 
                         if (!TextUtils.isEmpty(etKMS1.getText().toString().trim())
                                 || !TextUtils.isEmpty(etKMS2.getText().toString().trim())
@@ -421,6 +527,27 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
 
                             etTotalNumberPieces.setText(getString(R.string.tot_no_pieces) + ":"
                                     + Constants.EMPTY_STRING + String.valueOf(answer));
+
+                        } else {
+                            etTotalNumberPieces.setText("");
+                        }
+
+                    } else if (selectedDesignType.equals(Constants.KMSG)) {
+
+                        if (!TextUtils.isEmpty(etKMSG1.getText().toString().trim())
+                                || !TextUtils.isEmpty(etKMSG2.getText().toString().trim())
+                                || !TextUtils.isEmpty(etKMSG3.getText().toString().trim())
+                                || !TextUtils.isEmpty(etKMSG4.getText().toString().trim())
+                                || !TextUtils.isEmpty(etKMSG5.getText().toString().trim())) {
+
+                            int answer = Integer.parseInt(etKMSG1.getText().toString().trim()) +
+                                    Integer.parseInt(etKMSG2.getText().toString().trim()) +
+                                    Integer.parseInt(etKMSG3.getText().toString().trim()) +
+                                    Integer.parseInt(etKMSG4.getText().toString().trim()) +
+                                    Integer.parseInt(etKMSG5.getText().toString().trim());
+
+                            etTotalNumberPieces.setText(getString(R.string.tot_no_pieces) + ":"
+                                    + Constants.EMPTY_STRING + (answer));
 
                         } else {
                             etTotalNumberPieces.setText("");
@@ -449,7 +576,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                                     Integer.parseInt(etBbabySizeXXXL.getText().toString().trim());
 
                             etTotalNumberPieces.setText(getString(R.string.tot_no_pieces) + ":"
-                                    + Constants.EMPTY_STRING + String.valueOf(answer));
+                                    + Constants.EMPTY_STRING + (answer));
 
                         } else {
                             etTotalNumberPieces.setText("");
@@ -506,7 +633,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
     }
 
     private void setUiByBrand() {
-        etDesignNumber.addTextChangedListener(new TextWatcher() {
+        etDesignCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -514,7 +641,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (etDesignNumber.getText().toString().equals("")) {
+                /*if (etDesignNumber.getText().toString().equals("")) {
                     clearSizeFields();
                     etSelectSize.setText("");
                     llBBabyS3XLParent.setVisibility(View.GONE);
@@ -526,55 +653,250 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                     llBBabyS3XLParent.setVisibility(View.GONE);
                     llKidsMagicNumeric.setVisibility(View.GONE);
                     llKidsMagicMN.setVisibility(View.GONE);
-                }
+                }*/
                 if (etBrandName.getText().toString().equals(Constants.BBABY)) {
                     selectedBrand = Constants.BBABY;
 
-                    if (etDesignNumber.getText().toString().length() > 4) {
+                        /*String bBabyQuantity = etDesignNumber.getText().toString()
+                                .replaceAll("[0-9]", "");*/
 
-                        String bBabyQuantity = etDesignNumber.getText().toString()
-                                .replaceAll("[0-9]", "");
+                    String bBabyQuantity = etDesignCode.getText().toString();
 
-                        if (bBabyQuantity.matches("BBB") ||
-                                bBabyQuantity.matches("BBF") ||
-                                bBabyQuantity.matches("BBG") ||
-                                bBabyQuantity.matches("BBS") ||
-                                bBabyQuantity.matches("BT") ||
-                                bBabyQuantity.matches("BBNSG") ||
-                                bBabyQuantity.matches("BBNSB") ||
-                                bBabyQuantity.matches("GT")) {
+                    if (bBabyQuantity.matches("BBB") ||
+                            bBabyQuantity.matches("BBF") ||
+                            bBabyQuantity.matches("BBG") ||
+                            bBabyQuantity.matches("BBS") ||
+                            bBabyQuantity.matches("BT") ||
+                            bBabyQuantity.matches("BBNSG") ||
+                            bBabyQuantity.matches("BBNSB") ||
+                            bBabyQuantity.matches("GT")) {
+
+                        selectedDesignType = bBabyQuantity;
+                        String sizeName = "";
+                        switch (bBabyQuantity) {
+                            case "BBB":
+                                sizeName = getString(R.string.boys_top);
+                                break;
+                            case "BBF":
+                                sizeName = getString(R.string.frock);
+                                break;
+                            case "BBG":
+                                sizeName = getString(R.string.girls_top);
+                                break;
+
+                            case "BBS":
+                                sizeName = getString(R.string.baba_suit);
+                                break;
+
+                            case "BT":
+                                sizeName = getString(R.string.boys_trouser);
+                                break;
+
+                            case "BBNSG":
+                                sizeName = getString(R.string.girls_night_suit);
+                                break;
+
+                            case "BBNSB":
+                                sizeName = getString(R.string.boys_night_suit);
+                                break;
+
+                            case "GT":
+                                sizeName = getString(R.string.girls_trouser);
+                                break;
+                        }
+                        etSelectSize.setText(sizeName);
+                        llBBabyS3XLParent.setVisibility(View.VISIBLE);
+                        llSizeS.setVisibility(View.VISIBLE);
+                        viewS.setVisibility(View.VISIBLE);
+                        isSizeChartVisible = true;
+                        llBBabyNB912Parent.setVisibility(View.GONE);
+
+                    } else if (bBabyQuantity.matches("BBGR") ||
+                            bBabyQuantity.matches("BBBR")) {
+
+                        if (bBabyQuantity.equals("BBGR")) {
+                            etSelectSize.setText(getString(R.string.girls_romper));
+                        } else if (bBabyQuantity.equals("BBBR")) {
+                            etSelectSize.setText(getString(R.string.boys_romper));
+                        }
+
+                        selectedDesignType = bBabyQuantity;
+                        llBBabyS3XLParent.setVisibility(View.GONE);
+                        llBBabyNB912Parent.setVisibility(View.VISIBLE);
+                        isSizeChartVisible = true;
+                    } else {
+                        Helper.showOkDialog(getActivity(), getString(R.string.please_enter_valid_quantity_number));
+                    }
+
+
+                } else if (etBrandName.getText().toString().equals(Constants.KIDS_MAGIC)) {
+                    selectedBrand = Constants.KIDS_MAGIC;
+
+                    //Numeric Value
+                    if (etDesignCode.getText().toString().equals(Constants.NUMERIC)) {
+                        isKidsMagicP = false;
+                        etSelectSize.setText(getString(R.string.boys_tee_8_6));
+                        llBBabyS3XLParent.setVisibility(View.GONE);
+                        llBBabyNB912Parent.setVisibility(View.GONE);
+                        llKidsMagicGT.setVisibility(View.GONE);
+                        llKMS.setVisibility(View.GONE);
+                        llBBabyS3XLParent.setVisibility(View.GONE);
+                        llKidsMagicNumeric.setVisibility(View.GONE);
+                        llKMSGirls.setVisibility(View.GONE);
+                        llKidsMagicMN.setVisibility(View.GONE);
+
+                        llKidsMagicNumeric.setVisibility(View.VISIBLE);
+                        isSizeChartVisible = true;
+                        selectedDesignType = Constants.NUMERIC;
+
+                    } else {
+                        isKidsMagicP = false;
+                        String kidsMagicQuantity = etDesignCode.getText().toString();
+
+                        //MN
+                        if (kidsMagicQuantity.matches(Constants.MN)) {
+                            isKidsMagicP = false;
+                            selectedDesignType = Constants.MN;
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llBBabyNB912Parent.setVisibility(View.GONE);
+                            llKidsMagicGT.setVisibility(View.GONE);
+                            llKMS.setVisibility(View.GONE);
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llKidsMagicNumeric.setVisibility(View.GONE);
+                            llKMSGirls.setVisibility(View.GONE);
+
+                            llKidsMagicMN.setVisibility(View.VISIBLE);
+                            isSizeChartVisible = true;
+
+                            etSelectSize.setText(getString(R.string.boys_tee_2_6));
+
+                            //Girls Top
+                        } else if (kidsMagicQuantity.matches(Constants.GT)) {
+                            isKidsMagicP = false;
+                            selectedDesignType = Constants.GT;
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llBBabyNB912Parent.setVisibility(View.GONE);
+                            llKMS.setVisibility(View.GONE);
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llKidsMagicMN.setVisibility(View.GONE);
+                            llKidsMagicNumeric.setVisibility(View.GONE);
+                            llKMSGirls.setVisibility(View.GONE);
+
+                            llKidsMagicGT.setVisibility(View.VISIBLE);
+                            isSizeChartVisible = true;
+
+                            etSelectSize.setText(getString(R.string.girls_tee_20_36));
+
+                            //Pant
+                        } else if (kidsMagicQuantity.matches(Constants.PANT)) {
+
+                            etSelectSize.setEnabled(true);
+                            etSelectSize.setText("");
+                            selectedDesignType = Constants.PANT;
+                            isKidsMagicP = true;
+                            Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
+                                    android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                                    etSelectSize.setText(pantArray[position]);
+                                    if (position == 0) {
+                                        llBBabyS3XLParent.setVisibility(View.GONE);
+                                        llBBabyNB912Parent.setVisibility(View.GONE);
+                                        llKMS.setVisibility(View.GONE);
+                                        llBBabyS3XLParent.setVisibility(View.GONE);
+                                        llKidsMagicGT.setVisibility(View.GONE);
+                                        llKidsMagicNumeric.setVisibility(View.GONE);
+
+                                        llKidsMagicMN.setVisibility(View.VISIBLE);
+                                        llKMSGirls.setVisibility(View.GONE);
+                                        isSizeChartVisible = true;
+                                    } else {
+                                        llBBabyS3XLParent.setVisibility(View.GONE);
+                                        llBBabyNB912Parent.setVisibility(View.GONE);
+                                        llKMS.setVisibility(View.GONE);
+                                        llBBabyS3XLParent.setVisibility(View.GONE);
+                                        llKidsMagicGT.setVisibility(View.GONE);
+                                        llKidsMagicMN.setVisibility(View.GONE);
+                                        llKMSGirls.setVisibility(View.GONE);
+                                        isSizeChartVisible = true;
+                                        llKidsMagicNumeric.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
+                            //Kids Magic Suit Boys
+                        } else if (kidsMagicQuantity.equalsIgnoreCase(Constants.KMSB)) {
+                            isKidsMagicP = false;
+                            selectedDesignType = Constants.KMSB;
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llBBabyNB912Parent.setVisibility(View.GONE);
+                            etSelectSize.setText(getString(R.string.kmsb));
+
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llBBabyNB912Parent.setVisibility(View.GONE);
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llKidsMagicGT.setVisibility(View.GONE);
+                            llKidsMagicMN.setVisibility(View.GONE);
+                            llKidsMagicNumeric.setVisibility(View.GONE);
+                            llKMSGirls.setVisibility(View.GONE);
+
+                            llKMS.setVisibility(View.VISIBLE);
+                            isSizeChartVisible = true;
+
+                            //Kids Magic Suit Girls
+                        } else if (kidsMagicQuantity.equalsIgnoreCase(Constants.KMSG)) {
+                            isKidsMagicP = false;
+                            selectedDesignType = Constants.KMSG;
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llBBabyNB912Parent.setVisibility(View.GONE);
+                            etSelectSize.setText(getString(R.string.kmsg));
+
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llBBabyNB912Parent.setVisibility(View.GONE);
+                            llBBabyS3XLParent.setVisibility(View.GONE);
+                            llKidsMagicGT.setVisibility(View.GONE);
+                            llKidsMagicMN.setVisibility(View.GONE);
+                            llKidsMagicNumeric.setVisibility(View.GONE);
+                            llKMS.setVisibility(View.GONE);
+                            llKMSGirls.setVisibility(View.VISIBLE);
+                            isSizeChartVisible = true;
+                        }
+
+                    }
+
+
+                } else if (etBrandName.getText().toString().equals(Constants.COTTON_BLUE)) {
+                    selectedBrand = Constants.COTTON_BLUE;
+
+                    //Numeric
+                    if (etDesignCode.getText().toString().equals(Constants.NUMERIC)) {
+                        etSelectSize.setText(Constants.DESIGNER);
+                        selectedDesignType = Constants.NUMERIC;
+                        llBBabyS3XLParent.setVisibility(View.VISIBLE);
+                        llSizeS.setVisibility(View.VISIBLE);
+                        viewS.setVisibility(View.VISIBLE);
+                        isSizeChartVisible = true;
+                        llSizeS.setVisibility(View.GONE);
+                        viewS.setVisibility(View.GONE);
+
+                    } else {
+                        String bBabyQuantity = etDesignCode.getText().toString();
+
+                        if (bBabyQuantity.matches(Constants.ST) ||
+                                bBabyQuantity.matches(Constants.GM) ||
+                                bBabyQuantity.matches(Constants.PR)) {
 
                             selectedDesignType = bBabyQuantity;
+
                             String sizeName = "";
                             switch (bBabyQuantity) {
-                                case "BBB":
-                                    sizeName = getString(R.string.boys_top);
+                                case "ST":
+                                    sizeName = Constants.STRIPE;
                                     break;
-                                case "BBF":
-                                    sizeName = getString(R.string.frock);
+                                case "GM":
+                                    sizeName = Constants.GRACE_MARSADISE;
                                     break;
-                                case "BBG":
-                                    sizeName = getString(R.string.girls_top);
-                                    break;
-
-                                case "BBS":
-                                    sizeName = getString(R.string.baba_suit);
-                                    break;
-
-                                case "BT":
-                                    sizeName = getString(R.string.boys_trouser);
-                                    break;
-
-                                case "BBNSG":
-                                    sizeName = getString(R.string.girls_night_suit);
-                                    break;
-
-                                case "BBNSB":
-                                    sizeName = getString(R.string.boys_night_suit);
-                                    break;
-
-                                case "GT":
-                                    sizeName = getString(R.string.girls_trouser);
+                                case "PR":
+                                    sizeName = Constants.PREMIUM;
                                     break;
                             }
                             etSelectSize.setText(sizeName);
@@ -582,190 +904,15 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                             llSizeS.setVisibility(View.VISIBLE);
                             viewS.setVisibility(View.VISIBLE);
                             isSizeChartVisible = true;
-                            llBBabyNB912Parent.setVisibility(View.GONE);
-
-                        } else if (bBabyQuantity.matches("BBGR") ||
-                                bBabyQuantity.matches("BBBR")) {
-
-                            if (bBabyQuantity.equals("BBGR")) {
-                                etSelectSize.setText(getString(R.string.girls_romper));
-                            } else if (bBabyQuantity.equals("BBBR")) {
-                                etSelectSize.setText(getString(R.string.boys_romper));
-                            }
-
-                            selectedDesignType = bBabyQuantity;
-                            llBBabyS3XLParent.setVisibility(View.GONE);
-                            llBBabyNB912Parent.setVisibility(View.VISIBLE);
-                            isSizeChartVisible = true;
-                        } else {
-                            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_valid_quantity_number));
-                        }
-                    }
-
-                } else if (etBrandName.getText().toString().equals(Constants.KIDS_MAGIC)) {
-                    selectedBrand = Constants.KIDS_MAGIC;
-
-                    if (etDesignNumber.getText().toString().equals("")) {
-                        etSelectSize.setText("");
-                    }
-
-                    if (etDesignNumber.getText().toString().length() > 4) {
-
-                        //Numeric Value
-                        if (etDesignNumber.getText().toString().matches("[0-9]+")) {
-                            isKidsMagicP = false;
-                            etSelectSize.setText(getString(R.string.boys_tee_8_6));
-                            llKidsMagicNumeric.setVisibility(View.VISIBLE);
-                            isSizeChartVisible = true;
-                            selectedDesignType = Constants.NUMERIC;
-
-                        } else {
-                            isKidsMagicP = false;
-                            String kidsMagicQuantity = etDesignNumber.getText().toString()
-                                    .replaceAll("[0-9]", "");
-
-                            //MN
-                            if (kidsMagicQuantity.matches(Constants.MN)) {
-                                isKidsMagicP = false;
-                                selectedDesignType = Constants.MN;
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicNumeric.setVisibility(View.GONE);
-
-                                llKidsMagicMN.setVisibility(View.VISIBLE);
-                                isSizeChartVisible = true;
-
-                                etSelectSize.setText(getString(R.string.boys_tee_2_6));
-
-                                //Girls Top
-                            } else if (kidsMagicQuantity.matches(Constants.GT)) {
-                                isKidsMagicP = false;
-                                selectedDesignType = Constants.GT;
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicMN.setVisibility(View.GONE);
-                                llKidsMagicNumeric.setVisibility(View.GONE);
-
-                                llKidsMagicGT.setVisibility(View.VISIBLE);
-                                isSizeChartVisible = true;
-
-                                etSelectSize.setText(getString(R.string.girls_tee_20_36));
-
-                                //Pant
-                            } else if (kidsMagicQuantity.matches(Constants.PANT)) {
-
-                                etSelectSize.setEnabled(true);
-                                etSelectSize.setText("");
-                                selectedDesignType = Constants.PANT;
-                                isKidsMagicP = true;
-                                Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
-                                        android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                                        etSelectSize.setText(pantArray[position]);
-                                        if (position == 0) {
-                                            llBBabyS3XLParent.setVisibility(View.GONE);
-                                            llBBabyNB912Parent.setVisibility(View.GONE);
-                                            llKMS.setVisibility(View.GONE);
-                                            llBBabyS3XLParent.setVisibility(View.GONE);
-                                            llKidsMagicGT.setVisibility(View.GONE);
-                                            llKidsMagicNumeric.setVisibility(View.GONE);
-
-                                            llKidsMagicMN.setVisibility(View.VISIBLE);
-                                            isSizeChartVisible = true;
-                                        } else {
-                                            llBBabyS3XLParent.setVisibility(View.GONE);
-                                            llBBabyNB912Parent.setVisibility(View.GONE);
-                                            llKMS.setVisibility(View.GONE);
-                                            llBBabyS3XLParent.setVisibility(View.GONE);
-                                            llKidsMagicGT.setVisibility(View.GONE);
-                                            llKidsMagicMN.setVisibility(View.GONE);
-
-                                            llKidsMagicNumeric.setVisibility(View.VISIBLE);
-                                        }
-                                    }
-                                });
-                                //Kids Magic Suit
-                            } else if (kidsMagicQuantity.matches(Constants.KMS)) {
-                                isKidsMagicP = false;
-                                selectedDesignType = Constants.KMS;
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                etSelectSize.setText(getString(R.string.kms));
-
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicMN.setVisibility(View.GONE);
-                                llKidsMagicNumeric.setVisibility(View.GONE);
-
-                                llKMS.setVisibility(View.VISIBLE);
-                                isSizeChartVisible = true;
-                            }
-
-                        }
-
-                    }
-
-                } else if (etBrandName.getText().toString().equals(Constants.COTTON_BLUE)) {
-                    selectedBrand = Constants.COTTON_BLUE;
-
-                    if (etDesignNumber.getText().toString().length() > 4) {
-
-                        //Numeric
-                        if (etDesignNumber.getText().toString().matches("[0-9]+")) {
-                            etSelectSize.setText(Constants.DESIGNER);
-                            selectedDesignType = Constants.NUMERIC;
-                            llBBabyS3XLParent.setVisibility(View.VISIBLE);
-                            llSizeS.setVisibility(View.VISIBLE);
-                            viewS.setVisibility(View.VISIBLE);
-                            isSizeChartVisible = true;
                             llSizeS.setVisibility(View.GONE);
                             viewS.setVisibility(View.GONE);
 
-                        } else {
-                            String bBabyQuantity = etDesignNumber.getText().toString()
-                                    .replaceAll("[0-9]", "");
-
-                            if (bBabyQuantity.matches(Constants.ST) ||
-                                    bBabyQuantity.matches(Constants.GM) ||
-                                    bBabyQuantity.matches(Constants.PR)) {
-
-                                selectedDesignType = bBabyQuantity;
-
-                                String sizeName = "";
-                                switch (bBabyQuantity) {
-                                    case "ST":
-                                        sizeName = Constants.STRIPE;
-                                        break;
-                                    case "GM":
-                                        sizeName = Constants.GRACE_MARSADISE;
-                                        break;
-                                    case "PR":
-                                        sizeName = Constants.PREMIUM;
-                                        break;
-                                }
-                                etSelectSize.setText(sizeName);
-                                llBBabyS3XLParent.setVisibility(View.VISIBLE);
-                                llSizeS.setVisibility(View.VISIBLE);
-                                viewS.setVisibility(View.VISIBLE);
-                                isSizeChartVisible = true;
-                                llSizeS.setVisibility(View.GONE);
-                                viewS.setVisibility(View.GONE);
-
-                            }
                         }
-
-
                     }
 
+
                 }
+
 
             }
 
@@ -801,6 +948,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
 
             }
         });
+
     }
 
     private void validate() {
@@ -854,6 +1002,8 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
 
     private void sendOrderDetails() {
 
+        isClicked = false;
+
         SimpleDateFormat format = new SimpleDateFormat("d");
 
         format = new SimpleDateFormat("d MMM");
@@ -863,8 +1013,10 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         mDialog = Helper.showProgressDialog(getActivity());
         String orderCreationDate = tvDateOrderCreation.getText().toString();
         String partyName = etPartyName.getText().toString();
+
         String brandName = etBrandName.getText().toString();
         String designNumber = etDesignNumber.getText().toString();
+        String designCode = etDesignCode.getText().toString();
         String orderNumber = etOrderNumber.getText().toString();
         String deliveryDate = etDeliveryDate.getText().toString();
         String quantity = etQuantity.getText().toString();
@@ -872,12 +1024,13 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         String totalPieces = etTotalNumberPieces.getText().toString();
         String type = etSelectType.getText().toString();
 
-
         sendSizeDetails();
 
+        orderItem.setOrderId(String.valueOf(maxId + 1));
         orderItem.setOrderCreationDate(orderCreationDate);
         orderItem.setPartyName(partyName);
         orderItem.setBrandName(brandName);
+        orderItem.setDesignCode(designCode);
         orderItem.setDesignNumber(designNumber);
         orderItem.setOrderNumber(orderNumber);
         orderItem.setDeliveryDate(deliveryDate);
@@ -893,18 +1046,73 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 mDialog.dismiss();
-                Helper.showOkDialog(getActivity(), getString(R.string.order_created_successfully));
+                Helper.showOkClickDialog(getActivity(), getString(R.string.order_created_successfully), new DialogListener() {
+                    @Override
+                    public void onButtonClicked(int type) {
+                        Intent homeIntent = new Intent(getActivity(), MainActivity.class);
+                        startActivity(homeIntent);
+                    }
+                });
                 clearData();
                 etPartyName.setText("");
-                etPartyName.requestFocus();
             }
         });
+    }
 
+    private void getPartyListing() {
+        mDialog = Helper.showProgressDialog(getActivity());
+        orderRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mDialog.dismiss();
+
+                if (isClicked) {
+                    if (partyList.size() == 0) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            orderItem = dataSnapshot.getValue(OrderItem.class);
+                            partyList.add(orderItem);
+                        }
+                    }
+                    ivPartyNameList.performClick();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+
+            case R.id.ivPartyNameList:
+                isClicked = true;
+                if (partyList.size() == 0) {
+                    getPartyListing();
+                } else {
+
+                    HashSet hashSet = new HashSet();
+                    for (int i = 0; i < partyList.size(); i++) {
+                        OrderItem orderItem = partyList.get(i);
+                        hashSet.add(orderItem.getPartyName());
+                    }
+                    final ArrayList<String> arrayList = new ArrayList<>();
+                    arrayList.addAll(hashSet);
+
+                    Helper.showDropDown(etPartyName, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, arrayList), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            OrderItem orderItem = partyList.get(position);
+                            etPartyName.setText(arrayList.get(position));
+                            arrayList.clear();
+                        }
+                    });
+                }
+                break;
 
             case R.id.etBrandName:
                 Helper.showDropDown(etBrandName, new ArrayAdapter<>(requireActivity(),
@@ -933,6 +1141,36 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                         etSelectType.setText(typeArray[position]);
                     }
                 });
+                break;
+
+            case R.id.etDesignCode:
+                if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, kidsMagicDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(kidsMagicDesignTypeArray[position]);
+                        }
+                    });
+                } else if (selectedBrand.equals(Constants.BBABY)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, bBabyDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(bBabyDesignTypeArray[position]);
+                        }
+                    });
+
+                } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, cottonBlueDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(cottonBlueDesignTypeArray[position]);
+                        }
+                    });
+                }
+
                 break;
 
             case R.id.etDeliveryDate:
@@ -988,18 +1226,6 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                 }
                 break;
         }
-    }
-
-    private void clearData() {
-        etBrandName.setText("");
-        etDesignNumber.setText("");
-        etOrderNumber.setText("");
-        etDeliveryDate.setText("");
-        etSelectSize.setText("");
-        etTotalNumberPieces.setText("");
-        etSelectType.setText("");
-        etQuantity.setText("");
-        etPartyName.requestFocus();
     }
 
     private void setDefaultZero() {
@@ -1096,6 +1322,26 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
             etKMS5.setText("0");
         }
 
+        if (etKMSG1.getText().toString().equals("")) {
+            etKMSG1.setText("0");
+        }
+
+        if (etKMSG2.getText().toString().equals("")) {
+            etKMSG2.setText("0");
+        }
+
+        if (etKMSG3.getText().toString().equals("")) {
+            etKMSG3.setText("0");
+        }
+
+        if (etKMSG4.getText().toString().equals("")) {
+            etKMSG4.setText("0");
+        }
+
+        if (etKMSG5.getText().toString().equals("")) {
+            etKMSG5.setText("0");
+        }
+
         if (etBbabySizeS.getText().toString().equals("")) {
             etBbabySizeS.setText("0");
         }
@@ -1140,6 +1386,26 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
             etBbaby912.setText("0");
         }
 
+    }
+
+    private void clearData() {
+        etBrandName.setText("");
+        etDesignNumber.setText("");
+        etOrderNumber.setText("");
+        etDeliveryDate.setText("");
+        etSelectSize.setText("");
+        etTotalNumberPieces.setText("");
+        etSelectType.setText("");
+        etQuantity.setText("");
+        etDesignCode.setText("");
+
+        llBBabyNB912Parent.setVisibility(View.GONE);
+        llBBabyS3XLParent.setVisibility(View.GONE);
+        llKidsMagicGT.setVisibility(View.GONE);
+        llKidsMagicMN.setVisibility(View.GONE);
+        llKidsMagicNumeric.setVisibility(View.GONE);
+        llKMS.setVisibility(View.GONE);
+        llKMSGirls.setVisibility(View.GONE);
     }
 
     private void clearSizeFields() {
@@ -1187,6 +1453,12 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         etKMS4.setText("0");
         etKMS5.setText("0");
 
+        etKMSG1.setText("0");
+        etKMSG2.setText("0");
+        etKMSG3.setText("0");
+        etKMSG4.setText("0");
+        etKMSG5.setText("0");
+
         etBbabySizeS.setText("0");
 
         etBbabySizeM.setText("0");
@@ -1196,6 +1468,8 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         etBbabySizeXL.setText("0");
 
         etBbabySizeXXL.setText("0");
+
+        etBbabySizeXXXL.setText("0");
 
         etBbabyNB.setText("0");
 
@@ -1223,7 +1497,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                 sizeListItem.setXL(etBbabySizeXL.getText().toString());
                 sizeListItem.setXXL(etBbabySizeXXL.getText().toString());
                 sizeListItem.setXXXL(etBbabySizeXXXL.getText().toString());
-                sizeListItem.setDesignType("S3XL");
+                sizeListItem.setDesignType(selectedDesignType);
 
             } else if (selectedDesignType.equals("BBGR") || selectedDesignType.equals("BBBR")) {
                 sizeListItem = new SizeListItem();
@@ -1233,7 +1507,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                 sizeListItem.setSize3b6(etBbaby36.getText().toString());
                 sizeListItem.setSize6b9(etBbaby69.getText().toString());
                 sizeListItem.setSize9b12(etBbaby912.getText().toString());
-                sizeListItem.setDesignType("NB9/12");
+                sizeListItem.setDesignType(selectedDesignType);
 
             }
 
@@ -1248,7 +1522,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                 sizeListItem.setSize4(etKidsMagicMNSize4.getText().toString());
                 sizeListItem.setSize5(etKidsMagicMNSize5.getText().toString());
                 sizeListItem.setSize6(etKidsMagicMNSize6.getText().toString());
-                sizeListItem.setDesignType("MN");
+                sizeListItem.setDesignType(selectedDesignType);
 
             } else if (selectedDesignType.equals(Constants.NUMERIC)) {
                 sizeListItem = new SizeListItem();
@@ -1257,9 +1531,31 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                 sizeListItem.setSize12(etKidsMagicNumeric12.getText().toString());
                 sizeListItem.setSize14(etKidsMagicNumeric14.getText().toString());
                 sizeListItem.setSize16(etKidsMagicNumeric16.getText().toString());
-                sizeListItem.setDesignType("KMNumeric");
+                sizeListItem.setDesignType(selectedDesignType);
 
-            } else if (selectedDesignType.equals(Constants.GT)) {
+            } else if(selectedDesignType.equals(Constants.PANT)){
+                if(etSelectSize.getText().toString().equals(getString(R.string.pant_2_6))){
+                    sizeListItem = new SizeListItem();
+                    sizeListItem.setSize2(etKidsMagicMNSize2.getText().toString());
+                    sizeListItem.setSize3(etKidsMagicMNSize3.getText().toString());
+                    sizeListItem.setSize4(etKidsMagicMNSize4.getText().toString());
+                    sizeListItem.setSize5(etKidsMagicMNSize5.getText().toString());
+                    sizeListItem.setSize6(etKidsMagicMNSize6.getText().toString());
+                    sizeListItem.setDesignType(selectedDesignType);
+
+                }else if(etSelectSize.getText().toString().equals(getString(R.string.pant_8_16))){
+                    sizeListItem = new SizeListItem();
+                    sizeListItem.setSize8(etKidsMagicNumeric8.getText().toString());
+                    sizeListItem.setSize10(etKidsMagicNumeric10.getText().toString());
+                    sizeListItem.setSize12(etKidsMagicNumeric12.getText().toString());
+                    sizeListItem.setSize14(etKidsMagicNumeric14.getText().toString());
+                    sizeListItem.setSize16(etKidsMagicNumeric16.getText().toString());
+                    sizeListItem.setDesignType(selectedDesignType);
+                }
+            }
+
+
+            else if (selectedDesignType.equals(Constants.GT)) {
                 sizeListItem = new SizeListItem();
                 sizeListItem.setSize20(etKidsMagicGT20.getText().toString());
                 sizeListItem.setSize22(etKidsMagicGT22.getText().toString());
@@ -1270,16 +1566,24 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                 sizeListItem.setSize32(etKidsMagicGT32.getText().toString());
                 sizeListItem.setSize34(etKidsMagicGT34.getText().toString());
                 sizeListItem.setSize36(etKidsMagicGT36.getText().toString());
-                sizeListItem.setDesignType("GT");
+                sizeListItem.setDesignType(selectedDesignType);
 
-            } else if (selectedDesignType.equals(Constants.KMS)) {
+            } else if (selectedDesignType.equals(Constants.KMSB)) {
                 sizeListItem = new SizeListItem();
                 sizeListItem.setSize1(etKMS1.getText().toString());
                 sizeListItem.setSize2(etKMS2.getText().toString());
                 sizeListItem.setSize3(etKMS3.getText().toString());
                 sizeListItem.setSize4(etKMS4.getText().toString());
                 sizeListItem.setSize5(etKMS5.getText().toString());
-                sizeListItem.setDesignType("KMS");
+                sizeListItem.setDesignType(selectedDesignType);
+            } else if (selectedDesignType.equals(Constants.KMSG)) {
+                sizeListItem = new SizeListItem();
+                sizeListItem.setSize16(etKMSG1.getText().toString());
+                sizeListItem.setSize18(etKMSG2.getText().toString());
+                sizeListItem.setSize20(etKMSG3.getText().toString());
+                sizeListItem.setSize22(etKMSG4.getText().toString());
+                sizeListItem.setSize24(etKMSG5.getText().toString());
+                sizeListItem.setDesignType(selectedDesignType);
             }
 
 
@@ -1290,7 +1594,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
             sizeListItem.setXL(etBbabySizeXL.getText().toString());
             sizeListItem.setXXL(etBbabySizeXXL.getText().toString());
             sizeListItem.setXXXL(etBbabySizeXXXL.getText().toString());
-            sizeListItem.setDesignType("M3XL");
+            sizeListItem.setDesignType(selectedDesignType);
 
         }
 

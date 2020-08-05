@@ -1,8 +1,11 @@
 package com.cottonclub.fragments.ui.create_job_card;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,11 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cottonclub.R;
 import com.cottonclub.models.JobCardItem;
 import com.cottonclub.utilities.Helper;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +43,10 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
             etFabricType, etFabricConsumed, etMasterName, etCuttingIssueDate;
 
     private TextView tvDateOrderCreation;
+
+    private ImageView ivUploadFile,ivJobCardFile,ivCancelFile;
+
+    private LinearLayout llFileLayout;
 
     private Button btnCreateJobCard;
     private long maxId = 0;
@@ -95,6 +105,16 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
         btnCreateJobCard = view.findViewById(R.id.btnCreateJobCard);
         jobCardItem = new JobCardItem();
+
+        ivUploadFile = view.findViewById(R.id.ivUploadFile);
+        ivUploadFile.setOnClickListener(this);
+
+        ivJobCardFile = view.findViewById(R.id.ivJobCardFile);
+
+        llFileLayout = view.findViewById(R.id.llFileLayout);
+
+        ivCancelFile = view.findViewById(R.id.ivCancelFile);
+        ivCancelFile.setOnClickListener(this);
     }
 
     @Override
@@ -245,6 +265,14 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                 });
                 break;
 
+            case R.id.ivUploadFile:
+                ImagePicker.Companion.with(this)
+                        .crop()	    			//Crop image(Optional), Check Customization for more option
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .start();
+                break;
+
             case R.id.etCuttingIssueDate:
                 final Calendar c = Calendar.getInstance();
                 int year, month, day;
@@ -268,41 +296,25 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                 break;
 
             case R.id.etSelectSize:
-                if (!selectedBrand.equals("")) {
-                    if (selectedBrand.equals("KidsMagic")) {
-                        //Kids Magic
-                        Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
-                                android.R.layout.simple_list_item_1, kidsMagicSizesArray), new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                                etSelectSize.setText(kidsMagicSizesArray[position]);
-                            }
-                        });
-                    } else if (selectedBrand.equals("BBaby")) {
-                        //BBbay
-                        Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
-                                android.R.layout.simple_list_item_1, bbabySizesArray), new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                                etSelectSize.setText(bbabySizesArray[position]);
-                            }
-                        });
-                    } else {
-                        //Cotton Blue
-                        Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
-                                android.R.layout.simple_list_item_1, cottonBlueArray), new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                                etSelectSize.setText(cottonBlueArray[position]);
-                            }
-                        });
-                    }
-                }
-
 
                 break;
-        }
 
+            case R.id.ivCancelFile:
+                llFileLayout.setVisibility(View.GONE);
+                ivUploadFile.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK){
+            Uri fileUri = data.getData();
+            llFileLayout.setVisibility(View.VISIBLE);
+            ivUploadFile.setVisibility(View.GONE);
+            ivJobCardFile.setImageURI(fileUri);
+        }
 
     }
 }

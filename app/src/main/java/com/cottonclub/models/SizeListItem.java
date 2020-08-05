@@ -1,6 +1,9 @@
 package com.cottonclub.models;
 
-public class SizeListItem {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class SizeListItem implements Parcelable {
    private String S;
    private String M;
    private String L;
@@ -18,6 +21,7 @@ public class SizeListItem {
    private String size12;
    private String size14;
    private String size16;
+   private String size18;
    private String size20;
    private String size22;
    private String size24;
@@ -34,6 +38,58 @@ public class SizeListItem {
    private String size9b12;
 
    private String designType;
+
+    public SizeListItem(Parcel in) {
+        S = in.readString();
+        M = in.readString();
+        L = in.readString();
+        XL = in.readString();
+        XXL = in.readString();
+        XXXL = in.readString();
+        size1 = in.readString();
+        size2 = in.readString();
+        size3 = in.readString();
+        size4 = in.readString();
+        size5 = in.readString();
+        size6 = in.readString();
+        size8 = in.readString();
+        size10 = in.readString();
+        size12 = in.readString();
+        size14 = in.readString();
+        size16 = in.readString();
+        size18 = in.readString();
+        size20 = in.readString();
+        size22 = in.readString();
+        size24 = in.readString();
+        size26 = in.readString();
+        size28 = in.readString();
+        size30 = in.readString();
+        size32 = in.readString();
+        size34 = in.readString();
+        size36 = in.readString();
+        NB = in.readString();
+        size0b3 = in.readString();
+        size3b6 = in.readString();
+        size6b9 = in.readString();
+        size9b12 = in.readString();
+        designType = in.readString();
+    }
+
+    public static final Creator<SizeListItem> CREATOR = new Creator<SizeListItem>() {
+        @Override
+        public SizeListItem createFromParcel(Parcel in) {
+            return new SizeListItem(in);
+        }
+
+        @Override
+        public SizeListItem[] newArray(int size) {
+            return new SizeListItem[size];
+        }
+    };
+
+    public SizeListItem() {
+
+    }
 
     public String getS() {
         return S;
@@ -289,5 +345,55 @@ public class SizeListItem {
 
     public void setSize9b12(String size9b12) {
         this.size9b12 = size9b12;
+    }
+
+    public String getSize18() {
+        return size18;
+    }
+
+    public void setSize18(String size18) {
+        this.size18 = size18;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(S);
+        parcel.writeString(M);
+        parcel.writeString(L);
+        parcel.writeString(XL);
+        parcel.writeString(XXL);
+        parcel.writeString(XXXL);
+        parcel.writeString(size1);
+        parcel.writeString(size2);
+        parcel.writeString(size3);
+        parcel.writeString(size4);
+        parcel.writeString(size5);
+        parcel.writeString(size6);
+        parcel.writeString(size8);
+        parcel.writeString(size10);
+        parcel.writeString(size12);
+        parcel.writeString(size14);
+        parcel.writeString(size16);
+        parcel.writeString(size18);
+        parcel.writeString(size20);
+        parcel.writeString(size22);
+        parcel.writeString(size24);
+        parcel.writeString(size26);
+        parcel.writeString(size28);
+        parcel.writeString(size30);
+        parcel.writeString(size32);
+        parcel.writeString(size34);
+        parcel.writeString(size36);
+        parcel.writeString(NB);
+        parcel.writeString(size0b3);
+        parcel.writeString(size3b6);
+        parcel.writeString(size6b9);
+        parcel.writeString(size9b12);
+        parcel.writeString(designType);
     }
 }

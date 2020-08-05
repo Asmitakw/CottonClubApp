@@ -79,13 +79,20 @@
                         android:textColor="@color/colorPrimaryText" />
 
                     <TextView
-                        android:id="@+id/tvDesignNumber"
+                        android:id="@+id/tvPartyName"
                         style="@style/CustomSmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:textColor="@color/colorPrimaryText"/>
 
+                    <TextView
+                        android:id="@+id/tvDesignNumber"
+                        style="@style/CustomSmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/colorPrimaryText"/>
 
                     <TextView
                         android:id="@+id/tvDeliveryDate"

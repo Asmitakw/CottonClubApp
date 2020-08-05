@@ -3,6 +3,7 @@ package com.cottonclub.utilities;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -22,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -31,6 +34,7 @@ import android.widget.TextView;
 import com.cottonclub.BuildConfig;
 import com.cottonclub.R;
 import com.cottonclub.interfaces.DialogListener;
+import com.cottonclub.interfaces.ImageDialogActionListener;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -85,6 +89,8 @@ public class Helper {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                if (dialogListener != null)
+                    dialogListener.onButtonClicked(Dialog.BUTTON_POSITIVE);
             }
         });
 
@@ -202,7 +208,7 @@ public class Helper {
         MediaMetadataRetriever mediaMetadataRetriever = null;
         try {
             mediaMetadataRetriever = new MediaMetadataRetriever();
-            if (Build.VERSION.SDK_INT >= 14)
+            if (Build.VERSION.SDK_INT >= 21)
                 mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
             else
                 mediaMetadataRetriever.setDataSource(videoPath);
@@ -269,47 +275,6 @@ public class Helper {
         }
     }
 
-    public static String getCurrentVersionName(Context context) {
-        PackageInfo pInfo = null;
-        try {
-            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        String version = pInfo.versionName;
-        return version;
-    }
-
-
-    public static int getCurrentVersionCode(Context context) {
-        PackageInfo pInfo = null;
-        try {
-            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        int code = pInfo.versionCode;
-        return code;
-    }
-
-    public static void Log(String tag, String msg) {
-        if (msg == null)
-            return;
-
-        if (BuildConfig.DEBUG)
-            android.util.Log.v(tag, msg);
-
-    }
-
-    public static void errorLog(String tag, String msg) {
-        if (msg == null)
-            return;
-
-        if (BuildConfig.DEBUG)
-            android.util.Log.e(tag, msg);
-
-    }
-
     //Added for Image pick
     public static Uri getOutputMediaFileUri() {
         return Uri.fromFile(getOutputMediaFile());
@@ -331,9 +296,120 @@ public class Helper {
         return mediaFile;
     }
 
+    @TargetApi(Build.VERSION_CODES.P)
+    public static String getPath(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
+
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+    public static String getDataColumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
 
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -345,7 +421,7 @@ public class Helper {
         String[] projection = {MediaStore.Images.Media.DATA};
 
         Cursor cursor = null;
-        if (Build.VERSION.SDK_INT > 19) {
+        if (Build.VERSION.SDK_INT > 21) {
             try {
                 // Will return "image:x*"
                 String wholeID = DocumentsContract.getDocumentId(uri);
@@ -420,6 +496,66 @@ public class Helper {
         Calendar cal = Calendar.getInstance();
         return dateFormat.format(cal.getTime());
     }
+
+    public static String getFileName(String path) {
+        File file = new File(path);
+        return file.getName();
+    }
+
+    //Method to upload image
+    public static void showImagePickDialog(final Context context, String title, final ImageDialogActionListener listener) {
+        final Dialog dialog= new Dialog(context, R.style.CustomMediumText);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_add_photo_option, null);
+        dialog.setContentView(view);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height =     WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+
+        final TextView tvCamera= (TextView) view.findViewById(R.id.tvCamera);
+        final TextView tvGallery = (TextView) view.findViewById(R.id.tvGallery);
+        final ImageView ivCamera = (ImageView)view.findViewById(R.id.ivCamera);
+        final ImageView ivGallery = (ImageView)view.findViewById(R.id.ivGallery);
+        final TextView tvUploadImage = (TextView)view.findViewById(R.id.tvUploadImage);
+
+        tvUploadImage.setText(title);
+
+        //Adding animation effects to the view
+        Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(context, R.anim.animation_rotate);
+        Animation zoom_in = AnimationUtils.loadAnimation(context, R.anim.animation_zoom_in);
+        Animation zoom_animation = AnimationUtils.loadAnimation(context, R.anim.animation_zoom_in);
+
+        tvUploadImage.startAnimation(zoom_animation);
+        tvCamera.startAnimation(zoom_in);
+        tvGallery.startAnimation(zoom_in);
+
+        ivCamera.startAnimation(hyperspaceJumpAnimation);
+        ivGallery.startAnimation(hyperspaceJumpAnimation);
+
+        ivCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (listener != null)
+                    listener.onCameraOptionClicked();
+            }
+        });
+
+        ivGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                if (listener != null)
+                    listener.onGalleryOptionClicked();
+            }
+        });
+
+        dialog.setCancelable(true);
+        dialog.show();
+    }
+
 }
 
 

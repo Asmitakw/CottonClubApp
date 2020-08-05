@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_calendar"
             android:text="20th July 2020"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/colorGreyDark" />
 
         <View
             android:layout_width="match_parent"
@@ -81,7 +81,6 @@
                 android:drawableEnd="@drawable/ic_drop_down"
                 android:editable="false"
                 android:drawableStart="@drawable/ic_tag"
-                android:focusableInTouchMode="false"
                 android:hint="@string/select_brand"
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/cursor_drawable" />
@@ -1463,19 +1462,19 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="@dimen/dimen_15"
+            android:layout_marginBottom="@dimen/dimen_forty"
             android:background="@color/colorGreyDark" />
 
-
         <com.cottonclub.custom_views.CustomButtonRegular
-            android:id="@+id/btnCreateOrder"
+            android:id="@+id/btnUpdateOrder"
             style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginBottom="@dimen/dimen_forty"
             android:background="@drawable/rounded_button"
-            android:text="@string/create_order"
+            android:text="@string/update_order"
             android:textAllCaps="true"
             android:textSize="20sp" />
 

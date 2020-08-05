@@ -16,8 +16,22 @@
     <dimen name="medium_icon">40dp</dimen>
     <dimen name="large_icon">50dp</dimen>
     <dimen name="extra_large_icon">150dp</dimen>
+    <dimen name="dimen_25">25dp</dimen>
+    <dimen name="dimen_8">8dp</dimen>
+    <dimen name="dimen_10">10dp</dimen>
+    <dimen name="dimen_15">15dp</dimen>
+    <dimen name="dimen_20">20dp</dimen>
     <dimen name="dimen_eighty">80dp</dimen>
+    <dimen name="dimen_hundred">100dp</dimen>
+    <dimen name="dimen_150">150dp</dimen>
+    <dimen name="dimen_180">180dp</dimen>
+    <dimen name="dimen_200">200dp</dimen>
+    <dimen name="dimen_305">305dp</dimen>
+    <dimen name="dimen_300">300dp</dimen>
+    <dimen name="dimen_350">350dp</dimen>
+    <dimen name="dimen_400">400dp</dimen>
     <dimen name="dimen_forty">40dp</dimen>
     <dimen name="dimen_twenty">20dp</dimen>
+    <dimen name="dimen_5">5dp</dimen>
 
 </resources>

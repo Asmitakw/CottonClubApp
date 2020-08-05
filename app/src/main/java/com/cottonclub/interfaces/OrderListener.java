@@ -1,6 +1,8 @@
 package com.cottonclub.interfaces;
 
-public interface DialogListener 
+import com.cottonclub.models.OrderItem;
+
+public interface OrderListener
 {
-	public void onButtonClicked(int type);
+	public void sendOrder(OrderItem orderItem);
 }

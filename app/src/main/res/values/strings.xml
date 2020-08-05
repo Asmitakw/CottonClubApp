@@ -112,7 +112,8 @@
     <string name="boys_tee_8_6">8*6 Boys T-shirt</string>
     <string name="boys_tee_2_6">2*6 Boys T-shirt</string>
     <string name="girls_tee_20_36">20*36 GirlsTop</string>
-    <string name="kms">1–5 Kids Magic Suit</string>
+    <string name="kmsb">1–5 Kids Magic Suit (Boys)</string>
+    <string name="kmsg">16–24 Kids Magic Suit (Girls)</string>
     <string name="girls_romper">Girls Romper</string>
     <string name="boys_romper">Boys Romper</string>
     <string name="boys_top">Boys Top</string>
@@ -123,6 +124,30 @@
     <string name="girls_night_suit">Girls Night Suit</string>
     <string name="boys_trouser">Boys Trouser</string>
     <string name="baba_suit">Baba Suit</string>
+    <string name="order_details">Order Details</string>
+    <string name="design_type">Design Type</string>
+    <string name="size_18">18</string>
+    <string name="design_code">Design Code</string>
+    <string name="party_name_list" />
+    <string name="pant_2_6">2*6 Pant</string>
+    <string name="pant_8_16">8*16 Pant</string>
+    <string name="update_order">Update Order</string>
+    <string name="order_updated_successfully">Order Updated Successfully</string>
+    <string name="sort_by">Sort By</string>
+    <string name="filter">Filter</string>
+    <string name="filter_by">Filter by</string>
+    <string name="sub_filter">Sub Filter</string>
+    <string name="failed_to_pick_image">Failed to pick Image</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="str_upload_profile_picture">Upload Profile Picture</string>
+    <string name="run_without_interruption">This application requires permissions to run without interruption</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="if_you_reject_permission"><![CDATA[If you reject permission, you cannot use this service\n\nPlease turn on permissions at [Setting] > [Permission]]]></string>
+    <string name="go_to_setting">Go to Settings</string>
+    <string name="no_records">No Records found for this filter.</string>
+    <string name="upload_jobcard">Upload Job Card</string>
 
 
     <string-array name="brand">
@@ -130,6 +155,39 @@
         <item>BBaby</item>
         <item>Cotton Blue</item>
     </string-array>
+
+    //Kids Magic
+    <string-array name="kidsMagicDesignType">
+        <item>MN</item>
+        <item>GT</item>
+        <item>P</item>
+        <item>KMS(B)</item>
+        <item>KMS(G)</item>
+        <item>Numeric</item>
+    </string-array>
+
+    //B Baby
+    <string-array name="bBabyDesignType">
+        <item>BBB</item>
+        <item>BBF</item>
+        <item>BBG</item>
+        <item>BBS</item>
+        <item>BT</item>
+        <item>BBNSG</item>
+        <item>BBNSB</item>
+        <item>GT</item>
+        <item>BBGR</item>
+        <item>BBBR</item>
+    </string-array>
+
+    //Cotton Blue
+    <string-array name="cottonBlueDesignType">
+        <item>ST</item>
+        <item>GM</item>
+        <item>PR</item>
+        <item>Numeric</item>
+    </string-array>
+
 
     <string-array name="kidsMagicSizes">
         <item>2–6</item>
@@ -151,6 +209,11 @@
         <item>XXL</item>
     </string-array>
 
+    <string-array name="filter">
+        <item>Party Name</item>
+        <item>Order Number</item>
+    </string-array>
+
     <string-array name="type">
         <item>Full sleeves</item>
         <item>Half sleeves</item>
@@ -160,5 +223,7 @@
         <item>2*6 Pant</item>
         <item>8*16 Pant</item>
     </string-array>
+
+
 
 </resources>
