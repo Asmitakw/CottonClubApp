@@ -1,12 +1,16 @@
 package com.cottonclub.fragments.ui.view_job_card;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cottonclub.R;
+import com.cottonclub.activities.ViewJobCardDetails;
+import com.cottonclub.activities.ViewOrderDetails;
 import com.cottonclub.adapters.JobCardAdapter;
+import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.JobCardItem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,7 +52,6 @@ public class ViewJobCardFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
         ordersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -59,8 +62,20 @@ public class ViewJobCardFragment extends Fragment {
                         jobCardList.add(jobCardItem);
                     }
                 }
+                jobCardAdapter = new JobCardAdapter(getActivity(), jobCardList, new RecyclerViewClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("jobCard", jobCardList.get(position));
+                        bundle.putString("designCode", jobCardList.get(position).getDesignCode());
+                        bundle.putParcelable("size", jobCardList.get(position).getSizeItem());
 
-                jobCardAdapter = new JobCardAdapter(getActivity(), jobCardList);
+                        Intent order_details_intent = new Intent(getActivity(), ViewJobCardDetails.class);
+                        order_details_intent.putExtra("extraWithOrder", bundle);
+                        startActivity(order_details_intent);
+
+                    }
+                });
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
                 rvViewJobCard.setLayoutManager(mLayoutManager);
                 rvViewJobCard.setItemAnimator(new DefaultItemAnimator());

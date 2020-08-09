@@ -4,15 +4,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cottonclub.R;
+import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.OrderItem;
 import com.cottonclub.utilities.Constants;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -22,15 +26,22 @@ import androidx.recyclerview.widget.RecyclerView;
 public class JobCardAdapter extends RecyclerView.Adapter<JobCardAdapter.ViewHolder> {
     private List<JobCardItem> jobCardList;
     private Context context;
+    private RecyclerViewClickListener recyclerViewClickListener;
 
-    public JobCardAdapter(Context context, List<JobCardItem> jobCardList) {
+    public JobCardAdapter(Context context, List<JobCardItem> jobCardList,
+                          RecyclerViewClickListener recyclerViewClickListener) {
         this.jobCardList = jobCardList;
         this.context = context;
+        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvJobCardNumber, tvBrandName, tvDesignNumber, tvMasterName, tvCuttingIssueDate,
                 tvCallCuttingInCharge, tvJobCardReminder;
+
+        CardView cvJobCardDetails;
+
+        ImageView ivJobCardFile;
 
         //set onclick listener to the entire view
         public ViewHolder(View view) {
@@ -42,6 +53,8 @@ public class JobCardAdapter extends RecyclerView.Adapter<JobCardAdapter.ViewHold
             tvCuttingIssueDate = view.findViewById(R.id.tvCuttingIssueDate);
             tvCallCuttingInCharge = view.findViewById(R.id.tvCallCuttingInCharge);
             tvJobCardReminder = view.findViewById(R.id.tvJobCardReminder);
+            ivJobCardFile = view.findViewById(R.id.ivJobCardFile);
+            cvJobCardDetails = view.findViewById(R.id.cvJobCardDetails);
         }
 
     }
@@ -56,7 +69,7 @@ public class JobCardAdapter extends RecyclerView.Adapter<JobCardAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder,final int position) {
         final JobCardItem jobCardItem = jobCardList.get(position);
         holder.tvJobCardNumber.setText(String.format("%s%s%s%s", context.getString(R.string.job_card_number)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, jobCardItem.getJobCardNumber()));
@@ -69,6 +82,15 @@ public class JobCardAdapter extends RecyclerView.Adapter<JobCardAdapter.ViewHold
         holder.tvCuttingIssueDate.setText(String.format("%s%s%s%s", context.getString(R.string.cutting_issue_date)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, jobCardItem.getCuttingIssueDate()));
 
+        //Picasso.get().load(jobCardItem.getJobCardFilePath()).into(holder.ivJobCardFile);
+
+        holder.cvJobCardDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewClickListener.onClick(view, position);
+
+            }
+        });
     }
 
 

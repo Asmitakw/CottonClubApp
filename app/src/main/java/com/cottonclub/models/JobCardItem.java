@@ -1,18 +1,62 @@
 package com.cottonclub.models;
 
-public class JobCardItem {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class JobCardItem implements Parcelable {
+    private String jobCardId;
     private String jobCardCreateDate;
     private String brand;
+    private String jobCardNumber;
+    private String designCode;
     private String designNumber;
     private String quantity;
-    private String jobCardNumber;
     private String size;
     private String fabricType;
     private String fabricConsumed;
+    private String fabricUnit;
     private String masterName;
+    private String totalPieces;
     private String cuttingIssueDate;
     private String jobCardDate;
     private String cuttingInchargeNumber;
+    private SizeListItem sizeItem;
+    private String jobCardFilePath;
+
+    protected JobCardItem(Parcel in) {
+        jobCardCreateDate = in.readString();
+        brand = in.readString();
+        jobCardNumber = in.readString();
+        designCode = in.readString();
+        designNumber = in.readString();
+        quantity = in.readString();
+        size = in.readString();
+        fabricType = in.readString();
+        fabricConsumed = in.readString();
+        fabricUnit = in.readString();
+        masterName = in.readString();
+        totalPieces = in.readString();
+        cuttingIssueDate = in.readString();
+        jobCardDate = in.readString();
+        cuttingInchargeNumber = in.readString();
+        sizeItem = in.readParcelable(SizeListItem.class.getClassLoader());
+        jobCardFilePath = in.readString();
+    }
+
+    public JobCardItem() {
+    }
+
+    public static final Creator<JobCardItem> CREATOR = new Creator<JobCardItem>() {
+        @Override
+        public JobCardItem createFromParcel(Parcel in) {
+            return new JobCardItem(in);
+        }
+
+        @Override
+        public JobCardItem[] newArray(int size) {
+            return new JobCardItem[size];
+        }
+    };
 
     public String getJobCardCreateDate() {
         return jobCardCreateDate;
@@ -108,5 +152,79 @@ public class JobCardItem {
 
     public void setCuttingInchargeNumber(String cuttingInchargeNumber) {
         this.cuttingInchargeNumber = cuttingInchargeNumber;
+    }
+
+    public String getDesignCode() {
+        return designCode;
+    }
+
+    public void setDesignCode(String designCode) {
+        this.designCode = designCode;
+    }
+
+    public SizeListItem getSizeItem() {
+        return sizeItem;
+    }
+
+    public void setSizeItem(SizeListItem sizeItem) {
+        this.sizeItem = sizeItem;
+    }
+
+    public String getFabricUnit() {
+        return fabricUnit;
+    }
+
+    public void setFabricUnit(String fabricUnit) {
+        this.fabricUnit = fabricUnit;
+    }
+
+    public String getJobCardFilePath() {
+        return jobCardFilePath;
+    }
+
+    public void setJobCardFilePath(String jobCardFilePath) {
+        this.jobCardFilePath = jobCardFilePath;
+    }
+
+    public String getTotalPieces() {
+        return totalPieces;
+    }
+
+    public void setTotalPieces(String totalPieces) {
+        this.totalPieces = totalPieces;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(jobCardCreateDate);
+        parcel.writeString(brand);
+        parcel.writeString(jobCardNumber);
+        parcel.writeString(designCode);
+        parcel.writeString(designNumber);
+        parcel.writeString(quantity);
+        parcel.writeString(size);
+        parcel.writeString(fabricType);
+        parcel.writeString(fabricConsumed);
+        parcel.writeString(fabricUnit);
+        parcel.writeString(masterName);
+        parcel.writeString(totalPieces);
+        parcel.writeString(cuttingIssueDate);
+        parcel.writeString(jobCardDate);
+        parcel.writeString(cuttingInchargeNumber);
+        parcel.writeParcelable(sizeItem, i);
+        parcel.writeString(jobCardFilePath);
+    }
+
+    public String getJobCardId() {
+        return jobCardId;
+    }
+
+    public void setJobCardId(String jobCardId) {
+        this.jobCardId = jobCardId;
     }
 }

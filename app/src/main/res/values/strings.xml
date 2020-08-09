@@ -148,11 +148,18 @@
     <string name="go_to_setting">Go to Settings</string>
     <string name="no_records">No Records found for this filter.</string>
     <string name="upload_jobcard">Upload Job Card</string>
+    <string name="please_enter_upload_job_card">Please Upload Job Card</string>
+    <string name="unit">Unit</string>
+    <string name="meters">m(s)</string>
+    <string name="kgs">Kg(s)</string>
+    <string name="selectFabric">Select Fabric</string>
+    <string name="please_select_fabric_unit">Please select Fabric Unit</string>
+    <string name="update_job_Card">Update Job Card</string>
 
 
     <string-array name="brand">
         <item>Kids Magic</item>
-        <item>BBaby</item>
+        <item>Be Baby</item>
         <item>Cotton Blue</item>
     </string-array>
 
@@ -224,6 +231,20 @@
         <item>8*16 Pant</item>
     </string-array>
 
+    <string-array name="units">
+        <item>Kg(s)</item>
+        <item>m(s)</item>
+    </string-array>
 
+    <string-array name="fabricType">
+        <item>Sinker</item>
+        <item>Interlock</item>
+        <item>LDH FAB (Plain)</item>
+        <item>LDH FAB (Stripe)</item>
+        <item>Fleece</item>
+        <item>Textile</item>
+        <item>Lycra</item>
+        <item>Bombay FAB</item>
+    </string-array>
 
 </resources>

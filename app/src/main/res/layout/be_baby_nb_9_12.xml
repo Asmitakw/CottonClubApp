@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/llBBabyNB912Parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.cottonclub.custom_views.CustomTextView
+            style="@style/CustomMediumText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/sizes" />
+
+        <com.cottonclub.custom_views.CustomTextView
+            style="@style/CustomMediumText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/no_of_pieces" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.cottonclub.custom_views.CustomTextView
+            style="@style/CustomMediumText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/size_NB"
+            android:textStyle="bold" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etBbabyNB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="35dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorGreyDark"
+            android:drawableEnd="@drawable/ic_edit"
+            android:gravity="center"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.cottonclub.custom_views.CustomTextView
+            style="@style/CustomMediumText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/size_03"
+            android:textStyle="bold" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etBbaby03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="35dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorGreyDark"
+            android:drawableEnd="@drawable/ic_edit"
+            android:gravity="center"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.cottonclub.custom_views.CustomTextView
+            style="@style/CustomMediumText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/size_3_6"
+            android:textStyle="bold" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etBbaby36"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="35dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorGreyDark"
+            android:drawableEnd="@drawable/ic_edit"
+            android:gravity="center"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.cottonclub.custom_views.CustomTextView
+            style="@style/CustomMediumText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/size_69"
+            android:textStyle="bold" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etBbaby69"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="35dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorGreyDark"
+            android:drawableEnd="@drawable/ic_edit"
+            android:gravity="center"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.cottonclub.custom_views.CustomTextView
+            style="@style/CustomMediumText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/size_912"
+            android:textStyle="bold" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etBbaby912"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="35dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorGreyDark"
+            android:drawableEnd="@drawable/ic_edit"
+            android:gravity="center"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+</LinearLayout>

@@ -4,7 +4,7 @@ public class Constants {
 
     public static String EMPTY_STRING = " ";
     public static String KIDS_MAGIC = "Kids Magic";
-    public static String BBABY = "BBaby";
+    public static String BBABY = "Be Baby";
     public static String COTTON_BLUE = "Cotton Blue";
     public static String DESIGNER = "Designer";
 

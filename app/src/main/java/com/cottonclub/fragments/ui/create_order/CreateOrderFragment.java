@@ -207,8 +207,6 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         etDesignCode.setOnClickListener(this);
         setDefaultSizeByQuantity();
         setUiByBrand();
-
-
     }
 
     private void setDefaultSizeByQuantity() {
@@ -1398,6 +1396,8 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         etSelectType.setText("");
         etQuantity.setText("");
         etDesignCode.setText("");
+        selectedBrand = "";
+        selectedDesignType = "";
 
         llBBabyNB912Parent.setVisibility(View.GONE);
         llBBabyS3XLParent.setVisibility(View.GONE);

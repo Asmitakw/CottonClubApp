@@ -38,7 +38,6 @@ public class OrderItem implements Parcelable {
     }
 
     public OrderItem() {
-        orderNumber = "1234";
     }
 
     public static final Creator<OrderItem> CREATOR = new Creator<OrderItem>() {
