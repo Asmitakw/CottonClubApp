@@ -604,15 +604,13 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                     }
 
                 } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
-                    if (!TextUtils.isEmpty(etBbabySizeS.getText().toString().trim())
-                            || !TextUtils.isEmpty(etBbabySizeM.getText().toString().trim())
+                    if (!TextUtils.isEmpty(etBbabySizeM.getText().toString().trim())
                             || !TextUtils.isEmpty(etBbabySizeL.getText().toString().trim())
                             || !TextUtils.isEmpty(etBbabySizeXL.getText().toString().trim())
                             || !TextUtils.isEmpty(etBbabySizeXXL.getText().toString().trim())
                             || !TextUtils.isEmpty(etBbabySizeXXXL.getText().toString().trim())) {
 
-                        int answer = Integer.parseInt(etBbabySizeS.getText().toString().trim()) +
-                                Integer.parseInt(etBbabySizeM.getText().toString().trim()) +
+                        int answer = Integer.parseInt(etBbabySizeM.getText().toString().trim()) +
                                 Integer.parseInt(etBbabySizeL.getText().toString().trim()) +
                                 Integer.parseInt(etBbabySizeXL.getText().toString().trim()) +
                                 Integer.parseInt(etBbabySizeXXL.getText().toString().trim()) +
@@ -922,310 +920,6 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        btnCreateOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validate();
-            }
-        });
-
-        orderRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    maxId = (snapshot.getChildrenCount());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
-    private void validate() {
-        if (TextUtils.isEmpty(etPartyName.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_party_name));
-            etPartyName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etBrandName.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_brand_name));
-            etBrandName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etOrderNumber.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_order_number));
-            etOrderNumber.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etDesignNumber.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_design_number));
-            etDesignNumber.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etQuantity.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_quantity));
-            etQuantity.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(etSelectSize.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_select_size));
-            etSelectSize.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(etSelectType.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_select_type));
-            etSelectType.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etDeliveryDate.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_select_delivery_date));
-            etDeliveryDate.requestFocus();
-            return;
-        }
-        sendOrderDetails();
-    }
-
-    private void sendOrderDetails() {
-
-        isClicked = false;
-
-        SimpleDateFormat format = new SimpleDateFormat("d");
-
-        format = new SimpleDateFormat("d MMM");
-
-        String currentDate = format.format(new Date());
-
-        mDialog = Helper.showProgressDialog(getActivity());
-        String orderCreationDate = tvDateOrderCreation.getText().toString();
-        String partyName = etPartyName.getText().toString();
-
-        String brandName = etBrandName.getText().toString();
-        String designNumber = etDesignNumber.getText().toString();
-        String designCode = etDesignCode.getText().toString();
-        String orderNumber = etOrderNumber.getText().toString();
-        String deliveryDate = etDeliveryDate.getText().toString();
-        String quantity = etQuantity.getText().toString();
-        String selectSize = etSelectSize.getText().toString();
-        String totalPieces = etTotalNumberPieces.getText().toString();
-        String type = etSelectType.getText().toString();
-
-        sendSizeDetails();
-
-        orderItem.setOrderId(String.valueOf(maxId + 1));
-        orderItem.setOrderCreationDate(orderCreationDate);
-        orderItem.setPartyName(partyName);
-        orderItem.setBrandName(brandName);
-        orderItem.setDesignCode(designCode);
-        orderItem.setDesignNumber(designNumber);
-        orderItem.setOrderNumber(orderNumber);
-        orderItem.setDeliveryDate(deliveryDate);
-        orderItem.setSelectSize(selectSize);
-        orderItem.setQuantity(quantity);
-        orderItem.setTotalPieces(totalPieces);
-        orderItem.setType(type);
-        orderItem.setOrderDate(currentDate);
-        orderItem.setSizeItem(sizeListItem);
-
-
-        orderRef.child(String.valueOf(maxId + 1)).setValue(orderItem, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                mDialog.dismiss();
-                Helper.showOkClickDialog(getActivity(), getString(R.string.order_created_successfully), new DialogListener() {
-                    @Override
-                    public void onButtonClicked(int type) {
-                        Intent homeIntent = new Intent(getActivity(), MainActivity.class);
-                        startActivity(homeIntent);
-                    }
-                });
-                clearData();
-                etPartyName.setText("");
-            }
-        });
-    }
-
-    private void getPartyListing() {
-        mDialog = Helper.showProgressDialog(getActivity());
-        orderRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mDialog.dismiss();
-
-                if (isClicked) {
-                    if (partyList.size() == 0) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            orderItem = dataSnapshot.getValue(OrderItem.class);
-                            partyList.add(orderItem);
-                        }
-                    }
-                    ivPartyNameList.performClick();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-
-            case R.id.ivPartyNameList:
-                isClicked = true;
-                if (partyList.size() == 0) {
-                    getPartyListing();
-                } else {
-
-                    HashSet hashSet = new HashSet();
-                    for (int i = 0; i < partyList.size(); i++) {
-                        OrderItem orderItem = partyList.get(i);
-                        hashSet.add(orderItem.getPartyName());
-                    }
-                    final ArrayList<String> arrayList = new ArrayList<>();
-                    arrayList.addAll(hashSet);
-
-                    Helper.showDropDown(etPartyName, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, arrayList), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            OrderItem orderItem = partyList.get(position);
-                            etPartyName.setText(arrayList.get(position));
-                            arrayList.clear();
-                        }
-                    });
-                }
-                break;
-
-            case R.id.etBrandName:
-                Helper.showDropDown(etBrandName, new ArrayAdapter<>(requireActivity(),
-                        android.R.layout.simple_list_item_1, brandArray), new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        clearData();
-                        clearSizeFields();
-                        etBrandName.setText(brandArray[position]);
-                        if (position == 0) {
-                            selectedBrand = Constants.KIDS_MAGIC;
-                        } else if (position == 1) {
-                            selectedBrand = Constants.BBABY;
-                        } else {
-                            selectedBrand = Constants.COTTON_BLUE;
-                        }
-                    }
-                });
-                break;
-
-            case R.id.etSelectType:
-                Helper.showDropDown(etSelectType, new ArrayAdapter<>(requireActivity(),
-                        android.R.layout.simple_list_item_1, typeArray), new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        etSelectType.setText(typeArray[position]);
-                    }
-                });
-                break;
-
-            case R.id.etDesignCode:
-                if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, kidsMagicDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(kidsMagicDesignTypeArray[position]);
-                        }
-                    });
-                } else if (selectedBrand.equals(Constants.BBABY)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, bBabyDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(bBabyDesignTypeArray[position]);
-                        }
-                    });
-
-                } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, cottonBlueDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(cottonBlueDesignTypeArray[position]);
-                        }
-                    });
-                }
-
-                break;
-
-            case R.id.etDeliveryDate:
-                final Calendar c = Calendar.getInstance();
-                int year, month, day;
-                year = c.get(Calendar.YEAR);
-                month = c.get(Calendar.MONTH);
-                day = c.get(Calendar.DAY_OF_MONTH);
-                datePickerDialog = new DatePickerDialog(requireActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                etDeliveryDate.setText(dayOfMonth + "/" + (monthOfYear + 1)
-                                        + "/" + year);
-                            }
-                        }, year, month, day);
-                datePickerDialog.getDatePicker().setMinDate(System
-                        .currentTimeMillis() - 1000);
-                datePickerDialog.show();
-                break;
-
-            case R.id.etSelectSize:
-                if (isKidsMagicP) {
-                    Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etSelectSize.setText(pantArray[position]);
-                            if (position == 0) {
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicNumeric.setVisibility(View.GONE);
-
-                                llKidsMagicMN.setVisibility(View.VISIBLE);
-                            } else {
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicMN.setVisibility(View.GONE);
-
-                                llKidsMagicNumeric.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
-                }
-                break;
-        }
-    }
-
     private void setDefaultZero() {
 
         if (etKidsMagicMNSize2.getText().toString().equals("")) {
@@ -1533,8 +1227,8 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                 sizeListItem.setSize16(etKidsMagicNumeric16.getText().toString());
                 sizeListItem.setDesignType(selectedDesignType);
 
-            } else if(selectedDesignType.equals(Constants.PANT)){
-                if(etSelectSize.getText().toString().equals(getString(R.string.pant_2_6))){
+            } else if (selectedDesignType.equals(Constants.PANT)) {
+                if (etSelectSize.getText().toString().equals(getString(R.string.pant_2_6))) {
                     sizeListItem = new SizeListItem();
                     sizeListItem.setSize2(etKidsMagicMNSize2.getText().toString());
                     sizeListItem.setSize3(etKidsMagicMNSize3.getText().toString());
@@ -1543,7 +1237,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                     sizeListItem.setSize6(etKidsMagicMNSize6.getText().toString());
                     sizeListItem.setDesignType(selectedDesignType);
 
-                }else if(etSelectSize.getText().toString().equals(getString(R.string.pant_8_16))){
+                } else if (etSelectSize.getText().toString().equals(getString(R.string.pant_8_16))) {
                     sizeListItem = new SizeListItem();
                     sizeListItem.setSize8(etKidsMagicNumeric8.getText().toString());
                     sizeListItem.setSize10(etKidsMagicNumeric10.getText().toString());
@@ -1552,10 +1246,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                     sizeListItem.setSize16(etKidsMagicNumeric16.getText().toString());
                     sizeListItem.setDesignType(selectedDesignType);
                 }
-            }
-
-
-            else if (selectedDesignType.equals(Constants.GT)) {
+            } else if (selectedDesignType.equals(Constants.GT)) {
                 sizeListItem = new SizeListItem();
                 sizeListItem.setSize20(etKidsMagicGT20.getText().toString());
                 sizeListItem.setSize22(etKidsMagicGT22.getText().toString());
@@ -1599,4 +1290,309 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         }
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        btnCreateOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validate();
+            }
+        });
+
+        orderRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    maxId = (snapshot.getChildrenCount());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void validate() {
+        if (TextUtils.isEmpty(etPartyName.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_party_name));
+            etPartyName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etBrandName.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_brand_name));
+            etBrandName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etOrderNumber.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_order_number));
+            etOrderNumber.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etDesignNumber.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_design_number));
+            etDesignNumber.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etQuantity.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_quantity));
+            etQuantity.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(etSelectSize.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_select_size));
+            etSelectSize.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(etSelectType.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_select_type));
+            etSelectType.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etDeliveryDate.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_select_delivery_date));
+            etDeliveryDate.requestFocus();
+            return;
+        }
+        sendOrderDetails();
+    }
+
+    private void sendOrderDetails() {
+
+        isClicked = false;
+
+        SimpleDateFormat format = new SimpleDateFormat("d");
+
+        format = new SimpleDateFormat("d MMM");
+
+        String currentDate = format.format(new Date());
+
+        mDialog = Helper.showProgressDialog(getActivity());
+        String orderCreationDate = tvDateOrderCreation.getText().toString();
+        String partyName = etPartyName.getText().toString();
+
+        String brandName = etBrandName.getText().toString();
+        String designNumber = etDesignNumber.getText().toString();
+        String designCode = etDesignCode.getText().toString();
+        String orderNumber = etOrderNumber.getText().toString();
+        String deliveryDate = etDeliveryDate.getText().toString();
+        String quantity = etQuantity.getText().toString();
+        String selectSize = etSelectSize.getText().toString();
+        String totalPieces = etTotalNumberPieces.getText().toString();
+        String type = etSelectType.getText().toString();
+
+        sendSizeDetails();
+
+        orderItem.setOrderId(String.valueOf(maxId + 1));
+        orderItem.setOrderCreationDate(orderCreationDate);
+        orderItem.setPartyName(partyName);
+        orderItem.setBrandName(brandName);
+        orderItem.setDesignCode(designCode);
+        orderItem.setDesignNumber(designNumber);
+        orderItem.setOrderNumber(orderNumber);
+        orderItem.setDeliveryDate(deliveryDate);
+        orderItem.setSelectSize(selectSize);
+        orderItem.setQuantity(quantity);
+        orderItem.setTotalPieces(totalPieces);
+        orderItem.setType(type);
+        orderItem.setOrderDate(currentDate);
+        orderItem.setSizeItem(sizeListItem);
+
+        orderRef.child(String.valueOf(maxId + 1)).setValue(orderItem, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                mDialog.dismiss();
+                Helper.showOkClickDialog(getActivity(), getString(R.string.order_created_successfully), new DialogListener() {
+                    @Override
+                    public void onButtonClicked(int type) {
+                        Intent homeIntent = new Intent(getActivity(), MainActivity.class);
+                        startActivity(homeIntent);
+                    }
+                });
+                clearData();
+                etPartyName.setText("");
+            }
+        });
+    }
+
+    private void getPartyListing() {
+        mDialog = Helper.showProgressDialog(getActivity());
+        orderRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mDialog.dismiss();
+
+                if (isClicked) {
+                    if (partyList.size() == 0) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            orderItem = dataSnapshot.getValue(OrderItem.class);
+                            partyList.add(orderItem);
+                        }
+                    }
+                    ivPartyNameList.performClick();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.ivPartyNameList:
+                isClicked = true;
+                if (partyList.size() == 0) {
+                    getPartyListing();
+                } else {
+
+                    HashSet hashSet = new HashSet();
+                    for (int i = 0; i < partyList.size(); i++) {
+                        OrderItem orderItem = partyList.get(i);
+                        hashSet.add(orderItem.getPartyName());
+                    }
+                    final ArrayList<String> arrayList = new ArrayList<>();
+                    arrayList.addAll(hashSet);
+
+                    Helper.showDropDown(etPartyName, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, arrayList), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            OrderItem orderItem = partyList.get(position);
+                            etPartyName.setText(arrayList.get(position));
+                            arrayList.clear();
+                        }
+                    });
+                }
+                break;
+
+            case R.id.etBrandName:
+                Helper.showDropDown(etBrandName, new ArrayAdapter<>(requireActivity(),
+                        android.R.layout.simple_list_item_1, brandArray), new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        clearData();
+                        clearSizeFields();
+                        etBrandName.setText(brandArray[position]);
+                        if (position == 0) {
+                            selectedBrand = Constants.KIDS_MAGIC;
+                        } else if (position == 1) {
+                            selectedBrand = Constants.BBABY;
+                        } else {
+                            selectedBrand = Constants.COTTON_BLUE;
+                        }
+                    }
+                });
+                break;
+
+            case R.id.etSelectType:
+                Helper.showDropDown(etSelectType, new ArrayAdapter<>(requireActivity(),
+                        android.R.layout.simple_list_item_1, typeArray), new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        etSelectType.setText(typeArray[position]);
+                    }
+                });
+                break;
+
+            case R.id.etDesignCode:
+                if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, kidsMagicDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(kidsMagicDesignTypeArray[position]);
+                        }
+                    });
+                } else if (selectedBrand.equals(Constants.BBABY)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, bBabyDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(bBabyDesignTypeArray[position]);
+                        }
+                    });
+
+                } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, cottonBlueDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(cottonBlueDesignTypeArray[position]);
+                        }
+                    });
+                }
+
+                break;
+
+            case R.id.etDeliveryDate:
+                final Calendar c = Calendar.getInstance();
+                int year, month, day;
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                day = c.get(Calendar.DAY_OF_MONTH);
+                datePickerDialog = new DatePickerDialog(requireActivity(),
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                etDeliveryDate.setText(dayOfMonth + "/" + (monthOfYear + 1)
+                                        + "/" + year);
+                            }
+                        }, year, month, day);
+                datePickerDialog.getDatePicker().setMinDate(System
+                        .currentTimeMillis() - 1000);
+                datePickerDialog.show();
+                break;
+
+            case R.id.etSelectSize:
+                if (isKidsMagicP) {
+                    Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etSelectSize.setText(pantArray[position]);
+                            if (position == 0) {
+                                llBBabyS3XLParent.setVisibility(View.GONE);
+                                llBBabyNB912Parent.setVisibility(View.GONE);
+                                llKMS.setVisibility(View.GONE);
+                                llBBabyS3XLParent.setVisibility(View.GONE);
+                                llKidsMagicGT.setVisibility(View.GONE);
+                                llKidsMagicNumeric.setVisibility(View.GONE);
+
+                                llKidsMagicMN.setVisibility(View.VISIBLE);
+                            } else {
+                                llBBabyS3XLParent.setVisibility(View.GONE);
+                                llBBabyNB912Parent.setVisibility(View.GONE);
+                                llKMS.setVisibility(View.GONE);
+                                llBBabyS3XLParent.setVisibility(View.GONE);
+                                llKidsMagicGT.setVisibility(View.GONE);
+                                llKidsMagicMN.setVisibility(View.GONE);
+
+                                llKidsMagicNumeric.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                }
+                break;
+        }
+    }
+
+
 }

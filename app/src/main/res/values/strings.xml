@@ -155,6 +155,15 @@
     <string name="selectFabric">Select Fabric</string>
     <string name="please_select_fabric_unit">Please select Fabric Unit</string>
     <string name="update_job_Card">Update Job Card</string>
+    <string name="select_parts">Select Parts</string>
+    <string name="other_parts">Other Parts Details</string>
+    <string name="parts">Parts</string>
+    <string name="alter_request_details">Alter Request Details</string>
+    <string name="please_select_parts">Please select Parts</string>
+    <string name="please_select_other_parts">Please enter other Parts Details</string>
+    <string name="please_enter_total_no_pieces">Please enter Total Number of Pieces</string>
+    <string name="update_alter_request">Update Alter Request</string>
+    <string name="alter_request_updated_successfully">Alter Request Updated Successfully</string>
 
 
     <string-array name="brand">
@@ -245,6 +254,13 @@
         <item>Textile</item>
         <item>Lycra</item>
         <item>Bombay FAB</item>
+    </string-array>
+
+    <string-array name="parts">
+        <item>Front</item>
+        <item>Back</item>
+        <item>Hatha</item>
+        <item>Other</item>
     </string-array>
 
 </resources>

@@ -79,7 +79,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         holder.tvPartyName.setText(String.format("%s%s%s%s", context.getString(R.string.party_name)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getPartyName()));
         holder.tvDesignNumber.setText(String.format("%s%s%s%s", context.getString(R.string.design_number)
-                , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getDesignNumber()));
+                , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getDesignCode() + orderItem.getDesignNumber()));
         holder.tvDeliveryDate.setText(String.format("%s%s%s%s", context.getString(R.string.delivery_date)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, orderItem.getDeliveryDate()));
 

@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/nav_alter_request"
-        android:name="com.cottonclub.fragments.ui.alter_request.AlterRequestFragment"
+        android:name="com.cottonclub.fragments.ui.alter_request.CreateAlterRequestFragment"
         android:label="@string/menu_tools"
         tools:layout="@layout/fragment_alter_request" />
 

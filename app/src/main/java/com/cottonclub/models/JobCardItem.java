@@ -13,7 +13,6 @@ public class JobCardItem implements Parcelable {
     private String quantity;
     private String size;
     private String fabricType;
-    private String fabricConsumed;
     private String fabricUnit;
     private String masterName;
     private String totalPieces;
@@ -24,6 +23,7 @@ public class JobCardItem implements Parcelable {
     private String jobCardFilePath;
 
     protected JobCardItem(Parcel in) {
+        jobCardId = in.readString();
         jobCardCreateDate = in.readString();
         brand = in.readString();
         jobCardNumber = in.readString();
@@ -32,7 +32,6 @@ public class JobCardItem implements Parcelable {
         quantity = in.readString();
         size = in.readString();
         fabricType = in.readString();
-        fabricConsumed = in.readString();
         fabricUnit = in.readString();
         masterName = in.readString();
         totalPieces = in.readString();
@@ -104,14 +103,6 @@ public class JobCardItem implements Parcelable {
 
     public void setFabricType(String fabricType) {
         this.fabricType = fabricType;
-    }
-
-    public String getFabricConsumed() {
-        return fabricConsumed;
-    }
-
-    public void setFabricConsumed(String fabricConsumed) {
-        this.fabricConsumed = fabricConsumed;
     }
 
     public String getMasterName() {
@@ -201,6 +192,7 @@ public class JobCardItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(jobCardId);
         parcel.writeString(jobCardCreateDate);
         parcel.writeString(brand);
         parcel.writeString(jobCardNumber);
@@ -209,7 +201,6 @@ public class JobCardItem implements Parcelable {
         parcel.writeString(quantity);
         parcel.writeString(size);
         parcel.writeString(fabricType);
-        parcel.writeString(fabricConsumed);
         parcel.writeString(fabricUnit);
         parcel.writeString(masterName);
         parcel.writeString(totalPieces);

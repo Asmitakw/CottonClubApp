@@ -1,5 +1,6 @@
 package com.cottonclub.fragments.ui.view_job_card;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.cottonclub.activities.ViewOrderDetails;
 import com.cottonclub.adapters.JobCardAdapter;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.JobCardItem;
+import com.cottonclub.utilities.Helper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +35,7 @@ public class ViewJobCardFragment extends Fragment {
     private JobCardItem jobCardItem;
     private ArrayList<JobCardItem> jobCardList = new ArrayList<>();
     private JobCardAdapter jobCardAdapter;
+    private Dialog mDialog;
 
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference ordersRef = mRootRef.child("JobCard");
@@ -46,6 +49,7 @@ public class ViewJobCardFragment extends Fragment {
     }
 
     private void initialise(View view) {
+        mDialog = Helper.showProgressDialog(getActivity());
         rvViewJobCard = view.findViewById(R.id.rvViewJobCard);
     }
 
@@ -80,6 +84,8 @@ public class ViewJobCardFragment extends Fragment {
                 rvViewJobCard.setLayoutManager(mLayoutManager);
                 rvViewJobCard.setItemAnimator(new DefaultItemAnimator());
                 rvViewJobCard.setAdapter(jobCardAdapter);
+
+                mDialog.dismiss();
             }
 
             @Override

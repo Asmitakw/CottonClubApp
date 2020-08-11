@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cvViewOrderDetails"
+        android:id="@+id/cvViewAlterRequestDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -64,27 +64,12 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tvOrderNumber"
-                        style="@style/CustomMediumText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorBlack" />
-
-                    <TextView
-                        android:id="@+id/tvBrand"
+                        android:id="@+id/tvBrandName"
                         style="@style/CustomSmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:textColor="@color/colorPrimaryText" />
-
-                    <TextView
-                        android:id="@+id/tvPartyName"
-                        style="@style/CustomSmallText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:textColor="@color/colorPrimaryText"/>
 
                     <TextView
                         android:id="@+id/tvDesignNumber"
@@ -95,7 +80,40 @@
                         android:textColor="@color/colorPrimaryText"/>
 
                     <TextView
-                        android:id="@+id/tvDeliveryDate"
+                        android:id="@+id/tvParts"
+                        style="@style/CustomSmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/colorPrimaryText"/>
+
+                    <TextView
+                        android:id="@+id/tvOtherParts"
+                        style="@style/CustomSmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:visibility="gone"
+                        android:textColor="@color/colorPrimaryText"/>
+
+                    <TextView
+                        android:id="@+id/tvAlterQuantity"
+                        style="@style/CustomSmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/colorPrimaryText"/>
+
+                    <TextView
+                        android:id="@+id/tvTotalPieces"
+                        style="@style/CustomSmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/colorPrimaryText"/>
+
+                    <TextView
+                        android:id="@+id/tvCuttingIssueDate"
                         style="@style/CustomSmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

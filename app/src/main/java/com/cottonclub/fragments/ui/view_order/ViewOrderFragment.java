@@ -154,7 +154,6 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
         ordersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mDialog.dismiss();
                 totalList = snapshot.getChildrenCount();
                 if (orderList.size() == 0) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -190,6 +189,7 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                 } else if (isFilterByOrderNumber) {
                     setFilterByOrderNumber(selectedOrderNumber);
                 }
+                mDialog.dismiss();
             }
 
             @Override

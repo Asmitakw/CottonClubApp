@@ -90,22 +90,38 @@
                         android:textColor="@color/colorPrimaryText" />
 
                     <TextView
-                        android:id="@+id/tvMasterName"
+                        android:id="@+id/tvQuantity"
                         style="@style/CustomSmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text="Master Name"
+                        android:text="Quantity"
                         android:textColor="@color/colorPrimaryText" />
 
                     <TextView
-                        android:id="@+id/tvCuttingIssueDate"
+                        android:id="@+id/tvNoOfPieces"
                         style="@style/CustomSmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text="Cutting Issue Date:07/07/2020"
+                        android:text="No.of Pieces"
                         android:textColor="@color/colorPrimaryText" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5"
+                        android:background="@drawable/rounded_border">
+
+                        <ImageView
+                            android:id="@+id/ivJobCardFile"
+                            android:layout_width="@dimen/dimen_200"
+                            android:layout_height="@dimen/dimen_200"
+                            android:scaleType="centerCrop"
+                            android:layout_margin="@dimen/dimen_5"
+                            android:src="@drawable/image_placeholder" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
