@@ -1881,7 +1881,7 @@ public class ViewOrderDetails extends AppCompatActivity implements View.OnClickL
 
         etBbabyNB.setText(sizeListItem.getNB());
 
-        etBbaby03.setText(sizeListItem.getSize3());
+        etBbaby03.setText(sizeListItem.getSize0b3());
 
         etBbaby36.setText(sizeListItem.getSize3b6());
 

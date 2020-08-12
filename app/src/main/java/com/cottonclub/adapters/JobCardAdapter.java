@@ -94,7 +94,7 @@ public class JobCardAdapter extends RecyclerView.Adapter<JobCardAdapter.ViewHold
         holder.tvBrandName.setText(String.format("%s%s%s%s", context.getString(R.string.brand_name)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, jobCardItem.getBrand()));
         holder.tvDesignNumber.setText(String.format("%s%s%s%s", context.getString(R.string.design_number)
-                , context.getString(R.string.colon), Constants.EMPTY_STRING, jobCardItem.getDesignCode() + jobCardItem.getDesignNumber()));
+                , context.getString(R.string.colon), Constants.EMPTY_STRING, jobCardItem.getDesignCode() + "-" + jobCardItem.getDesignNumber()));
         holder.tvQuantity.setText(String.format("%s%s%s%s", context.getString(R.string.quantity)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, jobCardItem.getQuantity()));
         holder.tvNoOfPieces.setText(jobCardItem.getTotalPieces());

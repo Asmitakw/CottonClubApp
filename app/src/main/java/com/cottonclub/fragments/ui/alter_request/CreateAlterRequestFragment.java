@@ -1548,6 +1548,7 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
 
         sendSizeDetails();
 
+        alterRequestItem.setAlterId(String.valueOf(maxId + 1));
         alterRequestItem.setAlterRequestCreationDate(jobCardCreationDate);
         alterRequestItem.setBrandName(brandName);
         alterRequestItem.setDesignCode(designCode);

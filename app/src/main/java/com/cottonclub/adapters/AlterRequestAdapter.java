@@ -80,8 +80,8 @@ public class AlterRequestAdapter extends RecyclerView.Adapter<AlterRequestAdapte
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, alterRequestItem.getBrandName()));
 
         holder.tvDesignNumber.setText(String.format("%s%s%s%s", context.getString(R.string.design_number)
-                , context.getString(R.string.colon), Constants.EMPTY_STRING, alterRequestItem.getDesignCode()
-                        + alterRequestItem.getDesignNumber()));
+                , context.getString(R.string.colon), Constants.EMPTY_STRING,
+                alterRequestItem.getDesignCode() + "-" + alterRequestItem.getDesignNumber()));
 
         holder.tvParts.setText(String.format("%s%s%s%s", context.getString(R.string.parts)
                 , context.getString(R.string.colon), Constants.EMPTY_STRING, alterRequestItem.getSelectedParts()));

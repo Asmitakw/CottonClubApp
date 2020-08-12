@@ -133,11 +133,20 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
         etDesignNumber = findViewById(R.id.etDesignNumber);
         etDesignNumber.setText(alterRequestItem.getDesignNumber());
 
+        llOtherParts = findViewById(R.id.llOtherParts);
+
         etParts = findViewById(R.id.etParts);
         etParts.setText(alterRequestItem.getSelectedParts());
 
-        etOtherParts = findViewById(R.id.etOtherParts);
-        etOtherParts.setText(alterRequestItem.getOtherParts());
+        if (!alterRequestItem.getOtherParts().isEmpty()) {
+            isOtherPartsDetailsVisible = true;
+            llOtherParts.setVisibility(View.VISIBLE);
+            etOtherParts = findViewById(R.id.etOtherParts);
+            etOtherParts.setText(alterRequestItem.getOtherParts());
+        } else {
+            isOtherPartsDetailsVisible = false;
+            llOtherParts.setVisibility(View.GONE);
+        }
 
         etAlterQuantity = findViewById(R.id.etAlterQuantity);
         etAlterQuantity.setText(getQuantity);
@@ -149,14 +158,13 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
         etMasterName.setText(alterRequestItem.getMaster());
 
         etCuttingIssueDate = findViewById(R.id.etCuttingIssueDate);
+        etCuttingIssueDate.setOnClickListener(this);
         etCuttingIssueDate.setText(alterRequestItem.getCuttingIssueDate());
 
         etSelectSize = findViewById(R.id.etSelectSize);
         etSelectSize.setText(alterRequestItem.getSelectSize());
         etSelectSize.setOnClickListener(this);
         etSelectSize.setEnabled(false);
-
-        llOtherParts = findViewById(R.id.llOtherParts);
 
         etKidsMagicMNSize2 = findViewById(R.id.etKidsMagicMNSize2);
 
@@ -318,7 +326,10 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
         String designCode = etDesignCode.getText().toString();
         String designNumber = etDesignNumber.getText().toString();
         String selectedParts = etParts.getText().toString();
-        String otherParts = etOtherParts.getText().toString();
+        if (isOtherPartsDetailsVisible) {
+            String otherParts = etOtherParts.getText().toString();
+            alterRequestItem.setOtherParts(otherParts);
+        }
         String alterQuantity = etAlterQuantity.getText().toString();
         String masterName = etMasterName.getText().toString();
         String totalPieces = etTotalNumberPieces.getText().toString();
@@ -331,7 +342,6 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
         alterRequestItem.setDesignCode(designCode);
         alterRequestItem.setDesignNumber(designNumber);
         alterRequestItem.setSelectedParts(selectedParts);
-        alterRequestItem.setOtherParts(otherParts);
         alterRequestItem.setAlterQuantity(alterQuantity);
         alterRequestItem.setMaster(masterName);
         alterRequestItem.setAlterRequestDate(currentDate);
@@ -352,7 +362,6 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
                                 finish();
                             }
                         });
-                        clearData();
                     }
                 });
     }
@@ -1445,7 +1454,9 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
         disableView(etDesignCode);
         disableView(etDesignNumber);
         disableView(etParts);
-        disableView(etOtherParts);
+        if (isOtherPartsDetailsVisible) {
+            disableView(etOtherParts);
+        }
         disableView(etAlterQuantity);
         disableView(etSelectSize);
         disableView(etTotalNumberPieces);
@@ -1513,7 +1524,9 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
         enableView(etDesignNumber);
         enableView(etAlterQuantity);
         enableView(etParts);
-        enableView(etOtherParts);
+        if (isOtherPartsDetailsVisible) {
+            enableView(etOtherParts);
+        }
         enableView(etSelectSize);
         enableView(etTotalNumberPieces);
         enableView(etMasterName);
@@ -1837,7 +1850,7 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
 
         etBbabyNB.setText(sizeListItem.getNB());
 
-        etBbaby03.setText(sizeListItem.getSize3());
+        etBbaby03.setText(sizeListItem.getSize0b3());
 
         etBbaby36.setText(sizeListItem.getSize3b6());
 

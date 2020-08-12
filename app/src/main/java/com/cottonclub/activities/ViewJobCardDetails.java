@@ -2031,7 +2031,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
 
         etBbabyNB.setText(sizeListItem.getNB());
 
-        etBbaby03.setText(sizeListItem.getSize3());
+        etBbaby03.setText(sizeListItem.getSize0b3());
 
         etBbaby36.setText(sizeListItem.getSize3b6());
 

@@ -256,6 +256,7 @@
             android:focusableInTouchMode="false"
             android:hint="@string/cutting_issue_date"
             android:singleLine="true"
+            android:layout_marginBottom="@dimen/dimen_15"
             android:textCursorDrawable="@drawable/cursor_drawable" />
 
         <View
@@ -269,7 +270,7 @@
             style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_forty"
+            android:layout_marginTop="@dimen/dimen_15"
             android:background="@drawable/rounded_button"
             android:text="@string/create_alter_request"
             android:textAllCaps="true"
