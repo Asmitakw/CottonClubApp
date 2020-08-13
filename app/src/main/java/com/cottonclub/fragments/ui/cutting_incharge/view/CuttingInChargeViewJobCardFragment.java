@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cottonclub.R;
 import com.cottonclub.activities.admin.ViewJobCardDetails;
+import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewJobCardDetails;
 import com.cottonclub.adapters.JobCardAdapter;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.JobCardItem;
+import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,7 +64,10 @@ public class CuttingInChargeViewJobCardFragment extends Fragment {
                 if (jobCardList.size() == 0) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         jobCardItem = dataSnapshot.getValue(JobCardItem.class);
-                        jobCardList.add(jobCardItem);
+                        assert jobCardItem != null;
+                        if(jobCardItem.getBrand().equals(Constants.KIDS_MAGIC)) {
+                            jobCardList.add(jobCardItem);
+                        }
                     }
                 }
                 jobCardAdapter = new JobCardAdapter(getActivity(), jobCardList, new RecyclerViewClickListener() {
@@ -73,7 +78,7 @@ public class CuttingInChargeViewJobCardFragment extends Fragment {
                         bundle.putString("designCode", jobCardList.get(position).getDesignCode());
                         bundle.putParcelable("size", jobCardList.get(position).getSizeItem());
 
-                        Intent order_details_intent = new Intent(getActivity(), ViewJobCardDetails.class);
+                        Intent order_details_intent = new Intent(getActivity(), CuttingInChargeViewJobCardDetails.class);
                         order_details_intent.putExtra("extraWithOrder", bundle);
                         startActivity(order_details_intent);
 

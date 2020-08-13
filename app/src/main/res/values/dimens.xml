@@ -20,6 +20,7 @@
     <dimen name="dimen_8">8dp</dimen>
     <dimen name="dimen_10">10dp</dimen>
     <dimen name="dimen_15">15dp</dimen>
+    <dimen name="dimen_18">18dp</dimen>
     <dimen name="dimen_20">20dp</dimen>
     <dimen name="dimen_eighty">80dp</dimen>
     <dimen name="dimen_hundred">100dp</dimen>
@@ -31,6 +32,7 @@
     <dimen name="dimen_350">350dp</dimen>
     <dimen name="dimen_400">400dp</dimen>
     <dimen name="dimen_forty">40dp</dimen>
+    <dimen name="dimen_50">50dp</dimen>
     <dimen name="dimen_twenty">20dp</dimen>
     <dimen name="dimen_5">5dp</dimen>
 

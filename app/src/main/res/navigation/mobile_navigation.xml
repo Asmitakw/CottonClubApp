@@ -45,4 +45,10 @@
         android:name="com.cottonclub.fragments.ui.admin.view.ViewAlterRequestFragment"
         android:label="@string/view_alter_request"
         tools:layout="@layout/fragment_view_order" />
+
+    <fragment
+        android:id="@+id/nav_ci_view_job_card"
+        android:name="com.cottonclub.fragments.ui.cutting_incharge.view.CuttingInChargeViewJobCardFragment"
+        android:label="@string/view_job_card"
+        tools:layout="@layout/fragment_view_order" />
 </navigation>

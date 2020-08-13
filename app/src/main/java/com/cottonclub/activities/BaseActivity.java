@@ -57,6 +57,7 @@ public class BaseActivity extends AppCompatActivity {
         Menu menu = navigationView.getMenu();
         MenuItem nav_logout = menu.findItem(R.id.nav_logout);
         MenuItem create_item = menu.findItem(R.id.create_item);
+        MenuItem view_item = menu.findItem(R.id.view_item);
         MenuItem cutting_in_charge_view_item = menu.findItem(R.id.cutting_in_charge_view_item);
 
         if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.ADMIN)) {
@@ -71,6 +72,7 @@ public class BaseActivity extends AppCompatActivity {
             tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
                     + getString(R.string.cutting_in_charge_km)));
             create_item.setVisible(false);
+            view_item.setVisible(false);
             cutting_in_charge_view_item.setVisible(true);
 
         } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.CUTTING_IN_CHARGE_BB)) {
@@ -79,6 +81,7 @@ public class BaseActivity extends AppCompatActivity {
             tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
                     + getString(R.string.cutting_in_charge_bb)));
             create_item.setVisible(false);
+            view_item.setVisible(false);
             cutting_in_charge_view_item.setVisible(true);
 
         } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.CUTTING_IN_CHARGE_CB)) {
@@ -87,6 +90,7 @@ public class BaseActivity extends AppCompatActivity {
             tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
                     + getString(R.string.cutting_in_charge_cb)));
             create_item.setVisible(false);
+            view_item.setVisible(false);
             cutting_in_charge_view_item.setVisible(true);
         }
 

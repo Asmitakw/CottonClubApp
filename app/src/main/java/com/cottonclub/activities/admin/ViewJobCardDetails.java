@@ -1641,6 +1641,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         disableView(etMasterName);
         disableView(etFabricUnit);
         disableView(etCuttingIssueDate);
+        ivCancelFile.setVisibility(View.GONE);
 
         disableView(etKidsMagicMNSize2);
         disableView(etKidsMagicMNSize3);
@@ -1709,6 +1710,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         enableView(etMasterName);
         enableView(etFabricUnit);
         enableView(etCuttingIssueDate);
+        ivCancelFile.setVisibility(View.VISIBLE);
 
         enableView(etKidsMagicMNSize2);
         enableView(etKidsMagicMNSize3);

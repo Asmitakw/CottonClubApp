@@ -147,7 +147,7 @@
     <string name="if_you_reject_permission"><![CDATA[If you reject permission, you cannot use this service\n\nPlease turn on permissions at [Setting] > [Permission]]]></string>
     <string name="go_to_setting">Go to Settings</string>
     <string name="no_records">No Records found for this filter.</string>
-    <string name="upload_file">Upload File</string>
+    <string name="upload_file">Upload File:</string>
     <string name="please_enter_upload_job_card">Please Upload Job Card</string>
     <string name="unit">Unit</string>
     <string name="meters">m(s)</string>
@@ -174,6 +174,12 @@
     <string name="item">Item</string>
     <string name="cutting_complete_date">Cutting Complete Date</string>
     <string name="wastage">Wastage</string>
+    <string name="view_job_card_details">View Job Card Details</string>
+    <string name="fabric_consumed_">Fabric Consumed:</string>
+    <string name="fabric_code">Fabric Code</string>
+    <string name="add_item">Add Item</string>
+    <string name="please_enter_fabric_code">Please enter Fabric Code</string>
+    <string name="please_enter_fabric_quantity">Please enter Fabric Quantity</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>
