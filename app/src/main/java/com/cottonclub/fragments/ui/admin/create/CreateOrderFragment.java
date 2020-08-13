@@ -1,8 +1,9 @@
-package com.cottonclub.fragments.ui.alter_request;
+package com.cottonclub.fragments.ui.admin.create;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -20,7 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cottonclub.R;
-import com.cottonclub.models.AlterRequestItem;
+import com.cottonclub.activities.BaseActivity;
+import com.cottonclub.interfaces.DialogListener;
 import com.cottonclub.models.OrderItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Constants;
@@ -32,31 +34,26 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+public class CreateOrderFragment extends Fragment implements View.OnClickListener {
 
-public class CreateAlterRequestFragment extends Fragment implements View.OnClickListener {
-
-    private EditText etDesignNumber, etAlterQuantity, etMasterName, etCuttingIssueDate,
-            etParts, etOtherParts, etBrandName, etDesignCode, etSelectSize;
+    private EditText etPartyName, etBrandName, etDesignNumber, etOrderNumber,
+            etDeliveryDate, etSelectSize, etSelectType, etQuantity;
 
     private TextView tvDateOrderCreation;
 
-    private Button btnCreateAlterRequest;
+    private Button btnCreateOrder;
     private long maxId = 0;
-    private AlterRequestItem alterRequestItem;
-    private Dialog mDialog;
-    private DatePickerDialog datePickerDialog;
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference alterRequestRef = mRootRef.child("AlterRequest");
-    private String[] partsArray;
-    private LinearLayout llOtherParts;
-
+    private OrderItem orderItem;
     private String[] brandArray;
     private String selectedBrand;
     private String selectedDesignType;
@@ -65,6 +62,8 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
     private String[] kidsMagicDesignTypeArray;
     private String[] bBabyDesignTypeArray;
     private String[] cottonBlueDesignTypeArray;
+    private Dialog mDialog;
+    private DatePickerDialog datePickerDialog;
     private LinearLayout llBBabyS3XLParent, llBBabyNB912Parent, llKidsMagicMN,
             llKidsMagicNumeric, llKidsMagicGT, llKMS, llSizeS, llKMSGirls;
     private EditText etKidsMagicMNSize2, etKidsMagicMNSize3, etKidsMagicMNSize4, etKidsMagicMNSize5,
@@ -74,24 +73,27 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
             etKidsMagicGT32, etKidsMagicGT34, etKidsMagicGT36, etKMS1, etKMS2, etKMS3, etKMS4, etKMS5,
             etKMSG1, etKMSG2, etKMSG3, etKMSG4, etKMSG5,
             etTotalNumberPieces, etBbabySizeS, etBbabySizeM, etBbabySizeL, etBbabySizeXL, etBbabySizeXXL,
-            etBbabySizeXXXL, etBbabyNB, etBbaby03, etBbaby36, etBbaby69, etBbaby912;
+            etBbabySizeXXXL, etBbabyNB, etBbaby03, etBbaby36, etBbaby69, etBbaby912, etDesignCode;
     private boolean isKidsMagicP = false;
     private boolean isSizeChartVisible = false;
-    private boolean isOtherPartsDetailsVisible = false;
+    private boolean isClicked = false;
     private TextWatcher textWatcher;
     private View viewS;
     private SizeListItem sizeListItem;
+    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference orderRef = mRootRef.child("Orders");
+    private ImageView ivPartyNameList;
 
+    private ArrayList<OrderItem> partyList = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        View root = inflater.inflate(R.layout.fragment_alter_request, container, false);
+        View root = inflater.inflate(R.layout.fragment_create_order, container, false);
         initialise(root);
         return root;
     }
 
-    private void initialise(View view) {
+    private void initialise(final View view) {
 
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
@@ -114,11 +116,19 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
         tvDateOrderCreation = view.findViewById(R.id.tvDateOrderCreation);
         tvDateOrderCreation.setText(Helper.getCurrentTime());
 
+        etPartyName = view.findViewById(R.id.etPartyName);
+
+        ivPartyNameList = view.findViewById(R.id.ivPartyNameList);
+        ivPartyNameList.setOnClickListener(this);
 
         etBrandName = view.findViewById(R.id.etBrandName);
         etBrandName.setOnClickListener(this);
 
         etDesignNumber = view.findViewById(R.id.etDesignNumber);
+        etOrderNumber = view.findViewById(R.id.etOrderNumber);
+
+        etDeliveryDate = view.findViewById(R.id.etDeliveryDate);
+        etDeliveryDate.setOnClickListener(this);
 
         etSelectSize = view.findViewById(R.id.etSelectSize);
         etSelectSize.setOnClickListener(this);
@@ -174,6 +184,7 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
         etKMSG4 = view.findViewById(R.id.etKMSG4);
         etKMSG5 = view.findViewById(R.id.etKMSG5);
 
+        btnCreateOrder = view.findViewById(R.id.btnCreateOrder);
         llBBabyS3XLParent = view.findViewById(R.id.llBBabyS3XLParent);
         llBBabyNB912Parent = view.findViewById(R.id.llBBabyNB912Parent);
 
@@ -184,50 +195,22 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
 
         llKMSGirls = view.findViewById(R.id.llKMSGirls);
 
+        etSelectType = view.findViewById(R.id.etSelectType);
+
         llSizeS = view.findViewById(R.id.llSizeS);
         viewS = view.findViewById(R.id.viewS);
+        etSelectType.setOnClickListener(this);
+        orderItem = new OrderItem();
 
+        etQuantity = view.findViewById(R.id.etQuantity);
         etDesignCode = view.findViewById(R.id.etDesignCode);
         etDesignCode.setOnClickListener(this);
-
-        if (partsArray == null)
-            partsArray = getResources().getStringArray(R.array.parts);
-
-        tvDateOrderCreation = view.findViewById(R.id.tvDateOrderCreation);
-        tvDateOrderCreation.setText(Helper.getCurrentTime());
-
-        etDesignNumber = view.findViewById(R.id.etDesignNumber);
-        etAlterQuantity = view.findViewById(R.id.etAlterQuantity);
-
-        etMasterName = view.findViewById(R.id.etMasterName);
-
-        etCuttingIssueDate = view.findViewById(R.id.etCuttingIssueDate);
-        etCuttingIssueDate.setOnClickListener(this);
-
-        etParts = view.findViewById(R.id.etParts);
-        etParts.setOnClickListener(this);
-
-        llOtherParts = view.findViewById(R.id.llOtherParts);
-
-        etOtherParts = view.findViewById(R.id.etOtherParts);
-
-        etBrandName = view.findViewById(R.id.etBrandName);
-
-        etDesignCode = view.findViewById(R.id.etDesignCode);
-        etDesignCode.setOnClickListener(this);
-
-        etSelectSize = view.findViewById(R.id.etSelectSize);
-        etSelectSize.setOnClickListener(this);
-
-        btnCreateAlterRequest = view.findViewById(R.id.btnCreateAlterRequest);
-        alterRequestItem = new AlterRequestItem();
-
         setDefaultSizeByQuantity();
         setUiByBrand();
     }
 
     private void setDefaultSizeByQuantity() {
-        etAlterQuantity.addTextChangedListener(new TextWatcher() {
+        etQuantity.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -235,9 +218,9 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String getDefaultQuantity = etAlterQuantity.getText().toString();
+                String getDefaultQuantity = etQuantity.getText().toString();
 
-                if (etAlterQuantity.getText().toString().length() > 0) {
+                if (etQuantity.getText().toString().length() > 0) {
 
                     //MN
                     etKidsMagicMNSize2.addTextChangedListener(textWatcher);
@@ -347,8 +330,8 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
                         etBbabySizeXXXL.setText(getDefaultQuantity);
                     }
 
-                    if (etAlterQuantity.getText().toString().length() > 1 || etAlterQuantity.getText().toString().length() == 1) {
-                        int getQuantity = Integer.parseInt(etAlterQuantity.getText().toString());
+                    if (etQuantity.getText().toString().length() > 1 || etQuantity.getText().toString().length() == 1) {
+                        int getQuantity = Integer.parseInt(etQuantity.getText().toString());
 
                         int sizeS = (int) (getQuantity * (50.0f / 100.0f));
                         //Default Value for S will be 50% of the given Quantity
@@ -401,11 +384,11 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
 
     @SuppressLint("SetTextI18n")
     private void getTotalNoPieces() {
-        if (!etAlterQuantity.getText().toString().equals("")) {
+        if (!etQuantity.getText().toString().equals("")) {
 
             setDefaultZero();
 
-            if (etAlterQuantity.getText().toString().length() > 1) {
+            if (etQuantity.getText().toString().length() > 1) {
 
                 if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
                     if (selectedDesignType.equals(Constants.MN)) {
@@ -1097,6 +1080,28 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
 
     }
 
+    private void clearData() {
+        etBrandName.setText("");
+        etDesignNumber.setText("");
+        etOrderNumber.setText("");
+        etDeliveryDate.setText("");
+        etSelectSize.setText("");
+        etTotalNumberPieces.setText("");
+        etSelectType.setText("");
+        etQuantity.setText("");
+        etDesignCode.setText("");
+        selectedBrand = "";
+        selectedDesignType = "";
+
+        llBBabyNB912Parent.setVisibility(View.GONE);
+        llBBabyS3XLParent.setVisibility(View.GONE);
+        llKidsMagicGT.setVisibility(View.GONE);
+        llKidsMagicMN.setVisibility(View.GONE);
+        llKidsMagicNumeric.setVisibility(View.GONE);
+        llKMS.setVisibility(View.GONE);
+        llKMSGirls.setVisibility(View.GONE);
+    }
+
     private void clearSizeFields() {
         etKidsMagicMNSize2.setText("0");
 
@@ -1289,18 +1294,152 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
     @Override
     public void onStart() {
         super.onStart();
-        btnCreateAlterRequest.setOnClickListener(new View.OnClickListener() {
+
+        btnCreateOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 validate();
             }
         });
 
-        alterRequestRef.addValueEventListener(new ValueEventListener() {
+        orderRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     maxId = (snapshot.getChildrenCount());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void validate() {
+        if (TextUtils.isEmpty(etPartyName.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_party_name));
+            etPartyName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etBrandName.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_brand_name));
+            etBrandName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etOrderNumber.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_order_number));
+            etOrderNumber.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etDesignNumber.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_design_number));
+            etDesignNumber.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etQuantity.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_quantity));
+            etQuantity.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(etSelectSize.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_select_size));
+            etSelectSize.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(etSelectType.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_select_type));
+            etSelectType.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etDeliveryDate.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_select_delivery_date));
+            etDeliveryDate.requestFocus();
+            return;
+        }
+        sendOrderDetails();
+    }
+
+    private void sendOrderDetails() {
+
+        isClicked = false;
+
+        SimpleDateFormat format = new SimpleDateFormat("d");
+
+        format = new SimpleDateFormat("d MMM");
+
+        String currentDate = format.format(new Date());
+
+        mDialog = Helper.showProgressDialog(getActivity());
+        String orderCreationDate = tvDateOrderCreation.getText().toString();
+        String partyName = etPartyName.getText().toString();
+
+        String brandName = etBrandName.getText().toString();
+        String designNumber = etDesignNumber.getText().toString();
+        String designCode = etDesignCode.getText().toString();
+        String orderNumber = etOrderNumber.getText().toString();
+        String deliveryDate = etDeliveryDate.getText().toString();
+        String quantity = etQuantity.getText().toString();
+        String selectSize = etSelectSize.getText().toString();
+        String totalPieces = etTotalNumberPieces.getText().toString();
+        String type = etSelectType.getText().toString();
+
+        sendSizeDetails();
+
+        orderItem.setOrderId(String.valueOf(maxId + 1));
+        orderItem.setOrderCreationDate(orderCreationDate);
+        orderItem.setPartyName(partyName);
+        orderItem.setBrandName(brandName);
+        orderItem.setDesignCode(designCode);
+        orderItem.setDesignNumber(designNumber);
+        orderItem.setOrderNumber(orderNumber);
+        orderItem.setDeliveryDate(deliveryDate);
+        orderItem.setSelectSize(selectSize);
+        orderItem.setQuantity(quantity);
+        orderItem.setTotalPieces(totalPieces);
+        orderItem.setType(type);
+        orderItem.setOrderDate(currentDate);
+        orderItem.setSizeItem(sizeListItem);
+
+        orderRef.child(String.valueOf(maxId + 1)).setValue(orderItem, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                mDialog.dismiss();
+                Helper.showOkClickDialog(getActivity(), getString(R.string.order_created_successfully), new DialogListener() {
+                    @Override
+                    public void onButtonClicked(int type) {
+                        Intent homeIntent = new Intent(getActivity(), BaseActivity.class);
+                        startActivity(homeIntent);
+                    }
+                });
+                clearData();
+                etPartyName.setText("");
+            }
+        });
+    }
+
+    private void getPartyListing() {
+        mDialog = Helper.showProgressDialog(getActivity());
+        orderRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mDialog.dismiss();
+
+                if (isClicked) {
+                    if (partyList.size() == 0) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            orderItem = dataSnapshot.getValue(OrderItem.class);
+                            partyList.add(orderItem);
+                        }
+                    }
+                    ivPartyNameList.performClick();
                 }
             }
 
@@ -1314,6 +1453,32 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+
+            case R.id.ivPartyNameList:
+                isClicked = true;
+                if (partyList.size() == 0) {
+                    getPartyListing();
+                } else {
+
+                    HashSet hashSet = new HashSet();
+                    for (int i = 0; i < partyList.size(); i++) {
+                        OrderItem orderItem = partyList.get(i);
+                        hashSet.add(orderItem.getPartyName());
+                    }
+                    final ArrayList<String> arrayList = new ArrayList<>();
+                    arrayList.addAll(hashSet);
+
+                    Helper.showDropDown(etPartyName, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, arrayList), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            OrderItem orderItem = partyList.get(position);
+                            etPartyName.setText(arrayList.get(position));
+                            arrayList.clear();
+                        }
+                    });
+                }
+                break;
 
             case R.id.etBrandName:
                 Helper.showDropDown(etBrandName, new ArrayAdapter<>(requireActivity(),
@@ -1333,6 +1498,17 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
                     }
                 });
                 break;
+
+            case R.id.etSelectType:
+                Helper.showDropDown(etSelectType, new ArrayAdapter<>(requireActivity(),
+                        android.R.layout.simple_list_item_1, typeArray), new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        etSelectType.setText(typeArray[position]);
+                    }
+                });
+                break;
+
             case R.id.etDesignCode:
                 if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
                     Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
@@ -1362,6 +1538,29 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
                 }
 
                 break;
+
+            case R.id.etDeliveryDate:
+                final Calendar c = Calendar.getInstance();
+                int year, month, day;
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                day = c.get(Calendar.DAY_OF_MONTH);
+                datePickerDialog = new DatePickerDialog(requireActivity(),
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                etDeliveryDate.setText(dayOfMonth + "/" + (monthOfYear + 1)
+                                        + "/" + year);
+                            }
+                        }, year, month, day);
+                datePickerDialog.getDatePicker().setMinDate(System
+                        .currentTimeMillis() - 1000);
+                datePickerDialog.show();
+                break;
+
             case R.id.etSelectSize:
                 if (isKidsMagicP) {
                     Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
@@ -1392,184 +1591,8 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
                     });
                 }
                 break;
-
-            case R.id.etCuttingIssueDate:
-                final Calendar c = Calendar.getInstance();
-                int year, month, day;
-                year = c.get(Calendar.YEAR);
-                month = c.get(Calendar.MONTH);
-                day = c.get(Calendar.DAY_OF_MONTH);
-                datePickerDialog = new DatePickerDialog(requireActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @SuppressLint("SetTextI18n")
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                etCuttingIssueDate.setText(dayOfMonth + "/" + (monthOfYear + 1)
-                                        + "/" + year);
-                            }
-                        }, year, month, day);
-                datePickerDialog.getDatePicker().setMinDate(System
-                        .currentTimeMillis() - 1000);
-                datePickerDialog.show();
-                break;
-
-            case R.id.etParts:
-                Helper.showDropDown(etParts, new ArrayAdapter<>(getActivity(),
-                        android.R.layout.simple_list_item_1, partsArray), new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        etParts.setText(partsArray[position]);
-                        if (position == 3) {
-                            isOtherPartsDetailsVisible = true;
-                            llOtherParts.setVisibility(View.VISIBLE);
-                        } else {
-                            llOtherParts.setVisibility(View.GONE);
-                            isOtherPartsDetailsVisible = false;
-                        }
-                    }
-                });
-                break;
         }
-
     }
 
-    private void validate() {
 
-        if (TextUtils.isEmpty(etBrandName.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_brand_name));
-            etBrandName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etDesignCode.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.design_code));
-            etDesignCode.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etDesignNumber.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_design_number));
-            etDesignNumber.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etParts.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_select_parts));
-            etParts.requestFocus();
-            return;
-        }
-
-        if (isOtherPartsDetailsVisible) {
-            if (TextUtils.isEmpty(etOtherParts.getText().toString().trim())) {
-                Helper.showOkDialog(getActivity(), getString(R.string.please_select_other_parts));
-                etOtherParts.requestFocus();
-                return;
-            }
-        }
-
-        if (TextUtils.isEmpty(etAlterQuantity.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_alter_quantity));
-            etAlterQuantity.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etSelectSize.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_select_size));
-            etSelectSize.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etTotalNumberPieces.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_total_no_pieces));
-            etTotalNumberPieces.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etMasterName.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_master_name));
-            etMasterName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_cutting_issue_date));
-            etCuttingIssueDate.requestFocus();
-            return;
-        }
-
-        sendAlterRequestDetails();
-    }
-
-    private void clearData() {
-        etBrandName.setText("");
-        etDesignCode.setText("");
-        etDesignNumber.setText("");
-        etParts.setText("");
-        etOtherParts.setText("");
-        etCuttingIssueDate.setText("");
-        etSelectSize.setText("");
-        etMasterName.setText("");
-        etTotalNumberPieces.setText("");
-        etAlterQuantity.setText("");
-        selectedBrand = "";
-        selectedDesignType = "";
-
-        etAlterQuantity.setText("");
-        etBrandName.requestFocus();
-
-        llBBabyNB912Parent.setVisibility(View.GONE);
-        llBBabyS3XLParent.setVisibility(View.GONE);
-        llKidsMagicGT.setVisibility(View.GONE);
-        llKidsMagicMN.setVisibility(View.GONE);
-        llKidsMagicNumeric.setVisibility(View.GONE);
-        llKMS.setVisibility(View.GONE);
-        llKMSGirls.setVisibility(View.GONE);
-    }
-
-    private void sendAlterRequestDetails() {
-        mDialog = Helper.showProgressDialog(getActivity());
-
-        SimpleDateFormat format = new SimpleDateFormat("d");
-        format = new SimpleDateFormat("d MMM");
-        final String currentDate = format.format(new Date());
-
-        String jobCardCreationDate = tvDateOrderCreation.getText().toString();
-        String brandName = etBrandName.getText().toString();
-        String designCode = etDesignCode.getText().toString();
-        String designNumber = etDesignNumber.getText().toString();
-        String selectedParts = etParts.getText().toString();
-        String otherParts = etOtherParts.getText().toString();
-        String alterQuantity = etAlterQuantity.getText().toString();
-        String masterName = etMasterName.getText().toString();
-        String totalPieces = etTotalNumberPieces.getText().toString();
-        String cuttingIssueDate = etCuttingIssueDate.getText().toString();
-
-        sendSizeDetails();
-
-        alterRequestItem.setAlterId(String.valueOf(maxId + 1));
-        alterRequestItem.setAlterRequestCreationDate(jobCardCreationDate);
-        alterRequestItem.setBrandName(brandName);
-        alterRequestItem.setDesignCode(designCode);
-        alterRequestItem.setDesignNumber(designNumber);
-        alterRequestItem.setSelectedParts(selectedParts);
-        alterRequestItem.setOtherParts(otherParts);
-        alterRequestItem.setAlterQuantity(alterQuantity);
-        alterRequestItem.setMaster(masterName);
-        alterRequestItem.setAlterRequestDate(currentDate);
-        alterRequestItem.setTotalPieces(totalPieces);
-        alterRequestItem.setCuttingIssueDate(cuttingIssueDate);
-        alterRequestItem.setSizeListItem(sizeListItem);
-
-        alterRequestRef.child(String.valueOf(maxId + 1)).setValue(alterRequestItem,
-                new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        mDialog.dismiss();
-                        Helper.showOkDialog(getActivity(), getString(R.string.alter_request_created_successfully));
-                        clearData();
-                    }
-                });
-    }
 }

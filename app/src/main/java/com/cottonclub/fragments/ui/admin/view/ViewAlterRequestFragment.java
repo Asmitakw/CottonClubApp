@@ -1,4 +1,4 @@
-package com.cottonclub.fragments.ui.view_alter_request;
+package com.cottonclub.fragments.ui.admin.view;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -8,8 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cottonclub.R;
-import com.cottonclub.activities.ViewAlterRequestDetails;
-import com.cottonclub.activities.ViewOrderDetails;
+import com.cottonclub.activities.admin.ViewAlterRequestDetails;
 import com.cottonclub.adapters.AlterRequestAdapter;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.AlterRequestItem;
@@ -22,7 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;

@@ -20,12 +20,12 @@
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.ViewOrderDetails" />
-        <activity android:name=".activities.ViewJobCardDetails" />
-        <activity android:name=".activities.ViewAlterRequestDetails" />
+        <activity android:name=".activities.admin.ViewOrderDetails" />
+        <activity android:name=".activities.admin.ViewJobCardDetails" />
+        <activity android:name=".activities.admin.ViewAlterRequestDetails" />
         <activity android:name=".activities.LoginActivity" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.BaseActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

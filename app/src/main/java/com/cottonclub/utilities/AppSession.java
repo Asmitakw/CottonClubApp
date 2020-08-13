@@ -17,6 +17,7 @@ public class AppSession {
     private static String SAVE_DEVICE_ID = "save_device_id";
     private static String PARTY_LIST = "party_list";
     private static String IS_INTRO = "is_intro";
+    private static  String SAVE_LOGGED_IN_USER = "logged_in_as";
 
 
     private static String SAVE_MEMBER_ID = "member_id";
@@ -53,17 +54,19 @@ public class AppSession {
         return sharedPreferences.getString(SAVE_DEVICE_ID, "");
     }
 
-    /*Save device Id*/
-    public void savePartyList(Context context, Set<String> partyList) {
+
+    /*Save logged in User*/
+    public void setSaveLoggedInUser(Context context, String loggedInAs) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putStringSet(PARTY_LIST, partyList);
+        editor.putString(SAVE_LOGGED_IN_USER, loggedInAs);
         editor.commit();
     }
 
-    public Set<String> getPartyList(Context context) {
+    public String getSaveLoggedInUser(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
-        return sharedPreferences.getStringSet(PARTY_LIST, Collections.singleton(""));
+        return sharedPreferences.getString(SAVE_LOGGED_IN_USER, "");
     }
+
 
 }

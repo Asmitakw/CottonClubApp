@@ -1,4 +1,4 @@
-package com.cottonclub.fragments.ui.view_order;
+package com.cottonclub.fragments.ui.admin.view;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.cottonclub.R;
-import com.cottonclub.activities.ViewOrderDetails;
+import com.cottonclub.activities.admin.ViewOrderDetails;
 import com.cottonclub.adapters.OrderAdapter;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.OrderItem;

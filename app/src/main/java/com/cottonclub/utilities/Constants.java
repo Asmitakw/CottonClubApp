@@ -2,6 +2,17 @@ package com.cottonclub.utilities;
 
 public class Constants {
 
+    //Login Ids as per Entities
+    public static String ADMIN = "1111";
+
+    public static String CUTTING_IN_CHARGE_KM = "1001";
+    public static String CUTTING_IN_CHARGE_BB = "1002";
+    public static String CUTTING_IN_CHARGE_CB = "1003";
+
+    public static String PRODUCTION_MANAGER_KM = "1004";
+    public static String PRODUCTION_MANAGER_BB = "1005";
+    public static String PRODUCTION_MANAGER_CB = "1006";
+
     public static String EMPTY_STRING = " ";
     public static String KIDS_MAGIC = "Kids Magic";
     public static String BBABY = "Be Baby";

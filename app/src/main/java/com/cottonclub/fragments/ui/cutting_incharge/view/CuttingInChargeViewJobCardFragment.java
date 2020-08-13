@@ -1,4 +1,4 @@
-package com.cottonclub.fragments.ui.view_job_card;
+package com.cottonclub.fragments.ui.cutting_incharge.view;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -7,9 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cottonclub.R;
-import com.cottonclub.activities.ViewJobCardDetails;
-import com.cottonclub.activities.ViewOrderDetails;
+import com.cottonclub.activities.admin.ViewJobCardDetails;
 import com.cottonclub.adapters.JobCardAdapter;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.JobCardItem;
@@ -22,14 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-
-public class ViewJobCardFragment extends Fragment {
+public class CuttingInChargeViewJobCardFragment extends Fragment {
 
     private RecyclerView rvViewJobCard;
     private JobCardItem jobCardItem;

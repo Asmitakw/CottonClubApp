@@ -2,17 +2,20 @@ package com.cottonclub.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.cottonclub.R;
 
+import androidx.annotation.RequiresApi;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.cottonclub.fragments.ui.home.HomeFragment;
 import com.cottonclub.interfaces.DialogListener;
+import com.cottonclub.utilities.AppSession;
+import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
 import com.google.android.material.navigation.NavigationView;
 
@@ -26,12 +29,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private TextView tvLoggedInAs;
     public Menu customizedMenu;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -51,21 +54,54 @@ public class MainActivity extends AppCompatActivity {
         View header = navigationView.getHeaderView(0);
         tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
 
-        //Hide view conditionally using following
-        // target.setVisible(false);
-
         Menu menu = navigationView.getMenu();
         MenuItem nav_logout = menu.findItem(R.id.nav_logout);
+        MenuItem create_item = menu.findItem(R.id.create_item);
+        MenuItem cutting_in_charge_view_item = menu.findItem(R.id.cutting_in_charge_view_item);
+
+        if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.ADMIN)) {
+            //Admin Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.admin)));
+            cutting_in_charge_view_item.setVisible(false);
+
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.CUTTING_IN_CHARGE_KM)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Kids Magic Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.cutting_in_charge_km)));
+            create_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(true);
+
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.CUTTING_IN_CHARGE_BB)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Be Baby Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.cutting_in_charge_bb)));
+            create_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(true);
+
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.CUTTING_IN_CHARGE_CB)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Cotton Blue Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.cutting_in_charge_cb)));
+            create_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(true);
+        }
+
         nav_logout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Helper.showOkCancelDialog(MainActivity.this, getString(R.string.do_want_to_logout_from_application), getString(R.string.yes), getString(R.string.no), new DialogListener() {
+                Helper.showOkCancelDialog(BaseActivity.this,
+                        getString(R.string.do_want_to_logout_from_application),
+                        getString(R.string.yes), getString(R.string.no), new DialogListener() {
                     @Override
                     public void onButtonClicked(int type) {
                         if (Dialog.BUTTON_POSITIVE == type) {
                             //AppSession.getInstance().clearSharedPreference(BaseActivity.this);
                             //AppSession.getInstance().saveLoginStatus(BaseActivity.this, false);
-                            Intent mainIntent = new Intent(MainActivity.this, LoginActivity.class);
+                            Intent mainIntent = new Intent(BaseActivity.this, LoginActivity.class);
                             startActivity(mainIntent);
                             //overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
                             finish();
@@ -77,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        tvLoggedInAs.setText("Logged in as: Admin");
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -96,4 +131,5 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 }

@@ -1,4 +1,4 @@
-package com.cottonclub.activities;
+package com.cottonclub.activities.admin;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cottonclub.R;
+import com.cottonclub.activities.BaseActivity;
 import com.cottonclub.interfaces.DialogListener;
-import com.cottonclub.interfaces.OrderListener;
 import com.cottonclub.models.OrderItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Constants;
@@ -343,7 +342,7 @@ public class ViewOrderDetails extends AppCompatActivity implements View.OnClickL
                 Helper.showOkClickDialog(ViewOrderDetails.this, getString(R.string.order_updated_successfully), new DialogListener() {
                     @Override
                     public void onButtonClicked(int type) {
-                        Intent homeIntent = new Intent(ViewOrderDetails.this,MainActivity.class);
+                        Intent homeIntent = new Intent(ViewOrderDetails.this, BaseActivity.class);
                         startActivity(homeIntent);
                         finish();
                     }

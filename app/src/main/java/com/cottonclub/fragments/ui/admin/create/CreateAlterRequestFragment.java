@@ -1,12 +1,8 @@
-package com.cottonclub.fragments.ui.create_job_card;
+package com.cottonclub.fragments.ui.admin.create;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -24,116 +20,87 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cottonclub.R;
-import com.cottonclub.models.JobCardItem;
+import com.cottonclub.models.AlterRequestItem;
+import com.cottonclub.models.OrderItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
-import com.github.dhaval2404.imagepicker.ImagePicker;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 
-public class CreateJobCardFragment extends Fragment implements View.OnClickListener {
+public class CreateAlterRequestFragment extends Fragment implements View.OnClickListener {
 
-    private EditText etBrandName, etDesignNumber, etQuantity, etJobCardNumber, etSelectSize,
-            etFabricType, etMasterName, etCuttingIssueDate, etFabricUnit,
-            etTotalNumberPieces, etDesignCode;
+    private EditText etDesignNumber, etAlterQuantity, etMasterName, etCuttingIssueDate,
+            etParts, etOtherParts, etBrandName, etDesignCode, etSelectSize;
 
+    private TextView tvDateOrderCreation;
+
+    private Button btnCreateAlterRequest;
+    private long maxId = 0;
+    private AlterRequestItem alterRequestItem;
+    private Dialog mDialog;
+    private DatePickerDialog datePickerDialog;
+    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference alterRequestRef = mRootRef.child("AlterRequest");
+    private String[] partsArray;
+    private LinearLayout llOtherParts;
+
+    private String[] brandArray;
+    private String selectedBrand;
+    private String selectedDesignType;
+    private String[] typeArray;
+    private String[] pantArray;
+    private String[] kidsMagicDesignTypeArray;
+    private String[] bBabyDesignTypeArray;
+    private String[] cottonBlueDesignTypeArray;
     private LinearLayout llBBabyS3XLParent, llBBabyNB912Parent, llKidsMagicMN,
             llKidsMagicNumeric, llKidsMagicGT, llKMS, llSizeS, llKMSGirls;
-
     private EditText etKidsMagicMNSize2, etKidsMagicMNSize3, etKidsMagicMNSize4, etKidsMagicMNSize5,
             etKidsMagicMNSize6, etKidsMagicNumeric8, etKidsMagicNumeric10,
             etKidsMagicNumeric12, etKidsMagicNumeric14, etKidsMagicNumeric16, etKidsMagicGT20,
             etKidsMagicGT22, etKidsMagicGT24, etKidsMagicGT26, etKidsMagicGT28, etKidsMagicGT30,
             etKidsMagicGT32, etKidsMagicGT34, etKidsMagicGT36, etKMS1, etKMS2, etKMS3, etKMS4, etKMS5,
-            etKMSG1, etKMSG2, etKMSG3, etKMSG4, etKMSG5, etBbabySizeS, etBbabySizeM, etBbabySizeL, etBbabySizeXL, etBbabySizeXXL,
+            etKMSG1, etKMSG2, etKMSG3, etKMSG4, etKMSG5,
+            etTotalNumberPieces, etBbabySizeS, etBbabySizeM, etBbabySizeL, etBbabySizeXL, etBbabySizeXXL,
             etBbabySizeXXXL, etBbabyNB, etBbaby03, etBbaby36, etBbaby69, etBbaby912;
-
-    private TextView tvDateOrderCreation;
-
-    private ImageView ivUploadFile, ivJobCardFile, ivCancelFile;
-
-    private LinearLayout llFileLayout;
-
-    private Button btnCreateJobCard;
-    private long maxId = 0;
-    private JobCardItem jobCardItem;
-    private String[] brandArray;
-    private String selectedBrand = "";
-    private String[] kidsMagicSizesArray;
-    private String[] bbabySizesArray;
-    private String[] cottonBlueArray;
-    private String[] fabricTypeArray;
-    private String[] kidsMagicDesignTypeArray;
-    private String[] bBabyDesignTypeArray;
-    private String[] cottonBlueDesignTypeArray;
-    private String[] pantArray;
-    private String[] unitArray;
-    private Dialog mDialog;
-    private DatePickerDialog datePickerDialog;
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference jobCardRef = mRootRef.child("JobCard");
-    private StorageReference storageRef;
-    private FirebaseStorage storage;
-    StorageReference storageReference;
-    private Uri fileUri;
-    private TextWatcher textWatcher;
-    private boolean isSizeChartVisible = false;
-    private String selectedDesignType;
     private boolean isKidsMagicP = false;
-    private boolean isClicked = false;
+    private boolean isSizeChartVisible = false;
+    private boolean isOtherPartsDetailsVisible = false;
+    private TextWatcher textWatcher;
     private View viewS;
-    private ArrayList<CharSequence> selectedFabricType = new ArrayList<>();
     private SizeListItem sizeListItem;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_create_job_card, container, false);
+        View root = inflater.inflate(R.layout.fragment_alter_request, container, false);
         initialise(root);
         return root;
     }
 
     private void initialise(View view) {
 
-        // get the Firebase  storage reference
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
 
-        if (kidsMagicSizesArray == null)
-            kidsMagicSizesArray = getResources().getStringArray(R.array.kidsMagicSizes);
+        if (typeArray == null)
+            typeArray = getResources().getStringArray(R.array.type);
 
-        if (bbabySizesArray == null)
-            bbabySizesArray = getResources().getStringArray(R.array.bBabySizes);
-
-        if (cottonBlueArray == null)
-            cottonBlueArray = getResources().getStringArray(R.array.cottonBlueSizes);
-
-        if (fabricTypeArray == null)
-            fabricTypeArray = getResources().getStringArray(R.array.fabricType);
+        if (pantArray == null)
+            pantArray = getResources().getStringArray(R.array.pant);
 
         if (kidsMagicDesignTypeArray == null)
             kidsMagicDesignTypeArray = getResources().getStringArray(R.array.kidsMagicDesignType);
@@ -144,56 +111,18 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
         if (cottonBlueDesignTypeArray == null)
             cottonBlueDesignTypeArray = getResources().getStringArray(R.array.cottonBlueDesignType);
 
-        if (pantArray == null)
-            pantArray = getResources().getStringArray(R.array.pant);
-
-        if (unitArray == null)
-            unitArray = getResources().getStringArray(R.array.units);
-
         tvDateOrderCreation = view.findViewById(R.id.tvDateOrderCreation);
         tvDateOrderCreation.setText(Helper.getCurrentTime());
+
 
         etBrandName = view.findViewById(R.id.etBrandName);
         etBrandName.setOnClickListener(this);
 
         etDesignNumber = view.findViewById(R.id.etDesignNumber);
-        etQuantity = view.findViewById(R.id.etQuantity);
-
-        etJobCardNumber = view.findViewById(R.id.etJobCardNumber);
 
         etSelectSize = view.findViewById(R.id.etSelectSize);
         etSelectSize.setOnClickListener(this);
-
-        etFabricType = view.findViewById(R.id.etFabricType);
-        etFabricType.setOnClickListener(this);
-
-        etFabricUnit = view.findViewById(R.id.etFabricUnit);
-        etFabricUnit.setOnClickListener(this);
-
-        etMasterName = view.findViewById(R.id.etMasterName);
-
-        etCuttingIssueDate = view.findViewById(R.id.etCuttingIssueDate);
-        etCuttingIssueDate.setOnClickListener(this);
-
-        btnCreateJobCard = view.findViewById(R.id.btnCreateJobCard);
-        btnCreateJobCard.setVisibility(View.VISIBLE);
-        btnCreateJobCard.setText(R.string.create_job_card);
-        jobCardItem = new JobCardItem();
-
-        ivUploadFile = view.findViewById(R.id.ivUploadFile);
-        ivUploadFile.setOnClickListener(this);
-
-        ivJobCardFile = view.findViewById(R.id.ivJobCardFile);
-
-        llFileLayout = view.findViewById(R.id.llFileLayout);
-
-        ivCancelFile = view.findViewById(R.id.ivCancelFile);
-        ivCancelFile.setOnClickListener(this);
-
-        etTotalNumberPieces = view.findViewById(R.id.etTotalNumberPieces);
-
-        etDesignCode = view.findViewById(R.id.etDesignCode);
-        etDesignCode.setOnClickListener(this);
+        etSelectSize.setEnabled(false);
 
         etKidsMagicMNSize2 = view.findViewById(R.id.etKidsMagicMNSize2);
 
@@ -258,385 +187,57 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
         llSizeS = view.findViewById(R.id.llSizeS);
         viewS = view.findViewById(R.id.viewS);
 
+        etDesignCode = view.findViewById(R.id.etDesignCode);
+        etDesignCode.setOnClickListener(this);
+
+        if (partsArray == null)
+            partsArray = getResources().getStringArray(R.array.parts);
+
+        tvDateOrderCreation = view.findViewById(R.id.tvDateOrderCreation);
+        tvDateOrderCreation.setText(Helper.getCurrentTime());
+
+        etDesignNumber = view.findViewById(R.id.etDesignNumber);
+        etAlterQuantity = view.findViewById(R.id.etAlterQuantity);
+
+        etMasterName = view.findViewById(R.id.etMasterName);
+
+        etCuttingIssueDate = view.findViewById(R.id.etCuttingIssueDate);
+        etCuttingIssueDate.setOnClickListener(this);
+
+        etParts = view.findViewById(R.id.etParts);
+        etParts.setOnClickListener(this);
+
+        llOtherParts = view.findViewById(R.id.llOtherParts);
+
+        etOtherParts = view.findViewById(R.id.etOtherParts);
+
+        etBrandName = view.findViewById(R.id.etBrandName);
+
+        etDesignCode = view.findViewById(R.id.etDesignCode);
+        etDesignCode.setOnClickListener(this);
+
+        etSelectSize = view.findViewById(R.id.etSelectSize);
+        etSelectSize.setOnClickListener(this);
+
+        btnCreateAlterRequest = view.findViewById(R.id.btnCreateAlterRequest);
+        alterRequestItem = new AlterRequestItem();
+
         setDefaultSizeByQuantity();
         setUiByBrand();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        btnCreateJobCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validate();
-            }
-        });
-
-        jobCardRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    maxId = (snapshot.getChildrenCount());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private void validate() {
-        if (TextUtils.isEmpty(etBrandName.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_brand_name));
-            etBrandName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etDesignNumber.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_design_number));
-            etDesignNumber.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etQuantity.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_quantity));
-            etQuantity.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etJobCardNumber.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_job_card_number));
-            etJobCardNumber.requestFocus();
-            return;
-        }
-
-       /* if (TextUtils.isEmpty(etSelectSize.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_select_size));
-            etSelectSize.requestFocus();
-            return;
-        }*/
-
-        if (TextUtils.isEmpty(etFabricType.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_fabric_type));
-            etFabricType.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etFabricUnit.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_select_fabric_unit));
-            etFabricUnit.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(etMasterName.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_master_name));
-            etMasterName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_cutting_issue_date));
-            etCuttingIssueDate.requestFocus();
-            return;
-        }
-
-        if (fileUri == null) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_upload_job_card));
-            return;
-        }
-
-        sendJobCardDetails();
-    }
-
-    private void sendJobCardDetails() {
-
-        uploadFileToStorage();
-    }
-
-    private void uploadFileToStorage() {
-        mDialog = Helper.showProgressDialog(getActivity());
-
-        SimpleDateFormat format = new SimpleDateFormat("d");
-        format = new SimpleDateFormat("d MMM");
-        final String currentDate = format.format(new Date());
-
-        storageRef = storageReference.child("images/" + maxId);
-        storageRef.putFile(fileUri)
-                .addOnSuccessListener(
-                        new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
-                            @Override
-                            public void onSuccess(
-                                    final UploadTask.TaskSnapshot taskSnapshot) {
-                                storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri downloadPhotoUrl) {
-                                        String jobCardCreationDate = tvDateOrderCreation.getText().toString();
-                                        String brandName = etBrandName.getText().toString();
-                                        String jobCardNumber = etJobCardNumber.getText().toString();
-                                        String designCode = etDesignCode.getText().toString();
-                                        String designNumber = etDesignNumber.getText().toString();
-                                        String quantity = etQuantity.getText().toString();
-                                        String selectSize = etSelectSize.getText().toString();
-                                        String totalPieces = etTotalNumberPieces.getText().toString();
-                                        String fabricType = etFabricType.getText().toString();
-                                        String fabricUnit = etFabricUnit.getText().toString();
-                                        String masterName = etMasterName.getText().toString();
-                                        String cuttingIssueDate = etCuttingIssueDate.getText().toString();
-                                        String jobCardFilePath = downloadPhotoUrl.toString();
-
-                                        sendSizeDetails();
-                                        jobCardItem.setJobCardId(String.valueOf(maxId + 1));
-                                        jobCardItem.setJobCardCreateDate(jobCardCreationDate);
-                                        jobCardItem.setBrand(brandName);
-                                        jobCardItem.setJobCardNumber(jobCardNumber);
-                                        jobCardItem.setDesignCode(designCode);
-                                        jobCardItem.setDesignNumber(designNumber);
-                                        jobCardItem.setQuantity(quantity);
-                                        jobCardItem.setSize(selectSize);
-                                        jobCardItem.setTotalPieces(totalPieces);
-                                        jobCardItem.setFabricType(fabricType);
-                                        jobCardItem.setFabricUnit(fabricUnit);
-                                        jobCardItem.setMasterName(masterName);
-                                        jobCardItem.setCuttingIssueDate(cuttingIssueDate);
-                                        jobCardItem.setJobCardFilePath(jobCardFilePath);
-                                        jobCardItem.setJobCardDate(currentDate);
-                                        jobCardItem.setSizeItem(sizeListItem);
-
-                                        jobCardRef.child(String.valueOf(maxId + 1)).setValue(jobCardItem, new DatabaseReference.CompletionListener() {
-                                            @Override
-                                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                                mDialog.dismiss();
-                                                Helper.showOkDialog(getActivity(), getString(R.string.job_card_created_successfully));
-                                                clearData();
-                                            }
-                                        });
-
-                                    }
-                                });
-                            }
-                        })
-
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                        // Error, Image not uploaded
-
-                    }
-                })
-                .addOnProgressListener(
-                        new OnProgressListener<UploadTask.TaskSnapshot>() {
-
-                            // Progress Listener for loading
-                            // percentage on the dialog box
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                double progress = (100.0 * taskSnapshot.getBytesTransferred()
-                                        / taskSnapshot.getTotalByteCount());
-                            }
-                        });
-
-
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-
-            case R.id.etBrandName:
-                clearSizeFields();
-                clearData();
-                Helper.showDropDown(etBrandName, new ArrayAdapter<>(requireActivity(),
-                        android.R.layout.simple_list_item_1, brandArray), new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        etBrandName.setText(brandArray[position]);
-                        etSelectSize.setText("");
-                        if (position == 0) {
-                            selectedBrand = Constants.KIDS_MAGIC;
-                        } else if (position == 1) {
-                            selectedBrand = Constants.BBABY;
-                        } else {
-                            selectedBrand = Constants.COTTON_BLUE;
-                        }
-                    }
-                });
-                break;
-
-            case R.id.ivUploadFile:
-                ImagePicker.Companion.with(this)
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .start();
-                break;
-
-            case R.id.etSelectSize:
-                if (isKidsMagicP) {
-                    Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etSelectSize.setText(pantArray[position]);
-                            if (position == 0) {
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicNumeric.setVisibility(View.GONE);
-
-                                llKidsMagicMN.setVisibility(View.VISIBLE);
-                            } else {
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicMN.setVisibility(View.GONE);
-
-                                llKidsMagicNumeric.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
-                }
-                break;
-
-            case R.id.etCuttingIssueDate:
-                final Calendar c = Calendar.getInstance();
-                int year, month, day;
-                year = c.get(Calendar.YEAR);
-                month = c.get(Calendar.MONTH);
-                day = c.get(Calendar.DAY_OF_MONTH);
-                datePickerDialog = new DatePickerDialog(requireActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @SuppressLint("SetTextI18n")
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                etCuttingIssueDate.setText(dayOfMonth + "/" + (monthOfYear + 1)
-                                        + "/" + year);
-                            }
-                        }, year, month, day);
-                datePickerDialog.getDatePicker().setMinDate(System
-                        .currentTimeMillis() - 1000);
-                datePickerDialog.show();
-                break;
-
-
-            case R.id.etFabricType:
-                showSelectReceiversDialog();
-                break;
-
-            case R.id.etFabricUnit:
-                Helper.showDropDown(etFabricUnit, new ArrayAdapter<>(getActivity(),
-                        android.R.layout.simple_list_item_1, unitArray), new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        etFabricUnit.setText(unitArray[position]);
-                    }
-                });
-                break;
-
-            case R.id.ivCancelFile:
-                llFileLayout.setVisibility(View.GONE);
-                ivUploadFile.setVisibility(View.VISIBLE);
-                break;
-
-
-            case R.id.etDesignCode:
-                if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, kidsMagicDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(kidsMagicDesignTypeArray[position]);
-                        }
-                    });
-                } else if (selectedBrand.equals(Constants.BBABY)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, bBabyDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(bBabyDesignTypeArray[position]);
-                        }
-                    });
-
-                } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, cottonBlueDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(cottonBlueDesignTypeArray[position]);
-                        }
-                    });
-                }
-                break;
-        }
-    }
-
-    private void showSelectReceiversDialog() {
-        boolean[] checkedReceivers = new boolean[fabricTypeArray.length];
-        int count = fabricTypeArray.length;
-
-        for (int i = 0; i < count; i++)
-            checkedReceivers[i] = selectedFabricType.contains(fabricTypeArray[i]);
-
-        DialogInterface.OnMultiChoiceClickListener receiversDialogListener = new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                if (isChecked)
-                    selectedFabricType.add(fabricTypeArray[which]);
-                else
-                    selectedFabricType.remove(fabricTypeArray[which]);
-
-                onChangeSelectedReceivers();
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder
-                .setTitle(getString(R.string.selectFabric))
-                .setMultiChoiceItems(fabricTypeArray, checkedReceivers, receiversDialogListener)
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void onChangeSelectedReceivers() {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (CharSequence receivers : selectedFabricType)
-            stringBuilder.append(receivers + ", ");
-
-        if (stringBuilder.length() != 0) {
-            String selectedFabric = stringBuilder.substring(0, stringBuilder.length() - 2);
-            etFabricType.setText(selectedFabric);
-        } else {
-            etFabricType.setHint(getString(R.string.fabric_type));
-        }
-    }
-
     private void setDefaultSizeByQuantity() {
-        etQuantity.addTextChangedListener(new TextWatcher() {
+        etAlterQuantity.addTextChangedListener(new TextWatcher() {
             @Override
-
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String getDefaultQuantity = etQuantity.getText().toString();
+                String getDefaultQuantity = etAlterQuantity.getText().toString();
 
-                if (etQuantity.getText().toString().length() > 0) {
+                if (etAlterQuantity.getText().toString().length() > 0) {
 
                     //MN
                     etKidsMagicMNSize2.addTextChangedListener(textWatcher);
@@ -746,8 +347,8 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                         etBbabySizeXXXL.setText(getDefaultQuantity);
                     }
 
-                    if (etQuantity.getText().toString().length() > 1 || etQuantity.getText().toString().length() == 1) {
-                        int getQuantity = Integer.parseInt(etQuantity.getText().toString());
+                    if (etAlterQuantity.getText().toString().length() > 1 || etAlterQuantity.getText().toString().length() == 1) {
+                        int getQuantity = Integer.parseInt(etAlterQuantity.getText().toString());
 
                         int sizeS = (int) (getQuantity * (50.0f / 100.0f));
                         //Default Value for S will be 50% of the given Quantity
@@ -800,11 +401,11 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
     @SuppressLint("SetTextI18n")
     private void getTotalNoPieces() {
-        if (!etQuantity.getText().toString().equals("")) {
+        if (!etAlterQuantity.getText().toString().equals("")) {
 
             setDefaultZero();
 
-            if (etQuantity.getText().toString().length() > 1) {
+            if (etAlterQuantity.getText().toString().length() > 1) {
 
                 if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
                     if (selectedDesignType.equals(Constants.MN)) {
@@ -1031,6 +632,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                                 Integer.parseInt(etBbabySizeXL.getText().toString().trim()) +
                                 Integer.parseInt(etBbabySizeXXL.getText().toString().trim()) +
                                 Integer.parseInt(etBbabySizeXXXL.getText().toString().trim());
+
                         etTotalNumberPieces.setText(getString(R.string.tot_no_pieces) + ":"
                                 + Constants.EMPTY_STRING + String.valueOf(answer));
 
@@ -1052,6 +654,19 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                /*if (etDesignNumber.getText().toString().equals("")) {
+                    clearSizeFields();
+                    etSelectSize.setText("");
+                    llBBabyS3XLParent.setVisibility(View.GONE);
+                    llBBabyNB912Parent.setVisibility(View.GONE);
+                    llBBabyS3XLParent.setVisibility(View.GONE);
+                    llBBabyNB912Parent.setVisibility(View.GONE);
+                    llKidsMagicGT.setVisibility(View.GONE);
+                    llKMS.setVisibility(View.GONE);
+                    llBBabyS3XLParent.setVisibility(View.GONE);
+                    llKidsMagicNumeric.setVisibility(View.GONE);
+                    llKidsMagicMN.setVisibility(View.GONE);
+                }*/
                 if (etBrandName.getText().toString().equals(Constants.BBABY)) {
                     selectedBrand = Constants.BBABY;
 
@@ -1482,35 +1097,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
     }
 
-    private void clearData() {
-        etBrandName.setText("");
-        etJobCardNumber.setText("");
-        etDesignCode.setText("");
-        etDesignNumber.setText("");
-        etQuantity.setText("");
-        etSelectSize.setText("");
-        etTotalNumberPieces.setText("");
-        etFabricType.setText("");
-        etFabricUnit.setText("");
-        etMasterName.setText("");
-        etCuttingIssueDate.setText("");
-
-        llFileLayout.setVisibility(View.GONE);
-        ivUploadFile.setVisibility(View.VISIBLE);
-        etJobCardNumber.requestFocus();
-
-        llBBabyNB912Parent.setVisibility(View.GONE);
-        llBBabyS3XLParent.setVisibility(View.GONE);
-        llKidsMagicGT.setVisibility(View.GONE);
-        llKidsMagicMN.setVisibility(View.GONE);
-        llKidsMagicNumeric.setVisibility(View.GONE);
-        llKMS.setVisibility(View.GONE);
-        llKMSGirls.setVisibility(View.GONE);
-
-        selectedBrand = "";
-        selectedDesignType = "";
-    }
-
     private void clearSizeFields() {
         etKidsMagicMNSize2.setText("0");
 
@@ -1701,14 +1287,289 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            fileUri = data.getData();
-            llFileLayout.setVisibility(View.VISIBLE);
-            ivUploadFile.setVisibility(View.GONE);
-            ivJobCardFile.setImageURI(fileUri);
+    public void onStart() {
+        super.onStart();
+        btnCreateAlterRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validate();
+            }
+        });
+
+        alterRequestRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    maxId = (snapshot.getChildrenCount());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.etBrandName:
+                Helper.showDropDown(etBrandName, new ArrayAdapter<>(requireActivity(),
+                        android.R.layout.simple_list_item_1, brandArray), new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        clearData();
+                        clearSizeFields();
+                        etBrandName.setText(brandArray[position]);
+                        if (position == 0) {
+                            selectedBrand = Constants.KIDS_MAGIC;
+                        } else if (position == 1) {
+                            selectedBrand = Constants.BBABY;
+                        } else {
+                            selectedBrand = Constants.COTTON_BLUE;
+                        }
+                    }
+                });
+                break;
+            case R.id.etDesignCode:
+                if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, kidsMagicDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(kidsMagicDesignTypeArray[position]);
+                        }
+                    });
+                } else if (selectedBrand.equals(Constants.BBABY)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, bBabyDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(bBabyDesignTypeArray[position]);
+                        }
+                    });
+
+                } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
+                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, cottonBlueDesignTypeArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etDesignCode.setText(cottonBlueDesignTypeArray[position]);
+                        }
+                    });
+                }
+
+                break;
+            case R.id.etSelectSize:
+                if (isKidsMagicP) {
+                    Helper.showDropDown(etSelectSize, new ArrayAdapter<>(requireActivity(),
+                            android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etSelectSize.setText(pantArray[position]);
+                            if (position == 0) {
+                                llBBabyS3XLParent.setVisibility(View.GONE);
+                                llBBabyNB912Parent.setVisibility(View.GONE);
+                                llKMS.setVisibility(View.GONE);
+                                llBBabyS3XLParent.setVisibility(View.GONE);
+                                llKidsMagicGT.setVisibility(View.GONE);
+                                llKidsMagicNumeric.setVisibility(View.GONE);
+
+                                llKidsMagicMN.setVisibility(View.VISIBLE);
+                            } else {
+                                llBBabyS3XLParent.setVisibility(View.GONE);
+                                llBBabyNB912Parent.setVisibility(View.GONE);
+                                llKMS.setVisibility(View.GONE);
+                                llBBabyS3XLParent.setVisibility(View.GONE);
+                                llKidsMagicGT.setVisibility(View.GONE);
+                                llKidsMagicMN.setVisibility(View.GONE);
+
+                                llKidsMagicNumeric.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                }
+                break;
+
+            case R.id.etCuttingIssueDate:
+                final Calendar c = Calendar.getInstance();
+                int year, month, day;
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                day = c.get(Calendar.DAY_OF_MONTH);
+                datePickerDialog = new DatePickerDialog(requireActivity(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                etCuttingIssueDate.setText(dayOfMonth + "/" + (monthOfYear + 1)
+                                        + "/" + year);
+                            }
+                        }, year, month, day);
+                datePickerDialog.getDatePicker().setMinDate(System
+                        .currentTimeMillis() - 1000);
+                datePickerDialog.show();
+                break;
+
+            case R.id.etParts:
+                Helper.showDropDown(etParts, new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_list_item_1, partsArray), new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        etParts.setText(partsArray[position]);
+                        if (position == 3) {
+                            isOtherPartsDetailsVisible = true;
+                            llOtherParts.setVisibility(View.VISIBLE);
+                        } else {
+                            llOtherParts.setVisibility(View.GONE);
+                            isOtherPartsDetailsVisible = false;
+                        }
+                    }
+                });
+                break;
         }
 
+    }
+
+    private void validate() {
+
+        if (TextUtils.isEmpty(etBrandName.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_brand_name));
+            etBrandName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etDesignCode.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.design_code));
+            etDesignCode.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etDesignNumber.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_design_number));
+            etDesignNumber.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etParts.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_select_parts));
+            etParts.requestFocus();
+            return;
+        }
+
+        if (isOtherPartsDetailsVisible) {
+            if (TextUtils.isEmpty(etOtherParts.getText().toString().trim())) {
+                Helper.showOkDialog(getActivity(), getString(R.string.please_select_other_parts));
+                etOtherParts.requestFocus();
+                return;
+            }
+        }
+
+        if (TextUtils.isEmpty(etAlterQuantity.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_alter_quantity));
+            etAlterQuantity.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etSelectSize.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_select_size));
+            etSelectSize.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etTotalNumberPieces.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_total_no_pieces));
+            etTotalNumberPieces.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etMasterName.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_master_name));
+            etMasterName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
+            Helper.showOkDialog(getActivity(), getString(R.string.please_enter_cutting_issue_date));
+            etCuttingIssueDate.requestFocus();
+            return;
+        }
+
+        sendAlterRequestDetails();
+    }
+
+    private void clearData() {
+        etBrandName.setText("");
+        etDesignCode.setText("");
+        etDesignNumber.setText("");
+        etParts.setText("");
+        etOtherParts.setText("");
+        etCuttingIssueDate.setText("");
+        etSelectSize.setText("");
+        etMasterName.setText("");
+        etTotalNumberPieces.setText("");
+        etAlterQuantity.setText("");
+        selectedBrand = "";
+        selectedDesignType = "";
+
+        etAlterQuantity.setText("");
+        etBrandName.requestFocus();
+
+        llBBabyNB912Parent.setVisibility(View.GONE);
+        llBBabyS3XLParent.setVisibility(View.GONE);
+        llKidsMagicGT.setVisibility(View.GONE);
+        llKidsMagicMN.setVisibility(View.GONE);
+        llKidsMagicNumeric.setVisibility(View.GONE);
+        llKMS.setVisibility(View.GONE);
+        llKMSGirls.setVisibility(View.GONE);
+    }
+
+    private void sendAlterRequestDetails() {
+        mDialog = Helper.showProgressDialog(getActivity());
+
+        SimpleDateFormat format = new SimpleDateFormat("d");
+        format = new SimpleDateFormat("d MMM");
+        final String currentDate = format.format(new Date());
+
+        String jobCardCreationDate = tvDateOrderCreation.getText().toString();
+        String brandName = etBrandName.getText().toString();
+        String designCode = etDesignCode.getText().toString();
+        String designNumber = etDesignNumber.getText().toString();
+        String selectedParts = etParts.getText().toString();
+        String otherParts = etOtherParts.getText().toString();
+        String alterQuantity = etAlterQuantity.getText().toString();
+        String masterName = etMasterName.getText().toString();
+        String totalPieces = etTotalNumberPieces.getText().toString();
+        String cuttingIssueDate = etCuttingIssueDate.getText().toString();
+
+        sendSizeDetails();
+
+        alterRequestItem.setAlterId(String.valueOf(maxId + 1));
+        alterRequestItem.setAlterRequestCreationDate(jobCardCreationDate);
+        alterRequestItem.setBrandName(brandName);
+        alterRequestItem.setDesignCode(designCode);
+        alterRequestItem.setDesignNumber(designNumber);
+        alterRequestItem.setSelectedParts(selectedParts);
+        alterRequestItem.setOtherParts(otherParts);
+        alterRequestItem.setAlterQuantity(alterQuantity);
+        alterRequestItem.setMaster(masterName);
+        alterRequestItem.setAlterRequestDate(currentDate);
+        alterRequestItem.setTotalPieces(totalPieces);
+        alterRequestItem.setCuttingIssueDate(cuttingIssueDate);
+        alterRequestItem.setSizeListItem(sizeListItem);
+
+        alterRequestRef.child(String.valueOf(maxId + 1)).setValue(alterRequestItem,
+                new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                        mDialog.dismiss();
+                        Helper.showOkDialog(getActivity(), getString(R.string.alter_request_created_successfully));
+                        clearData();
+                    }
+                });
     }
 }

@@ -147,7 +147,7 @@
     <string name="if_you_reject_permission"><![CDATA[If you reject permission, you cannot use this service\n\nPlease turn on permissions at [Setting] > [Permission]]]></string>
     <string name="go_to_setting">Go to Settings</string>
     <string name="no_records">No Records found for this filter.</string>
-    <string name="upload_jobcard">Upload Job Card</string>
+    <string name="upload_file">Upload File</string>
     <string name="please_enter_upload_job_card">Please Upload Job Card</string>
     <string name="unit">Unit</string>
     <string name="meters">m(s)</string>
@@ -164,7 +164,16 @@
     <string name="please_enter_total_no_pieces">Please enter Total Number of Pieces</string>
     <string name="update_alter_request">Update Alter Request</string>
     <string name="alter_request_updated_successfully">Alter Request Updated Successfully</string>
-
+    <string name="do_you_want_to_exit_application">Do you want to exit the application?</string>
+    <string name="logged_in_as">Logged In As: </string>
+    <string name="user_id">User Id</string>
+    <string name="cutting_in_charge_km"><b>Cutting In-charge</b> Kids Magic</string>
+    <string name="cutting_in_charge_bb"><b>Cutting In-charge</b> Be Baby</string>
+    <string name="cutting_in_charge_cb"><b>Cutting In-charge</b> Cotton Blue</string>
+    <string name="job_card_details">Job Card Details</string>
+    <string name="item">Item</string>
+    <string name="cutting_complete_date">Cutting Complete Date</string>
+    <string name="wastage">Wastage</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>
