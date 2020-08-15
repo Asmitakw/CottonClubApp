@@ -316,9 +316,15 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
     private void validate() {
 
-        if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.cutting_issue_date));
-            etCuttingIssueDate.requestFocus();
+        if(fabricCodeList.isEmpty()){
+            Helper.showOkDialog(this, getString(R.string.please_enter_an_item));
+            etFabricItem.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(etCuttingCompleteDate.getText().toString().trim())) {
+            Helper.showOkDialog(this, getString(R.string.please_enter_cutting_complete_date));
+            etCuttingCompleteDate.requestFocus();
             return;
         }
 

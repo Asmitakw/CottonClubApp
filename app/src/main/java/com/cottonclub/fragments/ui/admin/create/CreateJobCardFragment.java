@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.cottonclub.R;
 import com.cottonclub.models.JobCardItem;
+import com.cottonclub.models.OrderItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
@@ -44,7 +45,9 @@ import com.google.firebase.storage.UploadTask;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -105,6 +108,8 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
     private View viewS;
     private ArrayList<CharSequence> selectedFabricType = new ArrayList<>();
     private SizeListItem sizeListItem;
+    private ImageView ivMasterList;
+    private ArrayList<JobCardItem> masterList = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -120,6 +125,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
         // get the Firebase  storage reference
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
 
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
@@ -150,6 +156,9 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
         if (unitArray == null)
             unitArray = getResources().getStringArray(R.array.units);
+
+        ivMasterList = view.findViewById(R.id.ivMasterList);
+        ivMasterList.setOnClickListener(this);
 
         tvDateOrderCreation = view.findViewById(R.id.tvDateOrderCreation);
         tvDateOrderCreation.setText(Helper.getCurrentTime());
@@ -352,6 +361,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
     private void sendJobCardDetails() {
 
+        isClicked = false;
         uploadFileToStorage();
     }
 
@@ -442,6 +452,32 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
 
     }
+
+    private void getMasterListing() {
+        mDialog = Helper.showProgressDialog(getActivity());
+        jobCardRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mDialog.dismiss();
+
+                if (isClicked) {
+                    if (masterList.size() == 0) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            jobCardItem = dataSnapshot.getValue(JobCardItem.class);
+                            masterList.add(jobCardItem);
+                        }
+                    }
+                    ivMasterList.performClick();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -576,6 +612,36 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                     });
                 }
                 break;
+
+            case R.id.ivMasterList:
+                isClicked = true;
+                if (masterList.size() == 0) {
+                    getMasterListing();
+                } else {
+
+                    HashSet hashSet = new HashSet();
+                    for (int i = 0; i < masterList.size(); i++) {
+                        JobCardItem jobCardItem = masterList.get(i);
+                        hashSet.add(jobCardItem.getMasterName());
+                    }
+                    final ArrayList<String> arrayList = new ArrayList<>();
+                    arrayList.addAll(hashSet);
+
+                    final ArrayList<String> top_three_items = new ArrayList<>();
+                    top_three_items.add(arrayList.get(2));
+                    top_three_items.add(arrayList.get(1));
+                    top_three_items.add(arrayList.get(0));
+
+                    Helper.showDropDown(etMasterName, new ArrayAdapter<>(getActivity(),
+                            android.R.layout.simple_list_item_1, top_three_items), new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            etMasterName.setText(top_three_items.get(position));
+                            top_three_items.clear();
+                        }
+                    });
+                }
+                break;
         }
     }
 
@@ -621,6 +687,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
         if (stringBuilder.length() != 0) {
             String selectedFabric = stringBuilder.substring(0, stringBuilder.length() - 2);
             etFabricType.setText(selectedFabric);
+            etFabricUnit.setText(getString(R.string.kgs));
         } else {
             etFabricType.setHint(getString(R.string.fabric_type));
         }

@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -65,6 +66,7 @@ public class ViewJobCardFragment extends Fragment {
                         jobCardList.add(jobCardItem);
                     }
                 }
+                Collections.reverse(jobCardList);
                 jobCardAdapter = new JobCardAdapter(getActivity(), jobCardList, new RecyclerViewClickListener() {
                     @Override
                     public void onClick(View view, int position) {

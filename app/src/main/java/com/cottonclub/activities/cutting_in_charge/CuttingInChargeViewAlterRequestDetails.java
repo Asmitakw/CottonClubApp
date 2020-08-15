@@ -51,10 +51,7 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
             etSelectSize, etTotalNumberPieces, etOtherParts, etAlterQuantity,
             etCuttingIssueDate, etMasterName;
 
-    private TextView tvDateOrderCreation;
-
     private Button btnUpdateAlterRequest;
-    private long maxId = 0;
     private AlterRequestItem alterRequestItem;
     private SizeListItem sizeListItem;
     private String[] brandArray;
@@ -88,14 +85,13 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
     private Menu customizedMenu;
     private boolean isOtherPartsDetailsVisible = false;
     private LinearLayout llOtherParts;
-    private Button btnCreateAlterRequest, btnAddItem;
+    private Button btnAddItem;
     private EditText etFabricItem, etFabricQuantity, etFabricCodeUnit, etCuttingCompleteDate,
             etWastage, etWastageUnit;
     private ArrayList<FabricListItem> fabricCodeList = new ArrayList<FabricListItem>();
     private RecyclerView rvFabricItem;
     private FabricListAdapter fabricListAdapter;
     private FabricListItem fabricListItem;
-    private boolean isImageShowing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,8 +134,6 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
 
         if (unitArray == null)
             unitArray = getResources().getStringArray(R.array.units);
-
-        tvDateOrderCreation = findViewById(R.id.tvDateOrderCreation);
 
         etBrandName = findViewById(R.id.etBrandName);
         etBrandName.setText(alterRequestItem.getBrandName());
@@ -236,8 +230,7 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
         etKMSG4 = findViewById(R.id.etKMSG4);
         etKMSG5 = findViewById(R.id.etKMSG5);
 
-        btnUpdateAlterRequest = findViewById(R.id.btnCreateAlterRequest);
-        btnUpdateAlterRequest.setText(R.string.update_alter_request);
+        btnUpdateAlterRequest = findViewById(R.id.btnUpdateAlterRequest);
         llBBabyS3XLParent = findViewById(R.id.llBBabyS3XLParent);
         llBBabyNB912Parent = findViewById(R.id.llBBabyNB912Parent);
 
@@ -276,6 +269,7 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
 
         etWastage = findViewById(R.id.etWastage);
         etWastageUnit = findViewById(R.id.etWastageUnit);
+        etWastageUnit.setOnClickListener(this);
     }
 
     @Override
@@ -291,9 +285,14 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
 
     private void validate() {
 
-        if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.cutting_issue_date));
-            etCuttingIssueDate.requestFocus();
+        if(fabricCodeList.isEmpty()){
+            Helper.showOkDialog(this, getString(R.string.please_enter_an_item));
+            etFabricItem.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(etCuttingCompleteDate.getText().toString().trim())) {
+            Helper.showOkDialog(this, getString(R.string.please_enter_cutting_complete_date));
+            etCuttingCompleteDate.requestFocus();
             return;
         }
 
@@ -329,7 +328,7 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 mDialog.dismiss();
-                    Helper.showOkClickDialog(CuttingInChargeViewAlterRequestDetails.this, getString(R.string.job_card_updated_successfully), new DialogListener() {
+                    Helper.showOkClickDialog(CuttingInChargeViewAlterRequestDetails.this, getString(R.string.alter_request_updated_successfully), new DialogListener() {
                     @Override
                     public void onButtonClicked(int type) {
                         Intent homeIntent = new Intent(CuttingInChargeViewAlterRequestDetails.this, BaseActivity.class);
@@ -1406,8 +1405,6 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
         disableView(etBbaby36);
         disableView(etBbaby69);
         disableView(etBbaby912);
-
-        btnUpdateAlterRequest.setVisibility(View.GONE);
     }
 
     private void setValues() {

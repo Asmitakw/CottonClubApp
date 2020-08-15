@@ -183,6 +183,17 @@
     <string name="please_enter_wastage_quantity">Please enter Wastage Quantity</string>
     <string name="job_card_updated_successfully">Job Card Updated Successfully</string>
     <string name="view_alter_request_details">View Alter Request Details</string>
+    <string name="please_enter_cutting_complete_date">Please enter cutting complete date</string>
+    <string name="please_enter_an_item">Please enter Fabric consumed Item</string>
+    <string name="sinker">Sinker</string>
+    <string name="interlock">Interlock</string>
+    <string name="ldh_fab_plain">LDH FAB(Plain)</string>
+    <string name="ldh_fab_stripe">LDH FAB(Stripe)</string>
+    <string name="fleece">Fleece</string>
+    <string name="textile">Textile</string>
+    <string name="lycra">Lycra</string>
+    <string name="bombay_fab">Bombay FAB</string>
+
 
     <string-array name="brand">
         <item>Kids Magic</item>

@@ -31,32 +31,19 @@
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
 
-        <LinearLayout
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etBrandName"
+            style="@style/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_tag" />
-
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etBrandName"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:drawableEnd="@drawable/ic_drop_down"
-                android:editable="false"
-                android:focusableInTouchMode="false"
-                android:hint="@string/select_brand"
-                android:singleLine="true"
-                android:textCursorDrawable="@drawable/cursor_drawable" />
-
-        </LinearLayout>
+            android:drawableStart="@drawable/ic_tag"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:drawablePadding="@dimen/dimen_15"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/select_brand"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
 
         <View
             android:layout_width="match_parent"
@@ -64,77 +51,58 @@
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
 
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etJobCardNumber"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/ic_job_card"
+            android:hint="@string/job_card_number"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorGreyDark" />
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_job_card" />
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etDesignCode"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_design"
+                android:drawableEnd="@drawable/ic_drop_down"
+                android:drawablePadding="@dimen/dimen_15"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/design_code"
+                android:singleLine="true"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etJobCardNumber"
+                android:id="@+id/etDesignNumber"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:hint="@string/job_card_number"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_number"
+                android:drawablePadding="@dimen/dimen_10"
+                android:hint="@string/design_number"
+                android:inputType="number"
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/cursor_drawable" />
 
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorGreyDark" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.cottonclub.custom_views.CustomEditViewRegular
-                    android:id="@+id/etDesignCode"
-                    style="@style/EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_design"
-                    android:drawableEnd="@drawable/ic_drop_down"
-                    android:drawablePadding="@dimen/dimen_15"
-                    android:editable="false"
-                    android:focusableInTouchMode="false"
-                    android:hint="@string/design_code"
-                    android:singleLine="true"
-                    android:textCursorDrawable="@drawable/cursor_drawable" />
-
-                <com.cottonclub.custom_views.CustomEditViewRegular
-                    android:id="@+id/etDesignNumber"
-                    style="@style/EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_number"
-                    android:drawablePadding="@dimen/dimen_10"
-                    android:hint="@string/design_number"
-                    android:inputType="number"
-                    android:singleLine="true"
-                    android:textCursorDrawable="@drawable/cursor_drawable" />
-
-            </LinearLayout>
         </LinearLayout>
 
         <View
@@ -176,30 +144,19 @@
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
 
-        <LinearLayout
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etQuantity"
+            style="@style/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/ic_quantity"
+            android:drawablePadding="@dimen/dimen_15"
+            android:hint="@string/quantity"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
 
-            <ImageView
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_quantity" />
-
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etQuantity"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:hint="@string/quantity"
-                android:inputType="number"
-                android:singleLine="true"
-                android:textCursorDrawable="@drawable/cursor_drawable" />
-
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -259,23 +216,46 @@
             android:layout_margin="5dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_master" />
-
             <com.cottonclub.custom_views.CustomEditViewRegular
                 android:id="@+id/etMasterName"
                 style="@style/EditText"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/dimen_305"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginEnd="@dimen/dimen_25"
+                android:drawableStart="@drawable/ic_master"
+                android:drawablePadding="@dimen/dimen_10"
                 android:hint="@string/master_name"
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/cursor_drawable" />
 
+            <ImageView
+                android:id="@+id/ivMasterList"
+                android:layout_width="@dimen/small_icon"
+                android:layout_height="@dimen/small_icon"
+                android:layout_marginStart="@dimen/dimen_8"
+                android:layout_marginTop="12dp"
+                android:src="@drawable/ic_drop_down_round_button" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorGreyDark" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etFabricType"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/ic_fabric_consumed"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:drawablePadding="@dimen/dimen_15"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/fabric_type"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
 
         <View
             android:layout_width="match_parent"
@@ -286,95 +266,95 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginStart="@dimen/dimen_10"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_fabric_consumed" />
+            <com.cottonclub.custom_views.CustomCheckBoxRegular
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_weight="1"
+                android:text="@string/sinker"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etFabricType"
+                android:id="@+id/etFabricUnitSinker"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:clickable="false"
+                android:drawableStart="@drawable/ic_kgs"
                 android:drawableEnd="@drawable/ic_drop_down"
+                android:drawablePadding="@dimen/dimen_10"
                 android:editable="false"
                 android:focusableInTouchMode="false"
-                android:hint="@string/fabric_type"
-                android:textCursorDrawable="@drawable/cursor_drawable" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorGreyDark" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.cottonclub.custom_views.CustomEditViewRegular
-                    android:id="@+id/etFabricUnit"
-                    style="@style/EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:drawableStart="@drawable/ic_kgs"
-                    android:drawableEnd="@drawable/ic_drop_down"
-                    android:drawablePadding="@dimen/dimen_10"
-                    android:editable="false"
-                    android:focusableInTouchMode="false"
-                    android:hint="@string/unit"
-                    android:singleLine="true"
-                    android:textCursorDrawable="@drawable/cursor_drawable" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorGreyDark" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_delivery_date" />
-
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etCuttingIssueDate"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:drawableEnd="@drawable/ic_calendar"
-                android:editable="false"
-                android:focusableInTouchMode="false"
-                android:hint="@string/cutting_issue_date"
+                android:hint="@string/unit"
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/cursor_drawable" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorGreyDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10"
+            android:orientation="horizontal">
+
+            <com.cottonclub.custom_views.CustomCheckBoxRegular
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_weight="1"
+                android:text="@string/interlock"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etFabricUnitInterlock"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="false"
+                android:drawableStart="@drawable/ic_kgs"
+                android:drawableEnd="@drawable/ic_drop_down"
+                android:drawablePadding="@dimen/dimen_10"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/unit"
+                android:singleLine="true"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorGreyDark" />
+
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etCuttingIssueDate"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/ic_delivery_date"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/cutting_issue_date"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
 
         <View
             android:layout_width="match_parent"
@@ -446,6 +426,5 @@
             android:visibility="gone" />
 
     </LinearLayout>
-
 
 </ScrollView>

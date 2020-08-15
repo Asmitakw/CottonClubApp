@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -1468,13 +1469,18 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
                     final ArrayList<String> arrayList = new ArrayList<>();
                     arrayList.addAll(hashSet);
 
+                    Collections.reverse(arrayList);
+                    final ArrayList<String> top_three_items = new ArrayList<>();
+                    top_three_items.add(arrayList.get(2));
+                    top_three_items.add(arrayList.get(1));
+                    top_three_items.add(arrayList.get(0));
+
                     Helper.showDropDown(etPartyName, new ArrayAdapter<>(requireActivity(),
-                            android.R.layout.simple_list_item_1, arrayList), new AdapterView.OnItemClickListener() {
+                            android.R.layout.simple_list_item_1, top_three_items), new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            OrderItem orderItem = partyList.get(position);
-                            etPartyName.setText(arrayList.get(position));
-                            arrayList.clear();
+                            etPartyName.setText(top_three_items.get(position));
+                            top_three_items.clear();
                         }
                     });
                 }

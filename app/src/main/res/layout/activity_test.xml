@@ -262,8 +262,6 @@
             android:textCursorDrawable="@drawable/cursor_drawable" />
 
 
-
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -308,12 +306,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="1"
                     android:drawableStart="@drawable/ic_quantity"
                     android:drawablePadding="@dimen/dimen_10"
                     android:hint="@string/quantity"
                     android:inputType="number"
                     android:singleLine="true"
-                    android:layout_weight="1"
                     android:textCursorDrawable="@drawable/cursor_drawable"
                     tools:ignore="NestedWeights" />
 
@@ -322,15 +320,15 @@
                     style="@style/EditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.3"
                     android:clickable="false"
                     android:drawableStart="@drawable/ic_kgs"
                     android:drawableEnd="@drawable/ic_drop_down"
                     android:drawablePadding="@dimen/dimen_10"
                     android:editable="false"
                     android:focusableInTouchMode="false"
-                    android:text="@string/kgs"
                     android:singleLine="true"
-                    android:layout_weight="1.3"
+                    android:text="@string/kgs"
                     android:textCursorDrawable="@drawable/cursor_drawable" />
             </LinearLayout>
         </LinearLayout>
@@ -362,8 +360,9 @@
             android:drawableStart="@drawable/ic_delivery_date"
             android:drawableEnd="@drawable/ic_calendar"
             android:drawablePadding="@dimen/dimen_15"
-            android:hint="@string/cutting_complete_date"
+            android:editable="false"
             android:focusableInTouchMode="false"
+            android:hint="@string/cutting_complete_date"
             android:textCursorDrawable="@drawable/cursor_drawable" />
 
         <View
@@ -385,8 +384,8 @@
                 android:layout_weight="1"
                 android:drawableStart="@drawable/ic_wastage"
                 android:drawablePadding="@dimen/dimen_15"
-                android:inputType="number"
                 android:hint="@string/wastage"
+                android:inputType="number"
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/cursor_drawable" />
 
@@ -397,34 +396,27 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:editable="false"
-                android:focusableInTouchMode="false"
                 android:drawableStart="@drawable/ic_kgs"
                 android:drawableEnd="@drawable/ic_drop_down"
                 android:drawablePadding="@dimen/dimen_10"
+                android:editable="false"
+                android:focusableInTouchMode="false"
                 android:text="@string/kgs"
                 android:textCursorDrawable="@drawable/cursor_drawable" />
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorGreyDark" />
-
         <com.cottonclub.custom_views.CustomButtonRegular
-            android:id="@+id/btnUpdateAlterRequest"
+            android:id="@+id/btnCreateAlterRequest"
             style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_15"
             android:layout_marginBottom="@dimen/dimen_forty"
             android:background="@drawable/rounded_button"
-            android:text="@string/update_job_Card"
+            android:text="@string/update_alter_request"
             android:textAllCaps="true"
-            android:textSize="20sp"
-            android:visibility="visible" />
-
+            android:textSize="20sp" />
 
     </LinearLayout>
 

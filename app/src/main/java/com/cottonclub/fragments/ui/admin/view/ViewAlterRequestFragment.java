@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ViewAlterRequestFragment extends Fragment implements View.OnClickListener {
 
@@ -64,6 +65,7 @@ public class ViewAlterRequestFragment extends Fragment implements View.OnClickLi
                     }
                 }
 
+                Collections.reverse(alterRequestList);
                 alterRequestAdapter = new AlterRequestAdapter(getActivity(), alterRequestList, new RecyclerViewClickListener() {
                     @Override
                     public void onClick(View view, int position) {

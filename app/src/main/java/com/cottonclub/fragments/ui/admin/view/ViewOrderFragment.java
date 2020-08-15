@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 
 import androidx.annotation.NonNull;
@@ -103,7 +104,8 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
         if (filterList.size() == 0) {
             Snackbar.make(getView(), getString(R.string.no_records), 3000).show();
         } else {
-            orderAdapter = new OrderAdapter(getActivity(), filterList, new RecyclerViewClickListener() {
+            Collections.reverse(filterList);
+            orderAdapter = new OrderAdapter(getActivity(), filterList,  new RecyclerViewClickListener() {
                 @Override
                 public void onClick(View view, int position) {
                     Bundle bundle = new Bundle();
@@ -161,6 +163,7 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                         orderList.add(orderItem);
                     }
                 }
+                Collections.reverse(orderList);
 
                 orderAdapter = new OrderAdapter(getActivity(), orderList, new RecyclerViewClickListener() {
                     @Override
