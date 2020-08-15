@@ -21,6 +21,14 @@ public class JobCardItem implements Parcelable {
     private String cuttingInchargeNumber;
     private SizeListItem sizeItem;
     private String jobCardFilePath;
+    private String isUpdatedByCuttingInCharge;
+
+    private String cuttingInChargeId;
+    private String cuttingCompleteDate;
+    private String wastage;
+    private String wastageUnit;
+    private String jobCardUpdatedByCuttingInChargeDate;
+    private FabricListItem fabricListItem;
 
     protected JobCardItem(Parcel in) {
         jobCardId = in.readString();
@@ -40,6 +48,7 @@ public class JobCardItem implements Parcelable {
         cuttingInchargeNumber = in.readString();
         sizeItem = in.readParcelable(SizeListItem.class.getClassLoader());
         jobCardFilePath = in.readString();
+        isUpdatedByCuttingInCharge = in.readString();
     }
 
     public JobCardItem() {
@@ -209,6 +218,7 @@ public class JobCardItem implements Parcelable {
         parcel.writeString(cuttingInchargeNumber);
         parcel.writeParcelable(sizeItem, i);
         parcel.writeString(jobCardFilePath);
+        parcel.writeString(isUpdatedByCuttingInCharge);
     }
 
     public String getJobCardId() {
@@ -217,5 +227,61 @@ public class JobCardItem implements Parcelable {
 
     public void setJobCardId(String jobCardId) {
         this.jobCardId = jobCardId;
+    }
+
+    public String getCuttingInChargeId() {
+        return cuttingInChargeId;
+    }
+
+    public void setCuttingInChargeId(String cuttingInChargeId) {
+        this.cuttingInChargeId = cuttingInChargeId;
+    }
+
+    public String getCuttingCompleteDate() {
+        return cuttingCompleteDate;
+    }
+
+    public void setCuttingCompleteDate(String cuttingCompleteDate) {
+        this.cuttingCompleteDate = cuttingCompleteDate;
+    }
+
+    public String getWastage() {
+        return wastage;
+    }
+
+    public void setWastage(String wastage) {
+        this.wastage = wastage;
+    }
+
+    public String getWastageUnit() {
+        return wastageUnit;
+    }
+
+    public void setWastageUnit(String wastageUnit) {
+        this.wastageUnit = wastageUnit;
+    }
+
+    public FabricListItem getFabricListItem() {
+        return fabricListItem;
+    }
+
+    public void setFabricListItem(FabricListItem fabricListItem) {
+        this.fabricListItem = fabricListItem;
+    }
+
+    public String getJobCardUpdatedByCuttingInChargeDate() {
+        return jobCardUpdatedByCuttingInChargeDate;
+    }
+
+    public void setJobCardUpdatedByCuttingInChargeDate(String jobCardUpdatedByCuttingInChargeDate) {
+        this.jobCardUpdatedByCuttingInChargeDate = jobCardUpdatedByCuttingInChargeDate;
+    }
+
+    public String getIsUpdatedByCuttingInCharge() {
+        return isUpdatedByCuttingInCharge;
+    }
+
+    public void setIsUpdatedByCuttingInCharge(String isUpdatedByCuttingInCharge) {
+        this.isUpdatedByCuttingInCharge = isUpdatedByCuttingInCharge;
     }
 }

@@ -15,16 +15,18 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".activities.admin.ViewOrderDetails" />
         <activity android:name=".activities.admin.ViewJobCardDetails" />
         <activity android:name=".activities.admin.ViewAlterRequestDetails" />
         <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardDetails" />
+        <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails" />
         <activity android:name=".activities.LoginActivity" />
+
         <activity
             android:name=".activities.BaseActivity"
             android:label="@string/title_activity_main"

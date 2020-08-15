@@ -1560,6 +1560,7 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
         alterRequestItem.setAlterRequestDate(currentDate);
         alterRequestItem.setTotalPieces(totalPieces);
         alterRequestItem.setCuttingIssueDate(cuttingIssueDate);
+        alterRequestItem.setIsUpdatedByCuttingInCharge("false");
         alterRequestItem.setSizeListItem(sizeListItem);
 
         alterRequestRef.child(String.valueOf(maxId + 1)).setValue(alterRequestItem,

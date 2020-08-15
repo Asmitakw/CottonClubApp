@@ -180,6 +180,9 @@
     <string name="add_item">Add Item</string>
     <string name="please_enter_fabric_code">Please enter Fabric Code</string>
     <string name="please_enter_fabric_quantity">Please enter Fabric Quantity</string>
+    <string name="please_enter_wastage_quantity">Please enter Wastage Quantity</string>
+    <string name="job_card_updated_successfully">Job Card Updated Successfully</string>
+    <string name="view_alter_request_details">View Alter Request Details</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>

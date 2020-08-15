@@ -116,6 +116,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
     private void initialise(View view) {
 
+        selectedFabricType.clear();
         // get the Firebase  storage reference
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -403,6 +404,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                                         jobCardItem.setJobCardFilePath(jobCardFilePath);
                                         jobCardItem.setJobCardDate(currentDate);
                                         jobCardItem.setSizeItem(sizeListItem);
+                                        jobCardItem.setIsUpdatedByCuttingInCharge("false");
 
                                         jobCardRef.child(String.valueOf(maxId + 1)).setValue(jobCardItem, new DatabaseReference.CompletionListener() {
                                             @Override
@@ -601,7 +603,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                 .setTitle(getString(R.string.selectFabric))
                 .setMultiChoiceItems(fabricTypeArray, checkedReceivers, receiversDialogListener)
                 .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }

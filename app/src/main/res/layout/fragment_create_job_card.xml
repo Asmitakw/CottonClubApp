@@ -130,6 +130,7 @@
                     android:drawableStart="@drawable/ic_number"
                     android:drawablePadding="@dimen/dimen_10"
                     android:hint="@string/design_number"
+                    android:inputType="number"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/cursor_drawable" />
 

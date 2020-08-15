@@ -5,12 +5,16 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,7 +22,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,19 +35,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cottonclub.R;
 import com.cottonclub.activities.BaseActivity;
-import com.cottonclub.activities.admin.ViewAlterRequestDetails;
-import com.cottonclub.adapters.AlterRequestAdapter;
+import com.cottonclub.activities.admin.ViewJobCardDetails;
 import com.cottonclub.adapters.FabricListAdapter;
 import com.cottonclub.interfaces.DialogListener;
-import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.FabricListItem;
 import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -90,16 +94,19 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     private TextWatcher textWatcher;
     private View viewS;
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference jobCardRef = mRootRef.child("JobCard");
+    private DatabaseReference cuttingInChargeJobCardRef = mRootRef.child("JobCard");
     private String getQuantity, getDesignCode;
     private Menu customizedMenu;
     private String designCode;
     private ImageView ivJobCardFile, ivCancelFile, ivUploadFile;
     private Button btnCreateJobCard, btnAddItem;
-    private EditText etFabricItem, etFabricQuantity,etFabricCodeUnit;
+    private EditText etFabricItem, etFabricQuantity, etFabricCodeUnit, etCuttingCompleteDate,
+            etWastage, etWastageUnit;
     private ArrayList<FabricListItem> fabricCodeList = new ArrayList<FabricListItem>();
     private RecyclerView rvFabricItem;
     private FabricListAdapter fabricListAdapter;
+    private FabricListItem fabricListItem;
+    private boolean isImageShowing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +209,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         ivCancelFile = findViewById(R.id.ivCancelFile);
         ivCancelFile.setOnClickListener(this);
         ivJobCardFile = findViewById(R.id.ivJobCardFile);
+        ivJobCardFile.setOnClickListener(this);
         Picasso.get()
                 .load(jobCardItem.getJobCardFilePath()).placeholder(R.drawable.image_placeholder)
                 .into(ivJobCardFile);
@@ -286,6 +294,13 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
         etFabricCodeUnit = findViewById(R.id.etFabricCodeUnit);
         etFabricCodeUnit.setOnClickListener(this);
+
+        etCuttingCompleteDate = findViewById(R.id.etCuttingCompleteDate);
+        etCuttingCompleteDate.setOnClickListener(this);
+
+        etWastage = findViewById(R.id.etWastage);
+        etWastageUnit = findViewById(R.id.etWastageUnit);
+
     }
 
     @Override
@@ -300,103 +315,45 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     }
 
     private void validate() {
-        if (TextUtils.isEmpty(etFabricType.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_fabric_type));
-            etFabricType.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etBrandName.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_brand_name));
-            etBrandName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etJobCardNumber.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.job_card_number));
-            etJobCardNumber.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etDesignNumber.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_design_number));
-            etDesignNumber.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etQuantity.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_quantity));
-            etQuantity.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(etSelectSize.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_select_size));
-            etSelectSize.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(etMasterName.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_master_name));
-            etMasterName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etFabricUnit.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_select_fabric_unit));
-            etFabricUnit.requestFocus();
-            return;
-        }
 
         if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
             Helper.showOkDialog(this, getString(R.string.cutting_issue_date));
             etCuttingIssueDate.requestFocus();
             return;
         }
+
+        if (TextUtils.isEmpty(etWastage.getText().toString().trim())) {
+            Helper.showOkDialog(this, getString(R.string.please_enter_wastage_quantity));
+            etWastage.requestFocus();
+            return;
+        }
+
         sendOrderDetails();
     }
 
     private void sendOrderDetails() {
-
+        mDialog = Helper.showProgressDialog(this);
         SimpleDateFormat format = new SimpleDateFormat("d");
 
         format = new SimpleDateFormat("d MMM");
 
         String currentDate = format.format(new Date());
 
-        mDialog = Helper.showProgressDialog(this);
-        String jobCreationDate = tvDateOrderCreation.getText().toString();
+        String cuttingCompleteDate = etCuttingCompleteDate.getText().toString();
+        String wastage = etWastage.getText().toString();
+        String wastageUnit = etWastageUnit.getText().toString();
 
-        String brandName = etBrandName.getText().toString();
-        String designNumber = etDesignNumber.getText().toString();
-        String designCode = etDesignCode.getText().toString();
-        String jobCardNumber = etJobCardNumber.getText().toString();
-        String issueDate = etCuttingIssueDate.getText().toString();
-        String quantity = etQuantity.getText().toString();
-        String selectSize = etSelectSize.getText().toString();
-        String totalPieces = etTotalNumberPieces.getText().toString();
-        String masterName = etMasterName.getText().toString();
-        String unit = etFabricUnit.getText().toString();
+        jobCardItem.setCuttingCompleteDate(cuttingCompleteDate);
+        jobCardItem.setWastage(wastage);
+        jobCardItem.setWastageUnit(wastageUnit);
+        jobCardItem.setJobCardUpdatedByCuttingInChargeDate(currentDate);
+        jobCardItem.setIsUpdatedByCuttingInCharge("true");
 
-        sendSizeDetails();
-        jobCardItem.setJobCardId(jobCardItem.getJobCardId());
-        jobCardItem.setJobCardCreateDate(jobCreationDate);
-        jobCardItem.setBrand(brandName);
-        jobCardItem.setDesignNumber(designNumber);
-        jobCardItem.setDesignCode(designCode);
-        jobCardItem.setJobCardNumber(jobCardNumber);
-        jobCardItem.setCuttingIssueDate(issueDate);
-        jobCardItem.setSize(selectSize);
-        jobCardItem.setQuantity(quantity);
-        jobCardItem.setTotalPieces(totalPieces);
-        jobCardItem.setFabricUnit(unit);
-        jobCardItem.setMasterName(masterName);
-        jobCardItem.setJobCardFilePath(jobCardItem.getJobCardFilePath());
-        jobCardItem.setSizeItem(sizeListItem);
-
-        jobCardRef.child(jobCardItem.getJobCardId()).setValue(jobCardItem, new DatabaseReference.CompletionListener() {
+       cuttingInChargeJobCardRef.child(jobCardItem.getJobCardId()).setValue(jobCardItem, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 mDialog.dismiss();
-                Helper.showOkClickDialog(CuttingInChargeViewJobCardDetails.this, getString(R.string.order_updated_successfully), new DialogListener() {
+                Helper.showOkClickDialog(CuttingInChargeViewJobCardDetails.this, getString(R.string.job_card_updated_successfully), new DialogListener() {
                     @Override
                     public void onButtonClicked(int type) {
                         Intent homeIntent = new Intent(CuttingInChargeViewJobCardDetails.this, BaseActivity.class);
@@ -404,13 +361,13 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                         finish();
                     }
                 });
-                clearData();
-                setViewsEnabled();
-                customizedMenu.findItem(R.id.edit_menu).setVisible(false);
-                customizedMenu.findItem(R.id.cancel_menu).setVisible(true);
 
             }
         });
+
+        for (int i = 0; i < fabricCodeList.size(); i++) {
+            cuttingInChargeJobCardRef.child(jobCardItem.getJobCardId()).child(getString(R.string.fabric_consumed)).push().setValue(fabricCodeList.get(i));
+        }
 
     }
 
@@ -418,31 +375,12 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     public void onClick(View view) {
         switch (view.getId()) {
 
-            case R.id.etBrandName:
-                Helper.showDropDown(etBrandName, new ArrayAdapter<>(this,
-                        android.R.layout.simple_list_item_1, brandArray), new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        clearData();
-                        clearSizeFields();
-                        etBrandName.setText(brandArray[position]);
-                        if (position == 0) {
-                            selectedBrand = Constants.KIDS_MAGIC;
-                        } else if (position == 1) {
-                            selectedBrand = Constants.BBABY;
-                        } else {
-                            selectedBrand = Constants.COTTON_BLUE;
-                        }
-                    }
-                });
-                break;
-
-            case R.id.etFabricUnit:
-                Helper.showDropDown(etFabricUnit, new ArrayAdapter<>(this,
+            case R.id.etWastageUnit:
+                Helper.showDropDown(etWastageUnit, new ArrayAdapter<>(this,
                         android.R.layout.simple_list_item_1, unitArray), new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        etFabricUnit.setText(unitArray[position]);
+                        etWastageUnit.setText(unitArray[position]);
                     }
                 });
                 break;
@@ -457,41 +395,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                 });
                 break;
 
-            case R.id.etFabricType:
-                showSelectReceiversDialog();
-                break;
-
-            case R.id.etDesignCode:
-                if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, kidsMagicDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(kidsMagicDesignTypeArray[position]);
-                        }
-                    });
-                } else if (selectedBrand.equals(Constants.BBABY)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, bBabyDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(bBabyDesignTypeArray[position]);
-                        }
-                    });
-
-                } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, cottonBlueDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(cottonBlueDesignTypeArray[position]);
-                        }
-                    });
-                }
-
-                break;
-
-            case R.id.etCuttingIssueDate:
+            case R.id.etCuttingCompleteDate:
                 final Calendar c = Calendar.getInstance();
                 int year, month, day;
                 year = c.get(Calendar.YEAR);
@@ -504,44 +408,12 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                etCuttingIssueDate.setText(dayOfMonth + "/" + (monthOfYear + 1)
-                                        + "/" + year);
+                                etCuttingCompleteDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                             }
                         }, year, month, day);
                 datePickerDialog.getDatePicker().setMinDate(System
                         .currentTimeMillis() - 1000);
                 datePickerDialog.show();
-                break;
-
-            case R.id.etSelectSize:
-                if (isKidsMagicP) {
-                    Helper.showDropDown(etSelectSize, new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etSelectSize.setText(pantArray[position]);
-                            if (position == 0) {
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicNumeric.setVisibility(View.GONE);
-
-                                llKidsMagicMN.setVisibility(View.VISIBLE);
-                            } else {
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicMN.setVisibility(View.GONE);
-
-                                llKidsMagicNumeric.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
-                }
                 break;
 
             case R.id.btnAddItem:
@@ -557,7 +429,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                     return;
                 }
 
-                FabricListItem fabricListItem = new FabricListItem();
+                fabricListItem = new FabricListItem();
                 fabricListItem.setFabricCode(etFabricItem.getText().toString());
                 fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString() + etFabricCodeUnit.getText().toString());
                 fabricCodeList.add(fabricListItem);
@@ -565,6 +437,51 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                 etFabricQuantity.setText("");
                 etFabricItem.requestFocus();
                 fabricListAdapter.notifyDataSetChanged();
+                break;
+
+            case R.id.ivJobCardFile:
+                Dialog dialog = new Dialog(CuttingInChargeViewJobCardDetails.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                dialog.getWindow().setBackgroundDrawable(
+                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+                ImageView imageView = new ImageView(CuttingInChargeViewJobCardDetails.this);
+                imageView.setLayoutParams(new RelativeLayout.LayoutParams
+                        (ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT));
+
+                Picasso.get()
+                        .load(jobCardItem.getJobCardFilePath())
+                        .into(imageView);
+
+                dialog.addContentView(imageView, new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+
+                imageView.setPadding(50, 50, 50, 50);
+
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(dialog.getWindow().getAttributes());
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                dialog.getWindow().setBackgroundDrawable(
+                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.setCancelable(true);
+
+                if (isImageShowing) {
+                    dialog.show();
+                    dialog.getWindow().setAttributes(lp);
+                    isImageShowing = false;
+                }
+
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        dialogInterface.dismiss();
+                        isImageShowing = true;
+                    }
+                });
                 break;
         }
 
@@ -1605,218 +1522,6 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
     }
 
-    private void enableView(TextView view) {
-        view.setEnabled(true);
-        view.setTextColor(getResources().getColor(R.color.colorPrimary));
-    }
-
-    private void setViewsEnabled() {
-
-    }
-
-    private void clearData() {
-        setViewsDisabled();
-        customizedMenu.findItem(R.id.cancel_menu).setVisible(false);
-        customizedMenu.findItem(R.id.edit_menu).setVisible(true);
-
-        llBBabyNB912Parent.setVisibility(View.GONE);
-        llBBabyS3XLParent.setVisibility(View.GONE);
-        llKidsMagicGT.setVisibility(View.GONE);
-        llKidsMagicMN.setVisibility(View.GONE);
-        llKidsMagicNumeric.setVisibility(View.GONE);
-        llKMS.setVisibility(View.GONE);
-        llKMSGirls.setVisibility(View.GONE);
-    }
-
-    private void clearSizeFields() {
-        etKidsMagicMNSize2.setText("0");
-
-        etKidsMagicMNSize3.setText("0");
-
-        etKidsMagicMNSize4.setText("0");
-
-        etKidsMagicMNSize5.setText("0");
-
-        etKidsMagicMNSize6.setText("0");
-
-        etKidsMagicNumeric8.setText("0");
-
-        etKidsMagicNumeric10.setText("0");
-
-        etKidsMagicNumeric12.setText("0");
-
-        etKidsMagicNumeric14.setText("0");
-
-        etKidsMagicNumeric16.setText("0");
-
-        etKidsMagicGT20.setText("0");
-
-        etKidsMagicGT22.setText("0");
-
-        etKidsMagicGT24.setText("0");
-
-        etKidsMagicGT26.setText("0");
-
-        etKidsMagicGT28.setText("0");
-
-        etKidsMagicGT30.setText("0");
-
-        etKidsMagicGT32.setText("0");
-
-        etKidsMagicGT34.setText("0");
-
-        etKidsMagicGT36.setText("0");
-
-        etKMS1.setText("0");
-        etKMS2.setText("0");
-        etKMS3.setText("0");
-        etKMS4.setText("0");
-        etKMS5.setText("0");
-
-        etKMSG1.setText("0");
-        etKMSG2.setText("0");
-        etKMSG3.setText("0");
-        etKMSG4.setText("0");
-        etKMSG5.setText("0");
-
-        etBbabySizeS.setText("0");
-
-        etBbabySizeM.setText("0");
-
-        etBbabySizeL.setText("0");
-
-        etBbabySizeXL.setText("0");
-
-        etBbabySizeXXL.setText("0");
-
-        etBbabySizeXXXL.setText("0");
-
-        etBbabyNB.setText("0");
-
-        etBbaby03.setText("0");
-
-        etBbaby36.setText("0");
-
-        etBbaby69.setText("0");
-
-        etBbaby912.setText("0");
-    }
-
-    private void sendSizeDetails() {
-        if (selectedBrand.equals(Constants.BBABY)) {
-            if (selectedDesignType.equals("BBB") || selectedDesignType.equals("BBF") ||
-                    selectedDesignType.equals("BBG") || selectedDesignType.equals("BBS") ||
-                    selectedDesignType.equals("BT") || selectedDesignType.equals("BBNSG") ||
-                    selectedDesignType.equals("BBNSB") || selectedDesignType.equals("GT")) {
-
-                sizeListItem = new SizeListItem();
-
-                sizeListItem.setS(etBbabySizeS.getText().toString());
-                sizeListItem.setM(etBbabySizeM.getText().toString());
-                sizeListItem.setL(etBbabySizeL.getText().toString());
-                sizeListItem.setXL(etBbabySizeXL.getText().toString());
-                sizeListItem.setXXL(etBbabySizeXXL.getText().toString());
-                sizeListItem.setXXXL(etBbabySizeXXXL.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            } else if (selectedDesignType.equals("BBGR") || selectedDesignType.equals("BBBR")) {
-                sizeListItem = new SizeListItem();
-
-                sizeListItem.setNB(etBbabyNB.getText().toString());
-                sizeListItem.setSize0b3(etBbaby03.getText().toString());
-                sizeListItem.setSize3b6(etBbaby36.getText().toString());
-                sizeListItem.setSize6b9(etBbaby69.getText().toString());
-                sizeListItem.setSize9b12(etBbaby912.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            }
-
-
-        } else if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
-
-            if (selectedDesignType.equals(Constants.MN)) {
-
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize2(etKidsMagicMNSize2.getText().toString());
-                sizeListItem.setSize3(etKidsMagicMNSize3.getText().toString());
-                sizeListItem.setSize4(etKidsMagicMNSize4.getText().toString());
-                sizeListItem.setSize5(etKidsMagicMNSize5.getText().toString());
-                sizeListItem.setSize6(etKidsMagicMNSize6.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            } else if (selectedDesignType.equals(Constants.NUMERIC)) {
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize8(etKidsMagicNumeric8.getText().toString());
-                sizeListItem.setSize10(etKidsMagicNumeric10.getText().toString());
-                sizeListItem.setSize12(etKidsMagicNumeric12.getText().toString());
-                sizeListItem.setSize14(etKidsMagicNumeric14.getText().toString());
-                sizeListItem.setSize16(etKidsMagicNumeric16.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            } else if (selectedDesignType.equals(Constants.PANT)) {
-                if (etSelectSize.getText().toString().equals(getString(R.string.pant_2_6))) {
-                    sizeListItem = new SizeListItem();
-                    sizeListItem.setSize2(etKidsMagicMNSize2.getText().toString());
-                    sizeListItem.setSize3(etKidsMagicMNSize3.getText().toString());
-                    sizeListItem.setSize4(etKidsMagicMNSize4.getText().toString());
-                    sizeListItem.setSize5(etKidsMagicMNSize5.getText().toString());
-                    sizeListItem.setSize6(etKidsMagicMNSize6.getText().toString());
-                    sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-                } else if (etSelectSize.getText().toString().equals(getString(R.string.pant_8_16))) {
-                    sizeListItem = new SizeListItem();
-                    sizeListItem.setSize8(etKidsMagicNumeric8.getText().toString());
-                    sizeListItem.setSize10(etKidsMagicNumeric10.getText().toString());
-                    sizeListItem.setSize12(etKidsMagicNumeric12.getText().toString());
-                    sizeListItem.setSize14(etKidsMagicNumeric14.getText().toString());
-                    sizeListItem.setSize16(etKidsMagicNumeric16.getText().toString());
-                    sizeListItem.setDesignType(etSelectSize.getText().toString());
-                }
-            } else if (selectedDesignType.equals(Constants.GT)) {
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize20(etKidsMagicGT20.getText().toString());
-                sizeListItem.setSize22(etKidsMagicGT22.getText().toString());
-                sizeListItem.setSize24(etKidsMagicGT24.getText().toString());
-                sizeListItem.setSize26(etKidsMagicGT26.getText().toString());
-                sizeListItem.setSize28(etKidsMagicGT28.getText().toString());
-                sizeListItem.setSize30(etKidsMagicGT30.getText().toString());
-                sizeListItem.setSize32(etKidsMagicGT32.getText().toString());
-                sizeListItem.setSize34(etKidsMagicGT34.getText().toString());
-                sizeListItem.setSize36(etKidsMagicGT36.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            } else if (selectedDesignType.equals(Constants.KMSB)) {
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize1(etKMS1.getText().toString());
-                sizeListItem.setSize2(etKMS2.getText().toString());
-                sizeListItem.setSize3(etKMS3.getText().toString());
-                sizeListItem.setSize4(etKMS4.getText().toString());
-                sizeListItem.setSize5(etKMS5.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-            } else if (selectedDesignType.equals(Constants.KMSG)) {
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize16(etKMSG1.getText().toString());
-                sizeListItem.setSize18(etKMSG2.getText().toString());
-                sizeListItem.setSize20(etKMSG3.getText().toString());
-                sizeListItem.setSize22(etKMSG4.getText().toString());
-                sizeListItem.setSize24(etKMSG5.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-            }
-
-
-        } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
-            sizeListItem = new SizeListItem();
-            sizeListItem.setM(etBbabySizeM.getText().toString());
-            sizeListItem.setL(etBbabySizeL.getText().toString());
-            sizeListItem.setXL(etBbabySizeXL.getText().toString());
-            sizeListItem.setXXL(etBbabySizeXXL.getText().toString());
-            sizeListItem.setXXXL(etBbabySizeXXXL.getText().toString());
-            sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-        }
-
-    }
-
     private void setValues() {
         etKidsMagicMNSize2.setText(sizeListItem.getSize2());
 
@@ -1862,11 +1567,11 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         etKMS4.setText(sizeListItem.getSize4());
         etKMS5.setText(sizeListItem.getSize5());
 
-        etKMSG1.setText(sizeListItem.getSize1());
-        etKMSG2.setText(sizeListItem.getSize2());
-        etKMSG3.setText(sizeListItem.getSize3());
-        etKMSG4.setText(sizeListItem.getSize4());
-        etKMSG5.setText(sizeListItem.getSize5());
+        etKMSG1.setText(sizeListItem.getSize16());
+        etKMSG2.setText(sizeListItem.getSize18());
+        etKMSG3.setText(sizeListItem.getSize20());
+        etKMSG4.setText(sizeListItem.getSize22());
+        etKMSG5.setText(sizeListItem.getSize24());
 
         etBbabySizeS.setText(sizeListItem.getS());
 

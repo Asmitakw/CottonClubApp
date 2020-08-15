@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cottonclub.R;
-import com.cottonclub.activities.admin.ViewJobCardDetails;
-import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewJobCardDetails;
-import com.cottonclub.adapters.JobCardAdapter;
+import com.cottonclub.activities.admin.ViewAlterRequestDetails;
+import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails;
+import com.cottonclub.adapters.AlterRequestAdapter;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
-import com.cottonclub.models.JobCardItem;
+import com.cottonclub.models.AlterRequestItem;
 import com.cottonclub.utilities.AppSession;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
@@ -29,79 +29,76 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
+public class CuttingInChargeViewAlterRequestFragment extends Fragment implements View.OnClickListener {
 
-public class CuttingInChargeViewJobCardFragment extends Fragment {
-
-    private RecyclerView rvViewJobCard;
-    private JobCardItem jobCardItem;
-    private ArrayList<JobCardItem> jobCardList = new ArrayList<>();
-    private JobCardAdapter jobCardAdapter;
+    private RecyclerView rvViewAlterRequest;
+    private AlterRequestItem alterRequestItem;
+    private ArrayList<AlterRequestItem> alterRequestList = new ArrayList<>();
+    private AlterRequestAdapter alterRequestAdapter;
     private Dialog mDialog;
-
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference ordersRef = mRootRef.child("JobCard");
+    private DatabaseReference alterRequestRef = mRootRef.child("AlterRequest");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_view_job_card, container, false);
+        View root = inflater.inflate(R.layout.fragment_view_alter_request, container, false);
+        setHasOptionsMenu(true);
         initialise(root);
         return root;
     }
 
     private void initialise(View view) {
         mDialog = Helper.showProgressDialog(getActivity());
-        rvViewJobCard = view.findViewById(R.id.rvViewJobCard);
+        rvViewAlterRequest = view.findViewById(R.id.rvViewAlterRequest);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        ordersRef.addValueEventListener(new ValueEventListener() {
+        alterRequestRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (jobCardList.size() == 0) {
+                if (alterRequestList.size() == 0) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        jobCardItem = dataSnapshot.getValue(JobCardItem.class);
-                        assert jobCardItem != null;
+                        alterRequestItem = dataSnapshot.getValue(AlterRequestItem.class);
+
+                        assert alterRequestItem != null;
                         if (AppSession.getInstance().getSaveLoggedInUser(requireActivity()).equals(Constants.CUTTING_IN_CHARGE_KM)) {
-                            if (jobCardItem.getBrand().equals(Constants.KIDS_MAGIC)) {
-                                jobCardList.add(jobCardItem);
+                            if (alterRequestItem.getBrandName().equals(Constants.KIDS_MAGIC)) {
+                                alterRequestList.add(alterRequestItem);
                             }
                         }else if(AppSession.getInstance().getSaveLoggedInUser(requireActivity()).equals(Constants.CUTTING_IN_CHARGE_BB)){
-                            if (jobCardItem.getBrand().equals(Constants.BBABY)) {
-                                jobCardList.add(jobCardItem);
+                            if (alterRequestItem.getBrandName().equals(Constants.BBABY)) {
+                                alterRequestList.add(alterRequestItem);
                             }
                         }else if(AppSession.getInstance().getSaveLoggedInUser(requireActivity()).equals(Constants.CUTTING_IN_CHARGE_CB)){
-                            if (jobCardItem.getBrand().equals(Constants.COTTON_BLUE)) {
-                                jobCardList.add(jobCardItem);
+                            if (alterRequestItem.getBrandName().equals(Constants.COTTON_BLUE)) {
+                                alterRequestList.add(alterRequestItem);
                             }
                         }
                     }
-
                 }
-                jobCardAdapter = new JobCardAdapter(getActivity(), jobCardList, new RecyclerViewClickListener() {
+
+                alterRequestAdapter = new AlterRequestAdapter(getActivity(), alterRequestList, new RecyclerViewClickListener() {
                     @Override
                     public void onClick(View view, int position) {
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable("jobCard", jobCardList.get(position));
-                        bundle.putString("designCode", jobCardList.get(position).getDesignCode());
-                        bundle.putParcelable("size", jobCardList.get(position).getSizeItem());
+                        bundle.putParcelable("alter", alterRequestList.get(position));
+                        bundle.putString("designCode", alterRequestList.get(position).getDesignCode());
+                        bundle.putParcelable("size", alterRequestList.get(position).getSizeListItem());
 
-                        Intent order_details_intent = new Intent(getActivity(), CuttingInChargeViewJobCardDetails.class);
+                        Intent order_details_intent = new Intent(getActivity(), CuttingInChargeViewAlterRequestDetails.class);
                         order_details_intent.putExtra("extraWithOrder", bundle);
                         startActivity(order_details_intent);
 
                     }
                 });
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                rvViewJobCard.setLayoutManager(mLayoutManager);
-                rvViewJobCard.setItemAnimator(new DefaultItemAnimator());
-                rvViewJobCard.setAdapter(jobCardAdapter);
-
+                rvViewAlterRequest.setLayoutManager(mLayoutManager);
+                rvViewAlterRequest.setItemAnimator(new DefaultItemAnimator());
+                rvViewAlterRequest.setAdapter(alterRequestAdapter);
                 mDialog.dismiss();
             }
 
@@ -110,6 +107,13 @@ public class CuttingInChargeViewJobCardFragment extends Fragment {
 
             }
         });
+
+    }
+
+
+    @Override
+    public void onClick(View view) {
+
 
     }
 }
