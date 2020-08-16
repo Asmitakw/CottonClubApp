@@ -38,8 +38,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 Intent mainIntent = new Intent(LoginActivity.this, BaseActivity.class);
                 startActivity(mainIntent);
-                AppSession.getInstance().setSaveLoggedInUser(LoginActivity.this,etUserId.getText().toString());
+                AppSession.getInstance().setSaveLoggedInUser(LoginActivity.this, etUserId.getText().toString());
                 finish();
+                AppSession.getInstance().saveLoginStatus(LoginActivity.this, true);
             }
         });
 

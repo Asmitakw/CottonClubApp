@@ -18,6 +18,8 @@ public class AppSession {
     private static String PARTY_LIST = "party_list";
     private static String IS_INTRO = "is_intro";
     private static  String SAVE_LOGGED_IN_USER = "logged_in_as";
+    private static String IS_LOGIN = "is_login";
+    private static String SAVE_FIREBASE_TOKEN = "refresh_token";
 
 
     private static String SAVE_MEMBER_ID = "member_id";
@@ -66,6 +68,35 @@ public class AppSession {
     public String getSaveLoggedInUser(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         return sharedPreferences.getString(SAVE_LOGGED_IN_USER, "");
+    }
+
+    /* Save Login details*/
+    public void saveLoginStatus(Context context, boolean isLogin) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_LOGIN, isLogin);
+        editor.commit();
+    }
+
+
+    public boolean getLoginStatus(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(IS_LOGIN, false);
+    }
+
+
+    /* Save Token*/
+    public void saveRefreshToken(Context context, String isLogin) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SAVE_FIREBASE_TOKEN, isLogin);
+        editor.commit();
+    }
+
+
+    public String getRefreshToken(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SAVE_FIREBASE_TOKEN, "");
     }
 
 
