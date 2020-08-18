@@ -15,13 +15,13 @@ import com.cottonclub.R;
 import com.cottonclub.activities.BaseActivity;
 import com.cottonclub.activities.LoginActivity;
 import com.cottonclub.utilities.AppSession;
+import com.cottonclub.utilities.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
 
 
 public class FirebaseService extends FirebaseMessagingService {
@@ -35,6 +35,7 @@ public class FirebaseService extends FirebaseMessagingService {
     String type = "0";
     String message = "0";
     Context context;
+    private String notificationMessage = "";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -60,25 +61,20 @@ public class FirebaseService extends FirebaseMessagingService {
             NotificationChannel channel = new NotificationChannel(channelId, "Default channel", NotificationManager.IMPORTANCE_DEFAULT);
             manager.createNotificationChannel(channel);
         }
-        manager.notify(0, builder.build());
+        notificationMessage = remoteMessage.getNotification().getBody();
+        if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_KM)
+                || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
+                || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)) {
 
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
+            if (notificationMessage.endsWith(Constants.KIDS_MAGIC)) {
+                manager.notify(0, builder.build());
+            } else if (notificationMessage.endsWith(Constants.BBABY)) {
+                manager.notify(0, builder.build());
+            } else if (notificationMessage.endsWith(Constants.COTTON_BLUE)) {
+                manager.notify(0, builder.build());
+            }
+        }
 
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        AppSession.getInstance().saveRefreshToken(context,token);
-
-
-
-                    }
-                });
     }
 
 

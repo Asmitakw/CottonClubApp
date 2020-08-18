@@ -193,7 +193,13 @@
     <string name="textile">Textile</string>
     <string name="lycra">Lycra</string>
     <string name="bombay_fab">Bombay FAB</string>
-
+    <string name="job_card_created">Job Card Created</string>
+    <string name="alter_request_created">Alter Request Created</string>
+    <string name="job_card_with">"Job Card "</string>
+    <string name="created">created for</string>
+    <string name="filter_by_party_name">Filter by Party Name</string>
+    <string name="filter_by_order_number">Filter by Order Number</string>
+    <string name="filter_by_job_card">Filter by Job Card</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>

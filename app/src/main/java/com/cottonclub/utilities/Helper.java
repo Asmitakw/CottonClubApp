@@ -1,6 +1,7 @@
 package com.cottonclub.utilities;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentUris;
@@ -26,6 +27,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -33,10 +35,21 @@ import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.cottonclub.BuildConfig;
 import com.cottonclub.R;
 import com.cottonclub.interfaces.DialogListener;
 import com.cottonclub.interfaces.ImageDialogActionListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -45,9 +58,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class Helper {
+
+
+
     public static void showOkDialog(Context context, String msg) {
         final Dialog dialog = new Dialog(context);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
@@ -576,6 +593,54 @@ public class Helper {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void sendNotification(Context context, String message) {
+        RequestQueue requestQueue;
+        String firebaseURl = "https://fcm.googleapis.com/fcm/send";
+        requestQueue = Volley.newRequestQueue(context);
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        JSONObject mainObject = new JSONObject();
+        try {
+            mainObject.put("to", "/topics/" + "news");
+            JSONObject notificationObject = new JSONObject();
+            notificationObject.put("title", "Cotton Club");
+            notificationObject.put("body", message);
+            mainObject.put("notification", notificationObject);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, firebaseURl,
+                    mainObject,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> header = new HashMap<>();
+                    header.put("content-type", "application/json");
+                    header.put("authorization", "key=AAAA0How4PA:APA91bExSt4jGOv5jIdb0OR0P2lv13qVZHN6Wo_TqwUdKLcs_rL_a8taAe5rBCfE1Ko3GrN6F9trOBYCxXWByYhjkbXb2b8Ta9VmTOcg2bRBaBrgKvHOfPTlgnEQz99R9uf85b_OFug1");
+                    return header;
+                }
+            };
+
+            requestQueue.add(request);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

@@ -56,7 +56,7 @@
             style="@style/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:drawablePadding="@dimen/dimen_15"
             android:drawableStart="@drawable/ic_job_card"
             android:hint="@string/job_card_number"
             android:singleLine="true"
@@ -149,7 +149,6 @@
             style="@style/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:drawableStart="@drawable/ic_quantity"
             android:drawablePadding="@dimen/dimen_15"
             android:hint="@string/quantity"
@@ -279,7 +278,7 @@
                 android:textSize="18sp" />
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etFabricUnitSinker"
+                android:id="@+id/etFabricUnit"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -347,7 +346,7 @@
             style="@style/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:drawablePadding="@dimen/dimen_15"
             android:drawableStart="@drawable/ic_delivery_date"
             android:drawableEnd="@drawable/ic_calendar"
             android:editable="false"

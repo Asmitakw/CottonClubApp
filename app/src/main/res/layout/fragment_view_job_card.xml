@@ -1,10 +1,149 @@
-<androidx.recyclerview.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rvViewJobCard"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:scrollbarFadeDuration="@integer/google_play_services_version"
-    android:scrollbarSize="2dp"
-    android:scrollbarThumbHorizontal="@color/colorAccent"
-    android:scrollbars="horizontal" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llFilterLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etBrandName"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_5"
+                android:drawableStart="@drawable/ic_tag"
+                android:drawableEnd="@drawable/ic_drop_down"
+                android:drawablePadding="@dimen/dimen_15"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/select_brand"
+                android:singleLine="true"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_margin="@dimen/dimen_5"
+                android:background="@color/colorGreyDark" />
+
+
+            <LinearLayout
+                android:id="@+id/llFilterBy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+               <!-- <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal">
+
+                    <com.cottonclub.custom_views.CustomEditViewRegular
+                        android:id="@+id/etFilter"
+                        style="@style/EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dimen_25"
+                        android:layout_weight="0.9"
+                        android:drawableStart="@drawable/ic_filter"
+                        android:drawablePadding="@dimen/dimen_15"
+                        android:hint="@string/filter_by_party_name"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/cursor_drawable" />
+
+                    <ImageView
+                        android:id="@+id/ivSearchFilter"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/small_icon"
+                        android:layout_marginTop="12dp"
+                        android:layout_weight="8.9"
+                        android:src="@drawable/ic_search" />
+
+                    <View
+                        android:id="@+id/viewSubFilter"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="@dimen/dimen_5"
+                        android:layout_marginTop="@dimen/dimen_5"
+                        android:layout_marginRight="@dimen/dimen_5"
+                        android:background="@color/colorPrimaryDark"
+                        android:visibility="gone" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_margin="@dimen/dimen_5"
+                    android:background="@color/colorPrimaryDark" />-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal">
+
+                    <com.cottonclub.custom_views.CustomEditViewRegular
+                        android:id="@+id/etOrderNumberFilter"
+                        style="@style/EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dimen_25"
+                        android:layout_weight="0.9"
+                        android:drawableStart="@drawable/ic_filter"
+                        android:drawablePadding="@dimen/dimen_15"
+                        android:hint="@string/filter_by_job_card"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/cursor_drawable" />
+
+                    <ImageView
+                        android:id="@+id/ivOrderFilter"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/small_icon"
+                        android:layout_marginTop="12dp"
+                        android:layout_weight="8.9"
+                        android:src="@drawable/ic_search" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/viewOrderFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="@dimen/dimen_5"
+                    android:layout_marginTop="@dimen/dimen_5"
+                    android:layout_marginRight="@dimen/dimen_5"
+                    android:background="@color/colorPrimaryDark" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvViewJobCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:scrollbarFadeDuration="@integer/google_play_services_version"
+        android:scrollbarSize="2dp"
+        android:scrollbarThumbHorizontal="@color/colorAccent"
+        android:scrollbars="horizontal" />
+
+</LinearLayout>

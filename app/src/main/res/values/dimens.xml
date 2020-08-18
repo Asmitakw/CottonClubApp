@@ -28,10 +28,12 @@
     <dimen name="dimen_180">180dp</dimen>
     <dimen name="dimen_200">200dp</dimen>
     <dimen name="dimen_305">305dp</dimen>
+    <dimen name="dimen_318">318dp</dimen>
     <dimen name="dimen_300">300dp</dimen>
     <dimen name="dimen_350">350dp</dimen>
     <dimen name="dimen_400">400dp</dimen>
     <dimen name="dimen_forty">40dp</dimen>
+    <dimen name="dimen_35">35dp</dimen>
     <dimen name="dimen_50">50dp</dimen>
     <dimen name="dimen_twenty">20dp</dimen>
     <dimen name="dimen_5">5dp</dimen>

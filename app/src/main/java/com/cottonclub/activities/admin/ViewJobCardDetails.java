@@ -208,6 +208,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
 
         ivUploadFile = findViewById(R.id.ivUploadFile);
         ivUploadFile.setVisibility(View.GONE);
+        ivUploadFile.setOnClickListener(this);
         ivCancelFile = findViewById(R.id.ivCancelFile);
         ivCancelFile.setOnClickListener(this);
         ivJobCardFile = findViewById(R.id.ivJobCardFile);

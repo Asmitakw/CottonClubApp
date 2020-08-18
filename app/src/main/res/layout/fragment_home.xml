@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.cottonclub.custom_views.CustomButtonRegular
+   <!-- <com.cottonclub.custom_views.CustomButtonRegular
         android:id="@+id/btnSendNotification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Send Notification"/>
+        android:text="Send Notification"/>-->
 
 </LinearLayout>

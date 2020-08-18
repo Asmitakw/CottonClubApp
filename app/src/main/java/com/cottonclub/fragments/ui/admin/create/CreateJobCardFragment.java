@@ -426,6 +426,12 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                                             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                                 mDialog.dismiss();
                                                 Helper.showOkDialog(getActivity(), getString(R.string.job_card_created_successfully));
+                                                Helper.sendNotification(getActivity(), getString(R.string.job_card_with)
+                                                        + jobCardItem.getJobCardNumber()
+                                                        + " "
+                                                        + getString(R.string.created)
+                                                        + " "
+                                                        + jobCardItem.getBrand());
                                                 clearData();
                                             }
                                         });
@@ -631,6 +637,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                     }
                     final ArrayList<String> arrayList = new ArrayList<>();
                     arrayList.addAll(hashSet);
+                    Collections.reverse(arrayList);
 
                     final ArrayList<String> top_three_items = new ArrayList<>();
                     top_three_items.add(arrayList.get(2));

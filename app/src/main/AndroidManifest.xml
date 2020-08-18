@@ -20,12 +20,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.admin.ViewOrderDetails" />
-        <activity android:name=".activities.admin.ViewJobCardDetails" />
-        <activity android:name=".activities.admin.ViewAlterRequestDetails" />
-        <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardDetails" />
-        <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails" />
-        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.admin.ViewOrderDetails"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activities.admin.ViewAlterRequestDetails"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardDetails"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait">
+        </activity>
 
         <activity
             android:name=".activities.BaseActivity"
