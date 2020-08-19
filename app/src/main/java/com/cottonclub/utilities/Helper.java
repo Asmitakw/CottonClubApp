@@ -600,7 +600,21 @@ public class Helper {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static void sendNotification(Context context, String message) {
+    public static boolean containsIgnoreCase(String str, String searchStr)     {
+        if(str == null || searchStr == null) return false;
+
+        final int length = searchStr.length();
+        if (length == 0)
+            return true;
+
+        for (int i = str.length() - length; i >= 0; i--) {
+            if (str.regionMatches(true, i, searchStr, 0, length))
+                return true;
+        }
+        return false;
+    }
+
+    public static void sendNotification(Context context, String message, String tag) {
         RequestQueue requestQueue;
         String firebaseURl = "https://fcm.googleapis.com/fcm/send";
         requestQueue = Volley.newRequestQueue(context);
@@ -611,6 +625,7 @@ public class Helper {
             JSONObject notificationObject = new JSONObject();
             notificationObject.put("title", "Cotton Club");
             notificationObject.put("body", message);
+            notificationObject.put("tag", tag);
             mainObject.put("notification", notificationObject);
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, firebaseURl,

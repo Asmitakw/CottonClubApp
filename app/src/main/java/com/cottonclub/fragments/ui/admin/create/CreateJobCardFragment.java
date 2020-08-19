@@ -7,12 +7,10 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cottonclub.R;
 import com.cottonclub.models.JobCardItem;
@@ -46,7 +43,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,7 +59,7 @@ import androidx.fragment.app.Fragment;
 public class CreateJobCardFragment extends Fragment implements View.OnClickListener {
 
     private EditText etBrandName, etDesignNumber, etQuantity, etJobCardNumber, etSelectSize,
-            etFabricType, etMasterName, etCuttingIssueDate, etFabricUnit,
+            etFabricType, etMasterName, etCuttingIssueDate,
             etTotalNumberPieces, etDesignCode;
 
     private LinearLayout llBBabyS3XLParent, llBBabyNB912Parent, llKidsMagicMN,
@@ -181,9 +177,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
 
         etFabricType = view.findViewById(R.id.etFabricType);
         etFabricType.setOnClickListener(this);
-
-        etFabricUnit = view.findViewById(R.id.etFabricUnit);
-        etFabricUnit.setOnClickListener(this);
 
         etMasterName = view.findViewById(R.id.etMasterName);
 
@@ -339,11 +332,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
             return;
         }
 
-        if (TextUtils.isEmpty(etFabricUnit.getText().toString().trim())) {
-            Helper.showOkDialog(getActivity(), getString(R.string.please_select_fabric_unit));
-            etFabricUnit.requestFocus();
-            return;
-        }
         if (TextUtils.isEmpty(etMasterName.getText().toString().trim())) {
             Helper.showOkDialog(getActivity(), getString(R.string.please_enter_master_name));
             etMasterName.requestFocus();
@@ -397,7 +385,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                                         String selectSize = etSelectSize.getText().toString();
                                         String totalPieces = etTotalNumberPieces.getText().toString();
                                         String fabricType = etFabricType.getText().toString();
-                                        String fabricUnit = etFabricUnit.getText().toString();
                                         String masterName = etMasterName.getText().toString();
                                         String cuttingIssueDate = etCuttingIssueDate.getText().toString();
                                         String jobCardFilePath = downloadPhotoUrl.toString();
@@ -413,7 +400,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                                         jobCardItem.setSize(selectSize);
                                         jobCardItem.setTotalPieces(totalPieces);
                                         jobCardItem.setFabricType(fabricType);
-                                        jobCardItem.setFabricUnit(fabricUnit);
                                         jobCardItem.setMasterName(masterName);
                                         jobCardItem.setCuttingIssueDate(cuttingIssueDate);
                                         jobCardItem.setJobCardFilePath(jobCardFilePath);
@@ -431,7 +417,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                                                         + " "
                                                         + getString(R.string.created)
                                                         + " "
-                                                        + jobCardItem.getBrand());
+                                                        + jobCardItem.getBrand(),jobCardItem.getJobCardId());
                                                 clearData();
                                             }
                                         });
@@ -488,7 +474,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
             }
         });
     }
-
 
     @Override
     public void onClick(View view) {
@@ -579,15 +564,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                 showSelectReceiversDialog();
                 break;
 
-            case R.id.etFabricUnit:
-                Helper.showDropDown(etFabricUnit, new ArrayAdapter<>(getActivity(),
-                        android.R.layout.simple_list_item_1, unitArray), new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        etFabricUnit.setText(unitArray[position]);
-                    }
-                });
-                break;
 
             case R.id.ivCancelFile:
                 llFileLayout.setVisibility(View.GONE);
@@ -699,7 +675,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
         if (stringBuilder.length() != 0) {
             String selectedFabric = stringBuilder.substring(0, stringBuilder.length() - 2);
             etFabricType.setText(selectedFabric);
-            etFabricUnit.setText(getString(R.string.kgs));
         } else {
             etFabricType.setHint(getString(R.string.fabric_type));
         }
@@ -1572,7 +1547,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
         etSelectSize.setText("");
         etTotalNumberPieces.setText("");
         etFabricType.setText("");
-        etFabricUnit.setText("");
         etMasterName.setText("");
         etCuttingIssueDate.setText("");
 

@@ -370,7 +370,7 @@
             android:layout_marginBottom="@dimen/dimen_15"
             android:drawableLeft="@drawable/ic_job_card"
             android:drawablePadding="@dimen/dimen_15"
-            android:text="@string/upload_file"
+            android:text="@string/upload_photo"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/dimen_18" />
 

@@ -64,7 +64,7 @@ public class ViewJobCardFragment extends Fragment implements View.OnClickListene
     private boolean isFilterByOrderNumber = false;
     private ImageView ivOrderFilter;
     private ArrayList<JobCardItem> partyList = new ArrayList<>();
-
+    private boolean isFilterByOrderSearched = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -99,11 +99,14 @@ public class ViewJobCardFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (etOrderNumberFilter.getText().toString().isEmpty()) {
-                    isFilterByOrderNumber = false;
-                    onStart();
+                if (isFilterByOrderSearched) {
+                    if (etOrderNumberFilter.getText().toString().isEmpty()) {
+                        isFilterByOrderSearched = false;
+                        isFilterByBrand = true;
+                        filterList.clear();
+                        onStart();
+                    }
                 }
-
             }
 
             @Override
@@ -209,7 +212,6 @@ public class ViewJobCardFragment extends Fragment implements View.OnClickListene
         setAdapter();
     }
 
-
     private void setFilterByOrderNumber(String partyName) {
         isFilterByOrderNumber = false;
         partyList.clear();
@@ -309,6 +311,7 @@ public class ViewJobCardFragment extends Fragment implements View.OnClickListene
                 break;
 
             case R.id.ivOrderFilter:
+                isFilterByOrderSearched = true;
                 if (etOrderNumberFilter.getText().toString().isEmpty()) {
                     Helper.showOkDialog(getActivity(), getString(R.string.please_enter_job_card_number));
                     return;

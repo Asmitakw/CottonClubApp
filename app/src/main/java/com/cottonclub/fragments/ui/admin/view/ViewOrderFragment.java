@@ -3,6 +3,8 @@ package com.cottonclub.fragments.ui.admin.view;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 
 import androidx.annotation.NonNull;
@@ -54,20 +55,23 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
     private Dialog mDialog;
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference ordersRef = mRootRef.child("Orders");
-    private EditText etBrandName, etFilter, etOrderNumberFilter;
+    private EditText etBrandName, etFilter, etSubFilter, etOrderNumberFilter;
     private String[] filterArray;
     private String[] brandArray;
     private String selectedBrand;
     private String selectedPartyName;
     private String selectedOrderNumber;
     private long totalList;
-    private LinearLayout llFilterLayout,llFilterBy;
+    private LinearLayout llFilterLayout;
     private Menu customizedMenu;
     private boolean isFilterByBrand = false;
     private boolean isFilterByPartyName = false;
     private boolean isFilterByOrderNumber = false;
     private View viewOrderFilter, viewSubFilter;
-    private ImageView ivSearchFilter,ivOrderFilter;
+    private ImageView ivSearchByPartyName, ivSearchByOrderNumber;
+    private LinearLayout llPartyNameFilter, llOrderNumberFilter;
+    private boolean isPartyNameSearched = false;
+    private boolean isOrderNumberSearched = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -85,17 +89,66 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
         etBrandName.setOnClickListener(this);
         etFilter = view.findViewById(R.id.etFilter);
         etFilter.setOnClickListener(this);
-        ivOrderFilter = view.findViewById(R.id.ivOrderFilter);
-        ivOrderFilter.setOnClickListener(this);
+        etSubFilter = view.findViewById(R.id.etSubFilter);
+        etSubFilter.setOnClickListener(this);
         etOrderNumberFilter = view.findViewById(R.id.etOrderNumberFilter);
         etOrderNumberFilter.setOnClickListener(this);
+        etFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (isPartyNameSearched) {
+                    if (etFilter.getText().toString().isEmpty()) {
+                        isPartyNameSearched = false;
+                        isFilterByBrand = true;
+                        filterList.clear();
+                        onStart();
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        etSubFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (isOrderNumberSearched) {
+                    if (etSubFilter.getText().toString().isEmpty()) {
+                        isOrderNumberSearched = false;
+                        isFilterByBrand = true;
+                        filterList.clear();
+                        onStart();
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         llFilterLayout = view.findViewById(R.id.llFilterLayout);
         viewOrderFilter = view.findViewById(R.id.viewOrderFilter);
         viewSubFilter = view.findViewById(R.id.viewSubFilter);
-        ivSearchFilter = view.findViewById(R.id.ivSearchFilter);
-        ivSearchFilter.setOnClickListener(this);
-        llFilterBy = view.findViewById(R.id.llFilterBy);
-
+        ivSearchByPartyName = view.findViewById(R.id.ivSearchByPartyName);
+        ivSearchByPartyName.setOnClickListener(this);
+        ivSearchByOrderNumber = view.findViewById(R.id.ivSearchByOrderNumber);
+        ivSearchByOrderNumber.setOnClickListener(this);
+        llPartyNameFilter = view.findViewById(R.id.llPartyNameFilter);
+        llOrderNumberFilter = view.findViewById(R.id.llOrderNumberFilter);
 
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
@@ -110,8 +163,7 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
         if (filterList.size() == 0) {
             Snackbar.make(getView(), getString(R.string.no_records), 3000).show();
         } else {
-            Collections.reverse(filterList);
-            orderAdapter = new OrderAdapter(getActivity(), filterList,  new RecyclerViewClickListener() {
+            orderAdapter = new OrderAdapter(getActivity(), filterList, new RecyclerViewClickListener() {
                 @Override
                 public void onClick(View view, int position) {
                     Bundle bundle = new Bundle();
@@ -154,6 +206,7 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
         rvViewOrder.setLayoutManager(mLayoutManager);
         rvViewOrder.setItemAnimator(new DefaultItemAnimator());
         rvViewOrder.setAdapter(orderAdapter);
+        Helper.hideKeyboardFrom(getActivity(), etFilter);
     }
 
     @Override
@@ -169,7 +222,6 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                         orderList.add(orderItem);
                     }
                 }
-                Collections.reverse(orderList);
 
                 orderAdapter = new OrderAdapter(getActivity(), orderList, new RecyclerViewClickListener() {
                     @Override
@@ -225,7 +277,6 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                 filterList.add(orderList.get(i));
             }
         }
-        filteredPartyList.addAll(filterList);
         setAdapter();
     }
 
@@ -234,7 +285,7 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
         partyList.clear();
 
         for (int i = 0; i < filterList.size(); i++) {
-            if (filterList.get(i).getPartyName().equalsIgnoreCase(partyName)) {
+            if (Helper.containsIgnoreCase(filterList.get(i).getPartyName(), partyName)) {
 
                 partyList.add(filterList.get(i));
             }
@@ -247,10 +298,10 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
         isFilterByOrderNumber = false;
         partyList.clear();
 
-        for (int i = 0; i < filteredPartyList.size(); i++) {
-            if (filteredPartyList.get(i).getOrderNumber().equalsIgnoreCase(partyName)) {
+        for (int i = 0; i < filterList.size(); i++) {
+            if (Helper.containsIgnoreCase(filterList.get(i).getOrderNumber(), partyName)) {
 
-                partyList.add(filteredPartyList.get(i));
+                partyList.add(filterList.get(i));
             }
         }
         setPartyNameAdapter();
@@ -267,7 +318,10 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                 return true;
 
             case R.id.cancel_menu:
+                viewOrderFilter.setVisibility(View.GONE);
                 llFilterLayout.setVisibility(View.GONE);
+                llPartyNameFilter.setVisibility(View.GONE);
+                llOrderNumberFilter.setVisibility(View.GONE);
                 customizedMenu.findItem(R.id.cancel_menu).setVisible(false);
                 customizedMenu.findItem(R.id.filter_menu).setVisible(true);
                 if (filterList.size() != 0) {
@@ -279,7 +333,7 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                 onStart();
                 etBrandName.setText("");
                 etFilter.setText("");
-                etOrderNumberFilter.setText("");
+                etSubFilter.setText("");
                 etOrderNumberFilter.setText("");
                 return true;
 
@@ -296,11 +350,13 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                         android.R.layout.simple_list_item_1, brandArray), new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        llPartyNameFilter.setVisibility(View.VISIBLE);
+                        llOrderNumberFilter.setVisibility(View.VISIBLE);
+                        viewOrderFilter.setVisibility(View.VISIBLE);
                         etFilter.setText("");
-                        etOrderNumberFilter.setText("");
+                        etSubFilter.setText("");
                         etOrderNumberFilter.setText("");
                         etBrandName.setText(brandArray[position]);
-                        llFilterBy.setVisibility(View.VISIBLE);
                         if (position == 0) {
                             filterList.clear();
                             isFilterByBrand = true;
@@ -322,8 +378,22 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                 });
                 break;
 
-            case R.id.etFilter:
-                /*Helper.showDropDown(etFilter, new ArrayAdapter<>(requireActivity(),
+            case R.id.ivSearchByPartyName:
+                isPartyNameSearched = true;
+                isFilterByPartyName = true;
+                selectedPartyName = etFilter.getText().toString();
+                onStart();
+                break;
+
+            case R.id.ivSearchByOrderNumber:
+                isOrderNumberSearched = true;
+                isFilterByOrderNumber = true;
+                selectedOrderNumber = etSubFilter.getText().toString();
+                onStart();
+                break;
+
+            /*case R.id.etFilter:
+                Helper.showDropDown(etFilter, new ArrayAdapter<>(requireActivity(),
                         android.R.layout.simple_list_item_1, filterArray), new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -346,14 +416,8 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                         }
 
                     }
-                });*/
-                break;
-
-            case R.id.ivSearchFilter:
-                isFilterByPartyName = true;
-                selectedPartyName = etFilter.getText().toString();
-                onStart();
-                break;
+                });
+                break;*/
 
             /*case R.id.etSubFilter:
 
@@ -379,12 +443,9 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                 });
                 break;*/
 
-            case R.id.ivOrderFilter:
-                isFilterByOrderNumber = true;
-                selectedOrderNumber = etOrderNumberFilter.getText().toString();
-                onStart();
-                break;
-               /* if(hashOrderNumberList.size() == 0) {
+            /*case R.id.etOrderNumberFilter:
+
+                if (hashOrderNumberList.size() == 0) {
                     HashSet order_hashSet = new HashSet();
                     for (int i = 0; i < filterList.size(); i++) {
                         OrderItem orderItem = filterList.get(i);
@@ -403,7 +464,8 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
                         hashOrderNumberList.clear();
                         onStart();
                     }
-                });*/
+                });
+                break;*/
         }
     }
 
@@ -413,6 +475,7 @@ public class ViewOrderFragment extends Fragment implements View.OnClickListener 
         customizedMenu.findItem(R.id.cancel_menu).setVisible(false);
         etBrandName.setText("");
         etFilter.setText("");
+        etSubFilter.setText("");
         etOrderNumberFilter.setText("");
     }
 }

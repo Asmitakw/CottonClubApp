@@ -32,6 +32,9 @@
         <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".activities.admin.ViewJobCardDetails"
+            android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".activities.LoginActivity"
             android:screenOrientation="portrait">
         </activity>

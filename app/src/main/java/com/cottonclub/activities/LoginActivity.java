@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.cottonclub.R;
 import com.cottonclub.utilities.AppSession;
+import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
 
 public class LoginActivity extends AppCompatActivity {
@@ -36,11 +37,19 @@ public class LoginActivity extends AppCompatActivity {
                     etUserId.requestFocus();
                     return;
                 }
-                Intent mainIntent = new Intent(LoginActivity.this, BaseActivity.class);
-                startActivity(mainIntent);
-                AppSession.getInstance().setSaveLoggedInUser(LoginActivity.this, etUserId.getText().toString());
-                finish();
-                AppSession.getInstance().saveLoginStatus(LoginActivity.this, true);
+                if (etUserId.getText().toString().equals(Constants.ADMIN)
+                        || etUserId.getText().toString().equals(Constants.CUTTING_IN_CHARGE_KM)
+                        || etUserId.getText().toString().equals(Constants.CUTTING_IN_CHARGE_BB)
+                        || etUserId.getText().toString().equals(Constants.CUTTING_IN_CHARGE_CB)) {
+                    Intent mainIntent = new Intent(LoginActivity.this, BaseActivity.class);
+                    startActivity(mainIntent);
+                    AppSession.getInstance().setSaveLoggedInUser(LoginActivity.this, etUserId.getText().toString());
+                    finish();
+                    AppSession.getInstance().saveLoginStatus(LoginActivity.this, true);
+
+                } else {
+                    Helper.showOkDialog(LoginActivity.this, getString(R.string.please_enter_valid_user_id));
+                }
             }
         });
 

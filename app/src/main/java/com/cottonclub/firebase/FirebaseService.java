@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 import com.cottonclub.R;
 import com.cottonclub.activities.BaseActivity;
 import com.cottonclub.activities.LoginActivity;
+import com.cottonclub.activities.admin.ViewJobCardDetails;
 import com.cottonclub.utilities.AppSession;
 import com.cottonclub.utilities.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,8 +45,18 @@ public class FirebaseService extends FirebaseMessagingService {
 
         this.context = this;
         Log.d("msg", "onMessageReceived: " + remoteMessage.getData().get("message"));
+        AppSession.getInstance().saveIsNotified(context, true);
         Intent intent;
         if (AppSession.getInstance().getLoginStatus(this)) {
+            if (remoteMessage.getData().get("message").contains("JobCard")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("position", remoteMessage.getNotification().getTag());
+                Intent order_details_intent = new Intent(context, ViewJobCardDetails.class);
+                order_details_intent.putExtra("extraWithOrder", bundle);
+                startActivity(order_details_intent);
+            } else {
+
+            }
             intent = new Intent(this, BaseActivity.class);
         } else {
             intent = new Intent(this, LoginActivity.class);
@@ -54,7 +66,7 @@ public class FirebaseService extends FirebaseMessagingService {
         String channelId = "Default";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_calendar)
-                .setContentTitle(remoteMessage.getNotification().getTitle())
+                .setContentTitle(remoteMessage.getNotification().getTag())
                 .setContentText(remoteMessage.getNotification().getBody()).setAutoCancel(true).setContentIntent(pendingIntent);
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -76,7 +88,6 @@ public class FirebaseService extends FirebaseMessagingService {
         }
 
     }
-
 
     @Override
     public void onNewToken(String s) {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.cottonclub.custom_views.CustomEditViewRegular xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/etFabricUnit"
+    style="@style/EditText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:clickable="false"
+    android:drawableStart="@drawable/ic_kgs"
+    android:drawableEnd="@drawable/ic_drop_down"
+    android:drawablePadding="@dimen/dimen_10"
+    android:editable="false"
+    android:focusableInTouchMode="false"
+    android:hint="@string/unit"
+    android:singleLine="true"
+    android:textCursorDrawable="@drawable/cursor_drawable" />

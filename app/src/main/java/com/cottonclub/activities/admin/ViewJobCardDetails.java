@@ -29,17 +29,22 @@ import android.widget.TextView;
 
 import com.cottonclub.R;
 import com.cottonclub.activities.BaseActivity;
+import com.cottonclub.adapters.JobCardAdapter;
 import com.cottonclub.interfaces.DialogListener;
+import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.SizeListItem;
+import com.cottonclub.utilities.AppSession;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -49,6 +54,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 
@@ -56,6 +62,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ViewJobCardDetails extends AppCompatActivity implements View.OnClickListener {
 
@@ -107,6 +116,9 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
     StorageReference storageReference;
     private Uri fileUri;
     private boolean isImageShowing = true;
+    private ArrayList<JobCardItem> jobCardList = new ArrayList<>();
+    private String position = "1";
+    private boolean isNotified = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,18 +132,28 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
     }
 
     private void initialise() {
+        if (AppSession.getInstance().getIsNotified(ViewJobCardDetails.this)) {
+            AppSession.getInstance().saveIsNotified(ViewJobCardDetails.this, false);
+            isNotified = true;
+        } else {
+            isNotified = false;
+        }
+
         // get the Firebase  storage reference
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         Bundle bundle = getIntent().getBundleExtra("extraWithOrder");
         if (bundle != null) {
-            jobCardItem = bundle.getParcelable("jobCard");
+            if (!isNotified) {
+                jobCardItem = bundle.getParcelable("jobCard");
+            }
             sizeListItem = bundle.getParcelable("size");
             getQuantity = jobCardItem.getQuantity();
             getDesignCode = bundle.getString("designCode");
             selectedBrand = jobCardItem.getBrand();
             selectedDesignType = sizeListItem.getDesignType();
+            position = bundle.getString("position");
         }
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
@@ -292,6 +314,26 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                 validate();
             }
         });
+
+        jobCardRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    jobCardItem = dataSnapshot.getValue(JobCardItem.class);
+                    jobCardList.add(jobCardItem);
+                }
+                jobCardItem = jobCardList.get(Integer.parseInt(position));
+                mDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private void validate() {

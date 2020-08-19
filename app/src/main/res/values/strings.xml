@@ -147,7 +147,7 @@
     <string name="if_you_reject_permission"><![CDATA[If you reject permission, you cannot use this service\n\nPlease turn on permissions at [Setting] > [Permission]]]></string>
     <string name="go_to_setting">Go to Settings</string>
     <string name="no_records">No Records found for this filter.</string>
-    <string name="upload_file">Upload File:</string>
+    <string name="upload_photo">Upload Photo:</string>
     <string name="please_enter_upload_job_card">Please Upload Job Card</string>
     <string name="unit">Unit</string>
     <string name="meters">m(s)</string>
@@ -200,6 +200,8 @@
     <string name="filter_by_party_name">Filter by Party Name</string>
     <string name="filter_by_order_number">Filter by Order Number</string>
     <string name="filter_by_job_card">Filter by Job Card</string>
+    <string name="please_enter_valid_login_id">Please enter valid login ID</string>
+    <string name="please_enter_valid_user_id">Please enter valid User ID</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>
@@ -281,14 +283,14 @@
     </string-array>
 
     <string-array name="fabricType">
-        <item>Sinker</item>
-        <item>Interlock</item>
-        <item>LDH FAB (Plain)</item>
-        <item>LDH FAB (Stripe)</item>
-        <item>Fleece</item>
-        <item>Textile</item>
-        <item>Lycra</item>
-        <item>Bombay FAB</item>
+        <item>Sinker (kg)</item>
+        <item>Interlock (kg)</item>
+        <item>LDH FAB [Plain] (kg)</item>
+        <item>LDH FAB [Stripe] (kg)</item>
+        <item>Fleece (kg)</item>
+        <item>Textile (m)</item>
+        <item>Lycra (kg)</item>
+        <item>Bombay FAB (kg)</item>
     </string-array>
 
     <string-array name="parts">

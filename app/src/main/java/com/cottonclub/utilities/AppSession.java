@@ -17,9 +17,10 @@ public class AppSession {
     private static String SAVE_DEVICE_ID = "save_device_id";
     private static String PARTY_LIST = "party_list";
     private static String IS_INTRO = "is_intro";
-    private static  String SAVE_LOGGED_IN_USER = "logged_in_as";
+    private static String SAVE_LOGGED_IN_USER = "logged_in_as";
     private static String IS_LOGIN = "is_login";
     private static String SAVE_FIREBASE_TOKEN = "refresh_token";
+    private static boolean isNotification = false;
 
 
     private static String SAVE_MEMBER_ID = "member_id";
@@ -97,6 +98,19 @@ public class AppSession {
     public String getRefreshToken(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         return sharedPreferences.getString(SAVE_FIREBASE_TOKEN, "");
+    }
+
+    public void saveIsNotified(Context context, boolean isLogin) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(SAVE_FIREBASE_TOKEN, false);
+        editor.commit();
+    }
+
+
+    public boolean getIsNotified(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(SAVE_FIREBASE_TOKEN, false);
     }
 
 
