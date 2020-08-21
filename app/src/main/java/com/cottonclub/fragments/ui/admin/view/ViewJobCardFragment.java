@@ -19,12 +19,10 @@ import android.widget.LinearLayout;
 
 import com.cottonclub.R;
 import com.cottonclub.activities.admin.ViewJobCardDetails;
-import com.cottonclub.activities.admin.ViewOrderDetails;
+import com.cottonclub.activities.admin.ViewJobCardDetails;
 import com.cottonclub.adapters.JobCardAdapter;
-import com.cottonclub.adapters.OrderAdapter;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.JobCardItem;
-import com.cottonclub.models.OrderItem;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
 import com.google.android.material.snackbar.Snackbar;

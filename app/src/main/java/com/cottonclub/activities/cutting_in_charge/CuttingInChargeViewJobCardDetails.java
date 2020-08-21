@@ -35,7 +35,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cottonclub.R;
 import com.cottonclub.activities.BaseActivity;
-import com.cottonclub.activities.admin.ViewJobCardDetails;
 import com.cottonclub.adapters.FabricListAdapter;
 import com.cottonclub.interfaces.DialogListener;
 import com.cottonclub.models.FabricListItem;
@@ -43,11 +42,9 @@ import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;

@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,25 +19,45 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.admin.ViewOrderDetails"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".activities.admin.ViewAlterRequestDetails"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardDetails"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".activities.admin.ViewJobCardDetails"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".activities.LoginActivity"
-            android:screenOrientation="portrait">
-        </activity>
+        <activity android:name=".activities.admin.ViewJobCardDetails">
 
+        </activity>
+        <activity
+            android:name=".activities.admin.ViewOrderDetails"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activities.admin.ViewAlterRequestDetails"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardDetails"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activities.admin.ViewJobCardNotificationDetails"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".activities.admin.ViewAlterRequestNotificationDetails"
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".activities.BaseActivity"
             android:label="@string/title_activity_main"
@@ -52,6 +71,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".firebase.FirebaseService"
             android:exported="false">

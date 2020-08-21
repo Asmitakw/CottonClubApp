@@ -32,14 +32,17 @@ import com.cottonclub.activities.BaseActivity;
 import com.cottonclub.interfaces.DialogListener;
 import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.SizeListItem;
+import com.cottonclub.utilities.AppSession;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -57,7 +60,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ViewJobCardDetails extends AppCompatActivity implements View.OnClickListener {
+public class ViewJobCardNotificationDetails extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etFabricType, etBrandName, etDesignNumber, etJobCardNumber,
             etCuttingIssueDate, etSelectSize, etMasterName, etQuantity;
@@ -107,6 +110,9 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
     StorageReference storageReference;
     private Uri fileUri;
     private boolean isImageShowing = true;
+    private ArrayList<JobCardItem> jobCardList = new ArrayList<>();
+    private String position = "1";
+    private boolean isNotified = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,24 +120,36 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.fragment_create_job_card);
         setTitle(getString(R.string.job_card_details));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        initialise();
-        setValues();
-        setViewsDisabled();
+        if (AppSession.getInstance().getIsNotified(ViewJobCardNotificationDetails.this)) {
+            isNotified = true;
+        } else {
+            isNotified = false;
+        }
+        btnCreateJobCard = findViewById(R.id.btnCreateJobCard);
+        btnCreateJobCard.setText(R.string.update_job_Card);
+
     }
 
     private void initialise() {
+
         // get the Firebase  storage reference
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
         Bundle bundle = getIntent().getBundleExtra("extraWithOrder");
         if (bundle != null) {
-            jobCardItem = bundle.getParcelable("jobCard");
-            sizeListItem = bundle.getParcelable("size");
-            getQuantity = jobCardItem.getQuantity();
-            getDesignCode = bundle.getString("designCode");
-            selectedBrand = jobCardItem.getBrand();
-            selectedDesignType = sizeListItem.getDesignType();
+            if (!isNotified) {
+                jobCardItem = bundle.getParcelable("jobCard");
+                sizeListItem = bundle.getParcelable("size");
+                getQuantity = jobCardItem.getQuantity();
+                getDesignCode = bundle.getString("designCode");
+                selectedBrand = jobCardItem.getBrand();
+                selectedDesignType = sizeListItem.getDesignType();
+                isNotified = false;
+                //AppSession.getInstance().saveIsNotified(ViewJobCardDetails.this, false);
+            }
+
+
+
         }
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
@@ -191,12 +209,14 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         etFabricType = findViewById(R.id.etFabricType);
         etFabricType.setText(jobCardItem.getFabricType());
 
+       /* etFabricUnit = findViewById(R.id.etFabricUnit);
+        etFabricUnit.setText(jobCardItem.getFabricUnit());
+        etFabricUnit.setOnClickListener(this);*/
+
         etCuttingIssueDate = findViewById(R.id.etCuttingIssueDate);
         etCuttingIssueDate.setText(jobCardItem.getCuttingIssueDate());
         etCuttingIssueDate.setOnClickListener(this);
 
-        btnCreateJobCard = findViewById(R.id.btnCreateJobCard);
-        btnCreateJobCard.setText(R.string.update_job_Card);
 
         llFileLayout = findViewById(R.id.llFileLayout);
         llFileLayout.setVisibility(View.VISIBLE);
@@ -204,6 +224,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
 
         ivUploadFile = findViewById(R.id.ivUploadFile);
         ivUploadFile.setVisibility(View.GONE);
+        ivUploadFile.setOnClickListener(this);
         ivCancelFile = findViewById(R.id.ivCancelFile);
         ivCancelFile.setOnClickListener(this);
         ivJobCardFile = findViewById(R.id.ivJobCardFile);
@@ -281,12 +302,50 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
     @Override
     public void onStart() {
         super.onStart();
+        mDialog = Helper.showProgressDialog(ViewJobCardNotificationDetails.this);
         btnCreateJobCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 validate();
             }
         });
+
+        if (isNotified) {
+            Bundle bundle = getIntent().getBundleExtra("extraWithOrder");
+            if (bundle != null) {
+                position = bundle.getString("position");
+            }
+            jobCardRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        jobCardItem = dataSnapshot.getValue(JobCardItem.class);
+                        jobCardList.add(jobCardItem);
+                    }
+                    int pos = Integer.parseInt(position) - 1 ;
+                    jobCardItem = jobCardList.get(pos);
+                    sizeListItem = jobCardList.get(pos).getSizeItem();
+                    getQuantity = jobCardItem.getQuantity();
+                    getDesignCode = jobCardItem.getDesignCode();
+                    selectedBrand = jobCardItem.getBrand();
+                    selectedDesignType = sizeListItem.getDesignType();
+
+                    initialise();
+                    setValues();
+                    setViewsDisabled();
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
+
+
     }
 
     private void validate() {
@@ -330,6 +389,12 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
             return;
         }
 
+        /*if (TextUtils.isEmpty(etFabricUnit.getText().toString().trim())) {
+            Helper.showOkDialog(this, getString(R.string.please_select_fabric_unit));
+            etFabricUnit.requestFocus();
+            return;
+        }*/
+
         if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
             Helper.showOkDialog(this, getString(R.string.cutting_issue_date));
             etCuttingIssueDate.requestFocus();
@@ -338,7 +403,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
 
         if (isClicked) {
             if (fileUri == null) {
-                Helper.showOkDialog(ViewJobCardDetails.this, getString(R.string.please_enter_upload_job_card));
+                Helper.showOkDialog(ViewJobCardNotificationDetails.this, getString(R.string.please_enter_upload_job_card));
                 return;
             }
         }
@@ -366,6 +431,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         String selectSize = etSelectSize.getText().toString();
         String totalPieces = etTotalNumberPieces.getText().toString();
         String masterName = etMasterName.getText().toString();
+        // String unit = etFabricUnit.getText().toString();
 
         sendSizeDetails();
         if (isClicked) {
@@ -382,6 +448,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
             jobCardItem.setSize(selectSize);
             jobCardItem.setQuantity(quantity);
             jobCardItem.setTotalPieces(totalPieces);
+            // jobCardItem.setFabricUnit(unit);
             jobCardItem.setMasterName(masterName);
             jobCardItem.setJobCardFilePath(jobCardItem.getJobCardFilePath());
             jobCardItem.setSizeItem(sizeListItem);
@@ -390,10 +457,10 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                     mDialog.dismiss();
-                    Helper.showOkClickDialog(ViewJobCardDetails.this, getString(R.string.order_updated_successfully), new DialogListener() {
+                    Helper.showOkClickDialog(ViewJobCardNotificationDetails.this, getString(R.string.job_card_updated_successfully), new DialogListener() {
                         @Override
                         public void onButtonClicked(int type) {
-                            Intent homeIntent = new Intent(ViewJobCardDetails.this, BaseActivity.class);
+                            Intent homeIntent = new Intent(ViewJobCardNotificationDetails.this, BaseActivity.class);
                             startActivity(homeIntent);
                             finish();
                         }
@@ -410,7 +477,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
     }
 
     private void uploadFileToStorage() {
-        mDialog = Helper.showProgressDialog(ViewJobCardDetails.this);
+        mDialog = Helper.showProgressDialog(ViewJobCardNotificationDetails.this);
         storageRef = storageReference.child("images/" + maxId);
         storageRef.putFile(fileUri)
                 .addOnSuccessListener(
@@ -455,7 +522,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                                             @Override
                                             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                                 mDialog.dismiss();
-                                                Helper.showOkDialog(ViewJobCardDetails.this, getString(R.string.job_card_created_successfully));
+                                                Helper.showOkDialog(ViewJobCardNotificationDetails.this, getString(R.string.job_card_created_successfully));
                                                 clearData();
                                             }
                                         });
@@ -538,6 +605,16 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                 });
                 break;
 
+          /*  case R.id.etFabricUnit:
+                Helper.showDropDown(etFabricUnit, new ArrayAdapter<>(this,
+                        android.R.layout.simple_list_item_1, unitArray), new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        etFabricUnit.setText(unitArray[position]);
+                    }
+                });
+                break;*/
+
             case R.id.etFabricType:
                 showSelectReceiversDialog();
                 break;
@@ -586,13 +663,13 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.ivJobCardFile:
-                Dialog dialog = new Dialog(ViewJobCardDetails.this);
+                Dialog dialog = new Dialog(ViewJobCardNotificationDetails.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
                 dialog.getWindow().setBackgroundDrawable(
                         new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-                ImageView imageView = new ImageView(ViewJobCardDetails.this);
+                ImageView imageView = new ImageView(ViewJobCardNotificationDetails.this);
                 imageView.setLayoutParams(new RelativeLayout.LayoutParams
                         (ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.MATCH_PARENT));
@@ -705,7 +782,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(ViewJobCardDetails.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ViewJobCardNotificationDetails.this);
         builder
                 .setTitle(getString(R.string.selectFabric))
                 .setMultiChoiceItems(fabricTypeArray, checkedReceivers, receiversDialogListener)
@@ -1455,7 +1532,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                         llBBabyNB912Parent.setVisibility(View.VISIBLE);
                         isSizeChartVisible = true;
                     } else {
-                        Helper.showOkDialog(ViewJobCardDetails.this, getString(R.string.please_enter_valid_quantity_number));
+                        Helper.showOkDialog(ViewJobCardNotificationDetails.this, getString(R.string.please_enter_valid_quantity_number));
                     }
 
 
@@ -1524,7 +1601,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                             etSelectSize.setText("");
                             selectedDesignType = Constants.PANT;
                             isKidsMagicP = true;
-                            Helper.showDropDown(etSelectSize, new ArrayAdapter<>(ViewJobCardDetails.this,
+                            Helper.showDropDown(etSelectSize, new ArrayAdapter<>(ViewJobCardNotificationDetails.this,
                                     android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -1669,6 +1746,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         disableView(etSelectSize);
         disableView(etTotalNumberPieces);
         disableView(etMasterName);
+        //disableView(etFabricUnit);
         disableView(etCuttingIssueDate);
         ivCancelFile.setVisibility(View.GONE);
 
@@ -1737,6 +1815,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         enableView(etSelectSize);
         enableView(etTotalNumberPieces);
         enableView(etMasterName);
+        // enableView(etFabricUnit);
         enableView(etCuttingIssueDate);
         ivCancelFile.setVisibility(View.VISIBLE);
 
@@ -2319,8 +2398,11 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
 
                 }
             }
-
-
         }
+
+        mDialog.dismiss();
     }
+
+
 }
+

@@ -202,6 +202,7 @@
     <string name="filter_by_job_card">Filter by Job Card</string>
     <string name="please_enter_valid_login_id">Please enter valid login ID</string>
     <string name="please_enter_valid_user_id">Please enter valid User ID</string>
+    <string name="alter_request_with">Alter Request with</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>

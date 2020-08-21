@@ -95,6 +95,7 @@
                     android:layout_marginEnd="@dimen/dimen_25"
                     android:drawableStart="@drawable/ic_filter"
                     android:drawablePadding="@dimen/dimen_10"
+                    android:singleLine="true"
                     android:hint="@string/filter_by_order_number"
                     android:textCursorDrawable="@drawable/cursor_drawable" />
 

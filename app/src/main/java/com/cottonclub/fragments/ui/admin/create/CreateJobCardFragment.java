@@ -417,7 +417,7 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                                                         + " "
                                                         + getString(R.string.created)
                                                         + " "
-                                                        + jobCardItem.getBrand(),jobCardItem.getJobCardId());
+                                                        + jobCardItem.getBrand(),String.valueOf(maxId));
                                                 clearData();
                                             }
                                         });

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.cottonclub.R;
+import com.cottonclub.utilities.AppSession;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -56,15 +57,9 @@ public class SplashActivity extends AppCompatActivity {
 
     private void startSplash() {
 
-        // updateAppLanguage(AppSession.getInstance().getLanguage(SplashActivity.this));
+        if (AppSession.getInstance().getLoginStatus(SplashActivity.this)) {
 
-        Intent mainIntent = new Intent(SplashActivity.this, LoginActivity.class);
-        startActivity(mainIntent);
-        //  overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
-        finish();
-
-        /*if (AppSession.getInstance().getLoginStatus(SplashActivity.this)) {
-            Intent mainIntent = new Intent(SplashActivity.this, HomeActivity.class);
+            Intent mainIntent = new Intent(SplashActivity.this, BaseActivity.class);
             startActivity(mainIntent);
             overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
             finish();
@@ -73,7 +68,7 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(mainIntent);
             overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
             finish();
-        }*/
+        }
 
     }
 }
