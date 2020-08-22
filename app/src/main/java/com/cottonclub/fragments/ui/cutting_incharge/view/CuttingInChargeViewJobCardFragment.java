@@ -51,7 +51,6 @@ public class CuttingInChargeViewJobCardFragment extends Fragment implements View
 
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference ordersRef = mRootRef.child("JobCard");
-
     private Menu customizedMenu;
     private EditText etBrandName, etOrderNumberFilter;
     private String[] brandArray;
@@ -151,6 +150,7 @@ public class CuttingInChargeViewJobCardFragment extends Fragment implements View
                         bundle.putParcelable("jobCard", jobCardList.get(position));
                         bundle.putString("designCode", jobCardList.get(position).getDesignCode());
                         bundle.putParcelable("size", jobCardList.get(position).getSizeItem());
+                        bundle.putParcelable("fabricConsumed", jobCardList.get(position).getFabricListItem());
 
                         Intent order_details_intent = new Intent(getActivity(), CuttingInChargeViewJobCardDetails.class);
                         order_details_intent.putExtra("extraWithOrder", bundle);

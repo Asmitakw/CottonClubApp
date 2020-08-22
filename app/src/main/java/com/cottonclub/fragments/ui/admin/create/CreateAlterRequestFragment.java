@@ -1569,7 +1569,7 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                         mDialog.dismiss();
                         Helper.showOkDialog(getActivity(), getString(R.string.alter_request_created_successfully));
-                        Helper.sendNotification(getActivity(), getString(R.string.alter_request)
+                        Helper.sendNotification(getActivity(), getString(R.string.alter_request_)
                                 + " "
                                 + getString(R.string.created)
                                 + " "

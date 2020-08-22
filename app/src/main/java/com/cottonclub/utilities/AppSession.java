@@ -21,6 +21,10 @@ public class AppSession {
     private static String IS_LOGIN = "is_login";
     private static String SAVE_FIREBASE_TOKEN = "refresh_token";
     private static String ISNOTIFIED = "isNotified";
+    private static String SAVE_NOTIFICATION_CONTENT = "notification_content";
+    private static String SAVE_TAG = "save tag";
+    private static String SAVE_TITLE = "save title";
+    private static String SAVE_BODY = "save body";
 
 
     private static String SAVE_MEMBER_ID = "member_id";
@@ -113,5 +117,60 @@ public class AppSession {
         return sharedPreferences.getBoolean(ISNOTIFIED, true);
     }
 
+    /* Save Notification Content*/
+    public void saveNotificationContent(Context context, String isLogin) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SAVE_NOTIFICATION_CONTENT, isLogin);
+        editor.commit();
+    }
+
+
+    public String getNotificationContent(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SAVE_NOTIFICATION_CONTENT, "");
+    }
+
+    /* Save Notification Tag*/
+    public void saveNotificationTag(Context context, String isLogin) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SAVE_TAG, isLogin);
+        editor.commit();
+    }
+
+
+    public String getNotificationTag(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SAVE_TAG, "");
+    }
+
+    /* Save Notification Title*/
+    public void saveNotificationTitle(Context context, String isLogin) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SAVE_TITLE, isLogin);
+        editor.commit();
+    }
+
+
+    public String getNotificationTitle(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SAVE_TITLE, "");
+    }
+
+    /* Save Notification Body*/
+    public void saveNotificationBody(Context context, String isLogin) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SAVE_BODY, isLogin);
+        editor.commit();
+    }
+
+
+    public String getNotificationBody(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SAVE_BODY, "");
+    }
 
 }

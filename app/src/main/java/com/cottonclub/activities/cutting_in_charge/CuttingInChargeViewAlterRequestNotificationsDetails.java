@@ -1,4 +1,4 @@
-package com.cottonclub.activities.admin;
+package com.cottonclub.activities.cutting_in_charge;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,12 +21,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cottonclub.R;
 import com.cottonclub.activities.BaseActivity;
+import com.cottonclub.adapters.FabricListAdapter;
 import com.cottonclub.interfaces.DialogListener;
 import com.cottonclub.models.AlterRequestItem;
-import com.cottonclub.models.JobCardItem;
+import com.cottonclub.models.FabricListItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.AppSession;
 import com.cottonclub.utilities.Constants;
@@ -44,16 +47,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
-public class ViewAlterRequestNotificationDetails extends AppCompatActivity implements View.OnClickListener {
+public class CuttingInChargeViewAlterRequestNotificationsDetails extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etBrandName, etDesignNumber, etParts,
             etSelectSize, etTotalNumberPieces, etOtherParts, etAlterQuantity,
             etCuttingIssueDate, etMasterName;
 
-    private TextView tvDateOrderCreation;
-
     private Button btnUpdateAlterRequest;
-    private long maxId = 0;
     private AlterRequestItem alterRequestItem;
     private SizeListItem sizeListItem;
     private String[] brandArray;
@@ -64,6 +64,7 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
     private String[] cottonBlueDesignTypeArray;
     private String[] partsArray;
     private String[] pantArray;
+    private String[] unitArray;
     private Dialog mDialog;
     private DatePickerDialog datePickerDialog;
     private LinearLayout llBBabyS3XLParent, llBBabyNB912Parent, llKidsMagicMN,
@@ -86,6 +87,13 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
     private Menu customizedMenu;
     private boolean isOtherPartsDetailsVisible = false;
     private LinearLayout llOtherParts;
+    private Button btnAddItem;
+    private EditText etFabricItem, etFabricQuantity, etFabricCodeUnit, etCuttingCompleteDate,
+            etWastage, etWastageUnit;
+    private ArrayList<FabricListItem> fabricCodeList = new ArrayList<FabricListItem>();
+    private RecyclerView rvFabricItem;
+    private FabricListAdapter fabricListAdapter;
+    private FabricListItem fabricListItem;
 
     private ArrayList<AlterRequestItem> alterRequestList = new ArrayList<>();
     private String position = "1";
@@ -94,29 +102,19 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_alter_request);
+        setContentView(R.layout.activity_cutting_in_charge_alter_request);
         setTitle(getString(R.string.alter_request_details));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        if (AppSession.getInstance().getIsNotified(ViewAlterRequestNotificationDetails.this)) {
+        if (AppSession.getInstance().getIsNotified(CuttingInChargeViewAlterRequestNotificationsDetails.this)) {
             isNotified = true;
         } else {
             isNotified = false;
         }
         btnUpdateAlterRequest = findViewById(R.id.btnUpdateAlterRequest);
         btnUpdateAlterRequest.setText(R.string.update_alter_request);
-
     }
 
     private void initialise() {
-        Bundle bundle = getIntent().getBundleExtra("extraWithOrder");
-        if (bundle != null) {
-            alterRequestItem = bundle.getParcelable("alter");
-            sizeListItem = bundle.getParcelable("size");
-            getQuantity = alterRequestItem.getAlterQuantity();
-            getDesignCode = bundle.getString("designCode");
-            selectedBrand = alterRequestItem.getBrandName();
-            selectedDesignType = sizeListItem.getDesignType();
-        }
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
 
@@ -135,7 +133,8 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
         if (pantArray == null)
             pantArray = getResources().getStringArray(R.array.pant);
 
-        tvDateOrderCreation = findViewById(R.id.tvDateOrderCreation);
+        if (unitArray == null)
+            unitArray = getResources().getStringArray(R.array.units);
 
         etBrandName = findViewById(R.id.etBrandName);
         etBrandName.setText(alterRequestItem.getBrandName());
@@ -232,6 +231,7 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
         etKMSG4 = findViewById(R.id.etKMSG4);
         etKMSG5 = findViewById(R.id.etKMSG5);
 
+        btnUpdateAlterRequest = findViewById(R.id.btnUpdateAlterRequest);
         llBBabyS3XLParent = findViewById(R.id.llBBabyS3XLParent);
         llBBabyNB912Parent = findViewById(R.id.llBBabyNB912Parent);
 
@@ -248,6 +248,29 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
         setDefaultSizeByQuantity();
         setDefaultTextWatcher();
         setUiByBrand();
+
+        btnAddItem = findViewById(R.id.btnAddItem);
+        btnAddItem.setOnClickListener(this);
+
+        etFabricItem = findViewById(R.id.etFabricItem);
+        etFabricQuantity = findViewById(R.id.etFabricQuantity);
+        rvFabricItem = findViewById(R.id.rvFabricItem);
+
+        fabricListAdapter = new FabricListAdapter(CuttingInChargeViewAlterRequestNotificationsDetails.this, fabricCodeList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CuttingInChargeViewAlterRequestNotificationsDetails.this);
+        rvFabricItem.setLayoutManager(mLayoutManager);
+        rvFabricItem.setItemAnimator(new DefaultItemAnimator());
+        rvFabricItem.setAdapter(fabricListAdapter);
+
+        etFabricCodeUnit = findViewById(R.id.etFabricCodeUnit);
+        etFabricCodeUnit.setOnClickListener(this);
+
+        etCuttingCompleteDate = findViewById(R.id.etCuttingCompleteDate);
+        etCuttingCompleteDate.setOnClickListener(this);
+
+        etWastage = findViewById(R.id.etWastage);
+        etWastageUnit = findViewById(R.id.etWastageUnit);
+        etWastageUnit.setOnClickListener(this);
     }
 
     @Override
@@ -284,6 +307,8 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
                     initialise();
                     setValues();
                     setViewsDisabled();
+                    AppSession.getInstance().saveIsNotified(CuttingInChargeViewAlterRequestNotificationsDetails.this, false);
+
 
                 }
 
@@ -298,223 +323,92 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
 
     private void validate() {
 
-        if (TextUtils.isEmpty(etBrandName.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_enter_brand_name));
-            etBrandName.requestFocus();
+        if (fabricCodeList.isEmpty()) {
+            Helper.showOkDialog(this, getString(R.string.please_enter_an_item));
+            etFabricItem.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(etCuttingCompleteDate.getText().toString().trim())) {
+            Helper.showOkDialog(this, getString(R.string.please_enter_cutting_complete_date));
+            etCuttingCompleteDate.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(etDesignCode.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.design_code));
-            etDesignCode.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etDesignNumber.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_enter_design_number));
-            etDesignNumber.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etParts.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_select_parts));
-            etParts.requestFocus();
-            return;
-        }
-
-        if (isOtherPartsDetailsVisible) {
-            if (TextUtils.isEmpty(etOtherParts.getText().toString().trim())) {
-                Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_select_other_parts));
-                etOtherParts.requestFocus();
-                return;
-            }
-        }
-
-        if (TextUtils.isEmpty(etAlterQuantity.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_enter_alter_quantity));
-            etAlterQuantity.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etSelectSize.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_select_size));
-            etSelectSize.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etTotalNumberPieces.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_enter_total_no_pieces));
-            etTotalNumberPieces.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etMasterName.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_enter_master_name));
-            etMasterName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
-            Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_enter_cutting_issue_date));
-            etCuttingIssueDate.requestFocus();
+        if (TextUtils.isEmpty(etWastage.getText().toString().trim())) {
+            Helper.showOkDialog(this, getString(R.string.please_enter_wastage_quantity));
+            etWastage.requestFocus();
             return;
         }
         sendAlterRequestDetails();
     }
 
     private void sendAlterRequestDetails() {
-        mDialog = Helper.showProgressDialog(ViewAlterRequestNotificationDetails.this);
+        mDialog = Helper.showProgressDialog(CuttingInChargeViewAlterRequestNotificationsDetails.this);
 
+        mDialog = Helper.showProgressDialog(this);
         SimpleDateFormat format = new SimpleDateFormat("d");
+
         format = new SimpleDateFormat("d MMM");
-        final String currentDate = format.format(new Date());
 
-        String jobCardCreationDate = tvDateOrderCreation.getText().toString();
-        String brandName = etBrandName.getText().toString();
-        String designCode = etDesignCode.getText().toString();
-        String designNumber = etDesignNumber.getText().toString();
-        String selectedParts = etParts.getText().toString();
-        if (isOtherPartsDetailsVisible) {
-            String otherParts = etOtherParts.getText().toString();
-            alterRequestItem.setOtherParts(otherParts);
-        }
-        String alterQuantity = etAlterQuantity.getText().toString();
-        String masterName = etMasterName.getText().toString();
-        String totalPieces = etTotalNumberPieces.getText().toString();
-        String cuttingIssueDate = etCuttingIssueDate.getText().toString();
+        String currentDate = format.format(new Date());
 
-        sendSizeDetails();
+        String cuttingCompleteDate = etCuttingCompleteDate.getText().toString();
+        String wastage = etWastage.getText().toString();
+        String wastageUnit = etWastageUnit.getText().toString();
 
-        alterRequestItem.setAlterRequestCreationDate(jobCardCreationDate);
-        alterRequestItem.setBrandName(brandName);
-        alterRequestItem.setDesignCode(designCode);
-        alterRequestItem.setDesignNumber(designNumber);
-        alterRequestItem.setSelectedParts(selectedParts);
-        alterRequestItem.setAlterQuantity(alterQuantity);
-        alterRequestItem.setMaster(masterName);
-        alterRequestItem.setAlterRequestDate(currentDate);
-        alterRequestItem.setTotalPieces(totalPieces);
-        alterRequestItem.setCuttingIssueDate(cuttingIssueDate);
-        alterRequestItem.setSizeListItem(sizeListItem);
+        alterRequestItem.setCuttingCompleteDate(cuttingCompleteDate);
+        alterRequestItem.setWastage(wastage);
+        alterRequestItem.setWastageUnit(wastageUnit);
+        alterRequestItem.setJobCardUpdatedByCuttingInChargeDate(currentDate);
+        alterRequestItem.setIsUpdatedByCuttingInCharge("true");
 
-        alterRequestRef.child(alterRequestItem.getAlterId()).setValue(alterRequestItem,
-                new DatabaseReference.CompletionListener() {
+        alterRequestRef.child(alterRequestItem.getAlterId()).setValue(alterRequestItem, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                mDialog.dismiss();
+                Helper.showOkClickDialog(CuttingInChargeViewAlterRequestNotificationsDetails.this, getString(R.string.alter_request_updated_successfully), new DialogListener() {
                     @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        mDialog.dismiss();
-                        Helper.showOkClickDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.alter_request_updated_successfully), new DialogListener() {
-                            @Override
-                            public void onButtonClicked(int type) {
-                                Intent homeIntent = new Intent(ViewAlterRequestNotificationDetails.this, BaseActivity.class);
-                                startActivity(homeIntent);
-                                finish();
-                            }
-                        });
+                    public void onButtonClicked(int type) {
+                        Intent homeIntent = new Intent(CuttingInChargeViewAlterRequestNotificationsDetails.this, BaseActivity.class);
+                        startActivity(homeIntent);
+                        finish();
                     }
                 });
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.edit_menu, menu);
-        customizedMenu = menu;
-        return true;
+            }
+        });
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
-            case R.id.edit_menu:
-                setViewsEnabled();
-                customizedMenu.findItem(R.id.edit_menu).setVisible(false);
-                customizedMenu.findItem(R.id.cancel_menu).setVisible(true);
-                return true;
-
-            case R.id.cancel_menu:
-                setViewsDisabled();
-                customizedMenu.findItem(R.id.cancel_menu).setVisible(false);
-                customizedMenu.findItem(R.id.edit_menu).setVisible(true);
-                return true;
+        for (int i = 0; i < fabricCodeList.size(); i++) {
+            alterRequestRef.child(alterRequestItem.getAlterId()).child(getString(R.string.fabric_consumed)).push().setValue(fabricCodeList.get(i));
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
-            case R.id.etBrandName:
-                Helper.showDropDown(etBrandName, new ArrayAdapter<>(this,
-                        android.R.layout.simple_list_item_1, brandArray), new AdapterView.OnItemClickListener() {
+            case R.id.etWastageUnit:
+                Helper.showDropDown(etWastageUnit, new ArrayAdapter<>(CuttingInChargeViewAlterRequestNotificationsDetails.this,
+                        android.R.layout.simple_list_item_1, unitArray), new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        clearData();
-                        clearSizeFields();
-                        etBrandName.setText(brandArray[position]);
-                        if (position == 0) {
-                            selectedBrand = Constants.KIDS_MAGIC;
-                        } else if (position == 1) {
-                            selectedBrand = Constants.BBABY;
-                        } else {
-                            selectedBrand = Constants.COTTON_BLUE;
-                        }
+                        etWastageUnit.setText(unitArray[position]);
                     }
                 });
                 break;
 
-            case R.id.etDesignCode:
-                if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, kidsMagicDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(kidsMagicDesignTypeArray[position]);
-                        }
-                    });
-                } else if (selectedBrand.equals(Constants.BBABY)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, bBabyDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(bBabyDesignTypeArray[position]);
-                        }
-                    });
-
-                } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
-                    Helper.showDropDown(etDesignCode, new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, cottonBlueDesignTypeArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etDesignCode.setText(cottonBlueDesignTypeArray[position]);
-                        }
-                    });
-                }
-
-                break;
-
-            case R.id.etParts:
-                Helper.showDropDown(etParts, new ArrayAdapter<>(ViewAlterRequestNotificationDetails.this,
-                        android.R.layout.simple_list_item_1, partsArray), new AdapterView.OnItemClickListener() {
+            case R.id.etFabricCodeUnit:
+                Helper.showDropDown(etFabricCodeUnit, new ArrayAdapter<>(CuttingInChargeViewAlterRequestNotificationsDetails.this,
+                        android.R.layout.simple_list_item_1, unitArray), new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        etParts.setText(partsArray[position]);
-                        if (position == 3) {
-                            isOtherPartsDetailsVisible = true;
-                            llOtherParts.setVisibility(View.VISIBLE);
-                        } else {
-                            llOtherParts.setVisibility(View.GONE);
-                            isOtherPartsDetailsVisible = false;
-                        }
+                        etFabricCodeUnit.setText(unitArray[position]);
                     }
                 });
                 break;
 
-            case R.id.etCuttingIssueDate:
+            case R.id.etCuttingCompleteDate:
                 final Calendar c = Calendar.getInstance();
                 int year, month, day;
                 year = c.get(Calendar.YEAR);
@@ -527,8 +421,7 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                etCuttingIssueDate.setText(dayOfMonth + "/" + (monthOfYear + 1)
-                                        + "/" + year);
+                                etCuttingCompleteDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                             }
                         }, year, month, day);
                 datePickerDialog.getDatePicker().setMinDate(System
@@ -536,36 +429,29 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
                 datePickerDialog.show();
                 break;
 
-            case R.id.etSelectSize:
-                if (isKidsMagicP) {
-                    Helper.showDropDown(etSelectSize, new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            etSelectSize.setText(pantArray[position]);
-                            if (position == 0) {
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicNumeric.setVisibility(View.GONE);
-
-                                llKidsMagicMN.setVisibility(View.VISIBLE);
-                            } else {
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llBBabyNB912Parent.setVisibility(View.GONE);
-                                llKMS.setVisibility(View.GONE);
-                                llBBabyS3XLParent.setVisibility(View.GONE);
-                                llKidsMagicGT.setVisibility(View.GONE);
-                                llKidsMagicMN.setVisibility(View.GONE);
-
-                                llKidsMagicNumeric.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
+            case R.id.btnAddItem:
+                if (etFabricItem.getText().toString().isEmpty()) {
+                    Helper.showOkDialog(CuttingInChargeViewAlterRequestNotificationsDetails.this,
+                            getString(R.string.please_enter_fabric_code));
+                    return;
                 }
+
+                if (etFabricQuantity.getText().toString().isEmpty()) {
+                    Helper.showOkDialog(CuttingInChargeViewAlterRequestNotificationsDetails.this,
+                            getString(R.string.please_enter_fabric_quantity));
+                    return;
+                }
+
+                fabricListItem = new FabricListItem();
+                fabricListItem.setFabricCode(etFabricItem.getText().toString());
+                fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString() + etFabricCodeUnit.getText().toString());
+                fabricCodeList.add(fabricListItem);
+                etFabricItem.setText("");
+                etFabricQuantity.setText("");
+                etFabricItem.requestFocus();
+                fabricListAdapter.notifyDataSetChanged();
                 break;
+
         }
 
     }
@@ -1293,7 +1179,7 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
                         llBBabyNB912Parent.setVisibility(View.VISIBLE);
                         isSizeChartVisible = true;
                     } else {
-                        Helper.showOkDialog(ViewAlterRequestNotificationDetails.this, getString(R.string.please_enter_valid_quantity_number));
+                        Helper.showOkDialog(CuttingInChargeViewAlterRequestNotificationsDetails.this, getString(R.string.please_enter_valid_quantity_number));
                     }
 
 
@@ -1362,7 +1248,7 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
                             etSelectSize.setText("");
                             selectedDesignType = Constants.PANT;
                             isKidsMagicP = true;
-                            Helper.showDropDown(etSelectSize, new ArrayAdapter<>(ViewAlterRequestNotificationDetails.this,
+                            Helper.showDropDown(etSelectSize, new ArrayAdapter<>(CuttingInChargeViewAlterRequestNotificationsDetails.this,
                                     android.R.layout.simple_list_item_1, pantArray), new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -1557,280 +1443,6 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
         disableView(etBbaby36);
         disableView(etBbaby69);
         disableView(etBbaby912);
-
-        btnUpdateAlterRequest.setVisibility(View.GONE);
-    }
-
-    private void enableView(TextView view) {
-        view.setEnabled(true);
-        view.setTextColor(getResources().getColor(R.color.colorPrimary));
-    }
-
-    private void setViewsEnabled() {
-        enableView(etBrandName);
-        enableView(etDesignCode);
-        enableView(etDesignNumber);
-        enableView(etAlterQuantity);
-        enableView(etParts);
-        if (isOtherPartsDetailsVisible) {
-            enableView(etOtherParts);
-        }
-        enableView(etSelectSize);
-        enableView(etTotalNumberPieces);
-        enableView(etMasterName);
-        enableView(etCuttingIssueDate);
-
-        enableView(etKidsMagicMNSize2);
-        enableView(etKidsMagicMNSize3);
-        enableView(etKidsMagicMNSize4);
-        enableView(etKidsMagicMNSize5);
-        enableView(etKidsMagicMNSize6);
-
-        enableView(etKidsMagicNumeric8);
-        enableView(etKidsMagicNumeric10);
-        enableView(etKidsMagicNumeric12);
-        enableView(etKidsMagicNumeric14);
-        enableView(etKidsMagicNumeric16);
-
-        enableView(etKidsMagicGT20);
-        enableView(etKidsMagicGT22);
-        enableView(etKidsMagicGT24);
-        enableView(etKidsMagicGT26);
-        enableView(etKidsMagicGT28);
-        enableView(etKidsMagicGT30);
-        enableView(etKidsMagicGT32);
-        enableView(etKidsMagicGT34);
-        enableView(etKidsMagicGT36);
-
-        enableView(etKMS1);
-        enableView(etKMS2);
-        enableView(etKMS3);
-        enableView(etKMS4);
-        enableView(etKMS5);
-
-        enableView(etKMSG1);
-        enableView(etKMSG2);
-        enableView(etKMSG3);
-        enableView(etKMSG4);
-        enableView(etKMSG5);
-
-        enableView(etBbabySizeS);
-        enableView(etBbabySizeM);
-        enableView(etBbabySizeL);
-        enableView(etBbabySizeXL);
-        enableView(etBbabySizeXXL);
-        enableView(etBbabySizeXXXL);
-
-        enableView(etBbabyNB);
-        enableView(etBbaby03);
-        enableView(etBbaby36);
-        enableView(etBbaby69);
-        enableView(etBbaby912);
-
-        btnUpdateAlterRequest.setVisibility(View.VISIBLE);
-    }
-
-    private void clearData() {
-        setViewsDisabled();
-        customizedMenu.findItem(R.id.cancel_menu).setVisible(false);
-        customizedMenu.findItem(R.id.edit_menu).setVisible(true);
-
-        llBBabyNB912Parent.setVisibility(View.GONE);
-        llBBabyS3XLParent.setVisibility(View.GONE);
-        llKidsMagicGT.setVisibility(View.GONE);
-        llKidsMagicMN.setVisibility(View.GONE);
-        llKidsMagicNumeric.setVisibility(View.GONE);
-        llKMS.setVisibility(View.GONE);
-        llKMSGirls.setVisibility(View.GONE);
-    }
-
-    private void clearSizeFields() {
-        etKidsMagicMNSize2.setText("0");
-
-        etKidsMagicMNSize3.setText("0");
-
-        etKidsMagicMNSize4.setText("0");
-
-        etKidsMagicMNSize5.setText("0");
-
-        etKidsMagicMNSize6.setText("0");
-
-        etKidsMagicNumeric8.setText("0");
-
-        etKidsMagicNumeric10.setText("0");
-
-        etKidsMagicNumeric12.setText("0");
-
-        etKidsMagicNumeric14.setText("0");
-
-        etKidsMagicNumeric16.setText("0");
-
-        etKidsMagicGT20.setText("0");
-
-        etKidsMagicGT22.setText("0");
-
-        etKidsMagicGT24.setText("0");
-
-        etKidsMagicGT26.setText("0");
-
-        etKidsMagicGT28.setText("0");
-
-        etKidsMagicGT30.setText("0");
-
-        etKidsMagicGT32.setText("0");
-
-        etKidsMagicGT34.setText("0");
-
-        etKidsMagicGT36.setText("0");
-
-        etKMS1.setText("0");
-        etKMS2.setText("0");
-        etKMS3.setText("0");
-        etKMS4.setText("0");
-        etKMS5.setText("0");
-
-        etKMSG1.setText("0");
-        etKMSG2.setText("0");
-        etKMSG3.setText("0");
-        etKMSG4.setText("0");
-        etKMSG5.setText("0");
-
-        etBbabySizeS.setText("0");
-
-        etBbabySizeM.setText("0");
-
-        etBbabySizeL.setText("0");
-
-        etBbabySizeXL.setText("0");
-
-        etBbabySizeXXL.setText("0");
-
-        etBbabySizeXXXL.setText("0");
-
-        etBbabyNB.setText("0");
-
-        etBbaby03.setText("0");
-
-        etBbaby36.setText("0");
-
-        etBbaby69.setText("0");
-
-        etBbaby912.setText("0");
-    }
-
-    private void sendSizeDetails() {
-        if (selectedBrand.equals(Constants.BBABY)) {
-            if (selectedDesignType.equals("BBB") || selectedDesignType.equals("BBF") ||
-                    selectedDesignType.equals("BBG") || selectedDesignType.equals("BBS") ||
-                    selectedDesignType.equals("BT") || selectedDesignType.equals("BBNSG") ||
-                    selectedDesignType.equals("BBNSB") || selectedDesignType.equals("GT")) {
-
-                sizeListItem = new SizeListItem();
-
-                sizeListItem.setS(etBbabySizeS.getText().toString());
-                sizeListItem.setM(etBbabySizeM.getText().toString());
-                sizeListItem.setL(etBbabySizeL.getText().toString());
-                sizeListItem.setXL(etBbabySizeXL.getText().toString());
-                sizeListItem.setXXL(etBbabySizeXXL.getText().toString());
-                sizeListItem.setXXXL(etBbabySizeXXXL.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            } else if (selectedDesignType.equals("BBGR") || selectedDesignType.equals("BBBR")) {
-                sizeListItem = new SizeListItem();
-
-                sizeListItem.setNB(etBbabyNB.getText().toString());
-                sizeListItem.setSize0b3(etBbaby03.getText().toString());
-                sizeListItem.setSize3b6(etBbaby36.getText().toString());
-                sizeListItem.setSize6b9(etBbaby69.getText().toString());
-                sizeListItem.setSize9b12(etBbaby912.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            }
-
-
-        } else if (selectedBrand.equals(Constants.KIDS_MAGIC)) {
-
-            if (selectedDesignType.equals(Constants.MN)) {
-
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize2(etKidsMagicMNSize2.getText().toString());
-                sizeListItem.setSize3(etKidsMagicMNSize3.getText().toString());
-                sizeListItem.setSize4(etKidsMagicMNSize4.getText().toString());
-                sizeListItem.setSize5(etKidsMagicMNSize5.getText().toString());
-                sizeListItem.setSize6(etKidsMagicMNSize6.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            } else if (selectedDesignType.equals(Constants.NUMERIC)) {
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize8(etKidsMagicNumeric8.getText().toString());
-                sizeListItem.setSize10(etKidsMagicNumeric10.getText().toString());
-                sizeListItem.setSize12(etKidsMagicNumeric12.getText().toString());
-                sizeListItem.setSize14(etKidsMagicNumeric14.getText().toString());
-                sizeListItem.setSize16(etKidsMagicNumeric16.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            } else if (selectedDesignType.equals(Constants.PANT)) {
-                if (etSelectSize.getText().toString().equals(getString(R.string.pant_2_6))) {
-                    sizeListItem = new SizeListItem();
-                    sizeListItem.setSize2(etKidsMagicMNSize2.getText().toString());
-                    sizeListItem.setSize3(etKidsMagicMNSize3.getText().toString());
-                    sizeListItem.setSize4(etKidsMagicMNSize4.getText().toString());
-                    sizeListItem.setSize5(etKidsMagicMNSize5.getText().toString());
-                    sizeListItem.setSize6(etKidsMagicMNSize6.getText().toString());
-                    sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-                } else if (etSelectSize.getText().toString().equals(getString(R.string.pant_8_16))) {
-                    sizeListItem = new SizeListItem();
-                    sizeListItem.setSize8(etKidsMagicNumeric8.getText().toString());
-                    sizeListItem.setSize10(etKidsMagicNumeric10.getText().toString());
-                    sizeListItem.setSize12(etKidsMagicNumeric12.getText().toString());
-                    sizeListItem.setSize14(etKidsMagicNumeric14.getText().toString());
-                    sizeListItem.setSize16(etKidsMagicNumeric16.getText().toString());
-                    sizeListItem.setDesignType(etSelectSize.getText().toString());
-                }
-            } else if (selectedDesignType.equals(Constants.GT)) {
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize20(etKidsMagicGT20.getText().toString());
-                sizeListItem.setSize22(etKidsMagicGT22.getText().toString());
-                sizeListItem.setSize24(etKidsMagicGT24.getText().toString());
-                sizeListItem.setSize26(etKidsMagicGT26.getText().toString());
-                sizeListItem.setSize28(etKidsMagicGT28.getText().toString());
-                sizeListItem.setSize30(etKidsMagicGT30.getText().toString());
-                sizeListItem.setSize32(etKidsMagicGT32.getText().toString());
-                sizeListItem.setSize34(etKidsMagicGT34.getText().toString());
-                sizeListItem.setSize36(etKidsMagicGT36.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-            } else if (selectedDesignType.equals(Constants.KMSB)) {
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize1(etKMS1.getText().toString());
-                sizeListItem.setSize2(etKMS2.getText().toString());
-                sizeListItem.setSize3(etKMS3.getText().toString());
-                sizeListItem.setSize4(etKMS4.getText().toString());
-                sizeListItem.setSize5(etKMS5.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-            } else if (selectedDesignType.equals(Constants.KMSG)) {
-                sizeListItem = new SizeListItem();
-                sizeListItem.setSize16(etKMSG1.getText().toString());
-                sizeListItem.setSize18(etKMSG2.getText().toString());
-                sizeListItem.setSize20(etKMSG3.getText().toString());
-                sizeListItem.setSize22(etKMSG4.getText().toString());
-                sizeListItem.setSize24(etKMSG5.getText().toString());
-                sizeListItem.setDesignType(etSelectSize.getText().toString());
-            }
-
-
-        } else if (selectedBrand.equals(Constants.COTTON_BLUE)) {
-            sizeListItem = new SizeListItem();
-            sizeListItem.setM(etBbabySizeM.getText().toString());
-            sizeListItem.setL(etBbabySizeL.getText().toString());
-            sizeListItem.setXL(etBbabySizeXL.getText().toString());
-            sizeListItem.setXXL(etBbabySizeXXL.getText().toString());
-            sizeListItem.setXXXL(etBbabySizeXXXL.getText().toString());
-            sizeListItem.setDesignType(etSelectSize.getText().toString());
-
-        }
-
     }
 
     private void setValues() {
@@ -2160,8 +1772,15 @@ public class ViewAlterRequestNotificationDetails extends AppCompatActivity imple
                 }
             }
 
-
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent home_intent = new Intent(CuttingInChargeViewAlterRequestNotificationsDetails.this, BaseActivity.class);
+        startActivity(home_intent);
+        finish();
     }
 }
 

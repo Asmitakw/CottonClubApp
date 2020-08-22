@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,15 +43,18 @@ import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 public class CuttingInChargeViewJobCardDetails extends AppCompatActivity implements View.OnClickListener {
@@ -62,6 +66,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
     private JobCardItem jobCardItem;
     private SizeListItem sizeListItem;
+    private FabricListItem fabricListItem;
     private String[] brandArray;
     private String selectedBrand;
     private String selectedDesignType;
@@ -92,6 +97,8 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     private View viewS;
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference cuttingInChargeJobCardRef = mRootRef.child("JobCard");
+    private DatabaseReference parentRef = cuttingInChargeJobCardRef.child("1").child("Fabric Consumed");
+
     private String getQuantity, getDesignCode;
     private Menu customizedMenu;
     private String designCode;
@@ -102,7 +109,6 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     private ArrayList<FabricListItem> fabricCodeList = new ArrayList<FabricListItem>();
     private RecyclerView rvFabricItem;
     private FabricListAdapter fabricListAdapter;
-    private FabricListItem fabricListItem;
     private boolean isImageShowing = true;
 
     @Override
@@ -117,7 +123,6 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     }
 
     private void initialise() {
-
         Bundle bundle = getIntent().getBundleExtra("extraWithOrder");
         if (bundle != null) {
             jobCardItem = bundle.getParcelable("jobCard");
@@ -309,11 +314,46 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                 validate();
             }
         });
+
+        parentRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot fabricSnapshot : dataSnapshot.getChildren()) {
+                    //fabricListItem = fabricSnapshot.getValue(FabricListItem.class);
+                    addFabricConsumedDetails((Map<String, Object>) dataSnapshot.getValue());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG", "onCancelled", databaseError.toException());
+            }
+        });
+    }
+
+    private void addFabricConsumedDetails(Map<String, Object> users) {
+
+        for (Map.Entry<String, Object> entry : users.entrySet()) {
+            FabricListItem fabricListItem1 = new FabricListItem();
+            Map singleUser = (Map) entry.getValue();
+
+            fabricListItem1.setFabricCode((String) singleUser.get("fabricCode"));
+            fabricListItem1.setFabricUnit((String) singleUser.get("fabricUnit"));
+            fabricListItem1.setFabricQuantity((String) singleUser.get("fabricQuantity"));
+            fabricCodeList.add(fabricListItem1);
+        }
+
+        fabricListAdapter = new FabricListAdapter(CuttingInChargeViewJobCardDetails.this, fabricCodeList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CuttingInChargeViewJobCardDetails.this);
+        rvFabricItem.setLayoutManager(mLayoutManager);
+        rvFabricItem.setItemAnimator(new DefaultItemAnimator());
+        rvFabricItem.setAdapter(fabricListAdapter);
+
     }
 
     private void validate() {
 
-        if(fabricCodeList.isEmpty()){
+        if (fabricCodeList.isEmpty()) {
             Helper.showOkDialog(this, getString(R.string.please_enter_an_item));
             etFabricItem.requestFocus();
             return;
@@ -347,12 +387,13 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         String wastageUnit = etWastageUnit.getText().toString();
 
         jobCardItem.setCuttingCompleteDate(cuttingCompleteDate);
+        jobCardItem.setFabricListItem(fabricListItem);
         jobCardItem.setWastage(wastage);
         jobCardItem.setWastageUnit(wastageUnit);
         jobCardItem.setJobCardUpdatedByCuttingInChargeDate(currentDate);
         jobCardItem.setIsUpdatedByCuttingInCharge("true");
 
-       cuttingInChargeJobCardRef.child(jobCardItem.getJobCardId()).setValue(jobCardItem, new DatabaseReference.CompletionListener() {
+        cuttingInChargeJobCardRef.child(jobCardItem.getJobCardId()).setValue(jobCardItem, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 mDialog.dismiss();
@@ -434,6 +475,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
                 fabricListItem = new FabricListItem();
                 fabricListItem.setFabricCode(etFabricItem.getText().toString());
+                fabricListItem.setFabricUnit(etFabricCodeUnit.getText().toString());
                 fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString() + etFabricCodeUnit.getText().toString());
                 fabricCodeList.add(fabricListItem);
                 etFabricItem.setText("");
@@ -1522,6 +1564,14 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         disableView(etBbaby36);
         disableView(etBbaby69);
         disableView(etBbaby912);
+
+        if (jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
+            disableView(etFabricItem);
+            disableView(etFabricQuantity);
+            disableView(etFabricCodeUnit);
+            disableView(etWastage);
+            disableView(etWastageUnit);
+        }
 
     }
 

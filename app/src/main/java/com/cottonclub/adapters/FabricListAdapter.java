@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,7 +57,13 @@ public class FabricListAdapter extends RecyclerView.Adapter<FabricListAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final FabricListItem fabricListItem = fabricList.get(position);
-
+        if(fabricListItem.getIsUpdated() != null) {
+            if (fabricListItem.getIsUpdated().equals("true")) {
+                disableView(holder.etFabricItem);
+                disableView(holder.etFabricQuantity);
+                holder.ivDelete.setEnabled(false);
+            }
+        }
         holder.etFabricItem.setText(fabricListItem.getFabricCode());
         holder.etFabricQuantity.setText(fabricListItem.getFabricQuantity());
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +73,11 @@ public class FabricListAdapter extends RecyclerView.Adapter<FabricListAdapter.Vi
                 notifyDataSetChanged();
             }
         });
+    }
+
+    private void disableView(TextView view) {
+        view.setEnabled(false);
+        view.setTextColor(context.getResources().getColor(R.color.colorGreyDark));
     }
 
     @Override

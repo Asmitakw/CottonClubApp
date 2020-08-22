@@ -406,6 +406,8 @@ public class CuttingInChargeViewAlterRequestDetails extends AppCompatActivity im
 
                 fabricListItem = new FabricListItem();
                 fabricListItem.setFabricCode(etFabricItem.getText().toString());
+                fabricListItem.setFabricUnit(etFabricCodeUnit.getText().toString());
+                fabricListItem.setIsUpdated("true");
                 fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString() + etFabricCodeUnit.getText().toString());
                 fabricCodeList.add(fabricListItem);
                 etFabricItem.setText("");

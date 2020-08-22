@@ -13,8 +13,8 @@ import androidx.core.app.NotificationCompat;
 
 import com.cottonclub.R;
 import com.cottonclub.activities.LoginActivity;
-import com.cottonclub.activities.admin.ViewAlterRequestNotificationDetails;
-import com.cottonclub.activities.admin.ViewJobCardNotificationDetails;
+import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewAlterRequestNotificationsDetails;
+import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewJobCardNotificationsDetails;
 import com.cottonclub.utilities.AppSession;
 import com.cottonclub.utilities.Constants;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -44,22 +44,25 @@ public class FirebaseService extends FirebaseMessagingService {
                 || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
                 || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)) {
 
+            AppSession.getInstance().saveNotificationTitle(context,remoteMessage.getNotification().getTitle());
+            AppSession.getInstance().saveNotificationBody(context,remoteMessage.getNotification().getBody());
+            AppSession.getInstance().saveNotificationTag(context,remoteMessage.getNotification().getTag());
             Intent intent = null;
 
             if (AppSession.getInstance().getLoginStatus(this)) {
                 if (Objects.requireNonNull(Objects.requireNonNull(remoteMessage.getNotification()).getBody()).contains("Job Card")) {
+                    AppSession.getInstance().saveNotificationContent(context,remoteMessage.getNotification().getBody());
                     Bundle bundle = new Bundle();
                     bundle.putString("position", remoteMessage.getNotification().getTag());
-                    intent = new Intent(context, ViewJobCardNotificationDetails.class);
+                    intent = new Intent(context, CuttingInChargeViewJobCardNotificationsDetails.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("extraWithOrder", bundle);
                     AppSession.getInstance().saveIsNotified(context, true);
-                }
-
-                else if (Objects.requireNonNull(Objects.requireNonNull(remoteMessage.getNotification()).getBody()).contains("Alter Request")) {
+                } else if (Objects.requireNonNull(Objects.requireNonNull(remoteMessage.getNotification()).getBody()).contains("Alter Request")) {
+                    AppSession.getInstance().saveNotificationContent(context,remoteMessage.getNotification().getBody());
                     Bundle bundle = new Bundle();
                     bundle.putString("position", remoteMessage.getNotification().getTag());
-                    intent = new Intent(context, ViewAlterRequestNotificationDetails.class);
+                    intent = new Intent(context, CuttingInChargeViewAlterRequestNotificationsDetails.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("extraWithOrder", bundle);
                     AppSession.getInstance().saveIsNotified(context, true);
@@ -67,12 +70,14 @@ public class FirebaseService extends FirebaseMessagingService {
                     intent = new Intent(this, LoginActivity.class);
                 }
 
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                        intent, PendingIntent.FLAG_ONE_SHOT);
                 String channelId = "Default";
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_calendar)
-                        .setContentTitle(remoteMessage.getNotification().getTag())
-                        .setContentText(remoteMessage.getNotification().getBody()).setAutoCancel(true).setContentIntent(pendingIntent);
+                        .setContentTitle(remoteMessage.getNotification().getTitle())
+                        .setContentText(remoteMessage.getNotification().getBody())
+                        .setAutoCancel(true).setContentIntent(pendingIntent);
 
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -80,19 +85,19 @@ public class FirebaseService extends FirebaseMessagingService {
                     manager.createNotificationChannel(channel);
                 }
                 notificationMessage = remoteMessage.getNotification().getBody();
-                if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_KM)
-                        || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
-                        || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)) {
 
-                    if (notificationMessage.endsWith(Constants.KIDS_MAGIC)) {
-                        manager.notify(0, builder.build());
-                    } else if (notificationMessage.endsWith(Constants.BBABY)) {
-                        manager.notify(0, builder.build());
-                    } else if (notificationMessage.endsWith(Constants.COTTON_BLUE)) {
-                        manager.notify(0, builder.build());
-                    }
+                if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_KM)
+                        && notificationMessage.endsWith(Constants.KIDS_MAGIC)) {
+                    manager.notify(0, builder.build());
+                } else if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
+                        && notificationMessage.endsWith(Constants.BBABY)) {
+                    manager.notify(0, builder.build());
+                } else if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)
+                        && notificationMessage.endsWith(Constants.COTTON_BLUE)) {
+                    manager.notify(0, builder.build());
                 }
             }
+
 
         } else {
             ///Toast.makeText(context,"est",Toast.LENGTH_SHORT).show();

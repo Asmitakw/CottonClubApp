@@ -43,18 +43,19 @@
 
         </activity>
         <activity
-            android:name=".activities.admin.ViewJobCardNotificationDetails"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity
             android:name=".activities.LoginActivity"
             android:screenOrientation="portrait">
 
         </activity>
+
         <activity
-            android:name=".activities.admin.ViewAlterRequestNotificationDetails"
+            android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestNotificationsDetails"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardNotificationsDetails"
             android:screenOrientation="portrait">
 
         </activity>

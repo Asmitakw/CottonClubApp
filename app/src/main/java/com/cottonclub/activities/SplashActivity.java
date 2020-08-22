@@ -1,12 +1,12 @@
 package com.cottonclub.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.cottonclub.R;
 import com.cottonclub.utilities.AppSession;
@@ -58,7 +58,6 @@ public class SplashActivity extends AppCompatActivity {
     private void startSplash() {
 
         if (AppSession.getInstance().getLoginStatus(SplashActivity.this)) {
-
             Intent mainIntent = new Intent(SplashActivity.this, BaseActivity.class);
             startActivity(mainIntent);
             overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
