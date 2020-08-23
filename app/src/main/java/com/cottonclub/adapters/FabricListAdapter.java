@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cottonclub.R;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.FabricListItem;
+import com.cottonclub.utilities.AppSession;
 
 import java.util.List;
 
@@ -57,12 +58,12 @@ public class FabricListAdapter extends RecyclerView.Adapter<FabricListAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final FabricListItem fabricListItem = fabricList.get(position);
-        if(fabricListItem.getIsUpdated() != null) {
-            if (fabricListItem.getIsUpdated().equals("true")) {
-                disableView(holder.etFabricItem);
-                disableView(holder.etFabricQuantity);
-                holder.ivDelete.setEnabled(false);
-            }
+
+
+        if (AppSession.getInstance().getIsUpdatedByCi(context).equals("true")) {
+            disableView(holder.etFabricItem);
+            disableView(holder.etFabricQuantity);
+            holder.ivDelete.setEnabled(false);
         }
         holder.etFabricItem.setText(fabricListItem.getFabricCode());
         holder.etFabricQuantity.setText(fabricListItem.getFabricQuantity());

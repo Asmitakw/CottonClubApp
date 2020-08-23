@@ -25,6 +25,7 @@ public class AppSession {
     private static String SAVE_TAG = "save tag";
     private static String SAVE_TITLE = "save title";
     private static String SAVE_BODY = "save body";
+    private static String IS_UPDATED_BY_CI = "cutting_incharge_update";
 
 
     private static String SAVE_MEMBER_ID = "member_id";
@@ -171,6 +172,20 @@ public class AppSession {
     public String getNotificationBody(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         return sharedPreferences.getString(SAVE_BODY, "");
+    }
+
+    /* Save Cutting InCharge Update*/
+    public void saveCuttingInChargeUpdate(Context context, String isLogin) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(IS_UPDATED_BY_CI, isLogin);
+        editor.commit();
+    }
+
+
+    public String getIsUpdatedByCi(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(IS_UPDATED_BY_CI, "");
     }
 
 }

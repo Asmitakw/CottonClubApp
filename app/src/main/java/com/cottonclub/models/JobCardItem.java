@@ -50,6 +50,9 @@ public class JobCardItem implements Parcelable {
         fabricListItem = in.readParcelable(FabricListItem.class.getClassLoader());
         jobCardFilePath = in.readString();
         isUpdatedByCuttingInCharge = in.readString();
+        wastage = in.readString();
+        wastageUnit = in.readString();
+        cuttingCompleteDate = in.readString();
     }
 
     public JobCardItem() {
@@ -221,6 +224,9 @@ public class JobCardItem implements Parcelable {
         parcel.writeParcelable(fabricListItem, i);
         parcel.writeString(jobCardFilePath);
         parcel.writeString(isUpdatedByCuttingInCharge);
+        parcel.writeString(wastage);
+        parcel.writeString(wastageUnit);
+        parcel.writeString(cuttingCompleteDate);
     }
 
     public String getJobCardId() {

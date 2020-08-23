@@ -41,6 +41,7 @@ import com.cottonclub.interfaces.DialogListener;
 import com.cottonclub.models.FabricListItem;
 import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.SizeListItem;
+import com.cottonclub.utilities.AppSession;
 import com.cottonclub.utilities.Constants;
 import com.cottonclub.utilities.Helper;
 import com.google.firebase.database.DataSnapshot;
@@ -60,7 +61,7 @@ import java.util.Objects;
 public class CuttingInChargeViewJobCardDetails extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etFabricType, etBrandName, etDesignNumber, etJobCardNumber,
-            etCuttingIssueDate, etSelectSize, etMasterName, etQuantity, etFabricUnit;
+            etCuttingIssueDate, etSelectSize, etMasterName, etQuantity;
 
     private TextView tvDateOrderCreation;
 
@@ -118,6 +119,8 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         setContentView(R.layout.activity_cutting_in_charge_job_card);
         setTitle(getString(R.string.view_job_card_details));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        AppSession.getInstance()
+                .saveCuttingInChargeUpdate(CuttingInChargeViewJobCardDetails.this,"false");
         initialise();
         setValues();
         setViewsDisabled();
@@ -191,10 +194,6 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
         etFabricType = findViewById(R.id.etFabricType);
         etFabricType.setText(jobCardItem.getFabricType());
-
-        etFabricUnit = findViewById(R.id.etFabricUnit);
-        etFabricUnit.setText(jobCardItem.getFabricUnit());
-        etFabricUnit.setOnClickListener(this);
 
         etCuttingIssueDate = findViewById(R.id.etCuttingIssueDate);
         etCuttingIssueDate.setText(jobCardItem.getCuttingIssueDate());
@@ -346,16 +345,14 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
             fabricListItemArrayList.add(fabricListItem1);
         }
 
-    fabricListAdapter = new FabricListAdapter(CuttingInChargeViewJobCardDetails .this, fabricListItemArrayList);
+        fabricListAdapter = new FabricListAdapter(CuttingInChargeViewJobCardDetails.this, fabricListItemArrayList);
 
-    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CuttingInChargeViewJobCardDetails.this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CuttingInChargeViewJobCardDetails.this);
         rvFabricItem.setLayoutManager(mLayoutManager);
-        rvFabricItem.setItemAnimator(new
-
-    DefaultItemAnimator());
+        rvFabricItem.setItemAnimator(new DefaultItemAnimator());
         rvFabricItem.setAdapter(fabricListAdapter);
 
-}
+    }
 
     private void validate() {
 
@@ -409,6 +406,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                         Intent homeIntent = new Intent(CuttingInChargeViewJobCardDetails.this, BaseActivity.class);
                         startActivity(homeIntent);
                         finish();
+
                     }
                 });
 
@@ -1521,7 +1519,6 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         disableView(etSelectSize);
         disableView(etTotalNumberPieces);
         disableView(etMasterName);
-        disableView(etFabricUnit);
         disableView(etCuttingIssueDate);
 
         disableView(etKidsMagicMNSize2);
@@ -1572,13 +1569,27 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         disableView(etBbaby912);
 
         if (jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
+            AppSession.getInstance()
+                    .saveCuttingInChargeUpdate(CuttingInChargeViewJobCardDetails.this, "true");
             disableView(etFabricItem);
             disableView(etFabricQuantity);
             disableView(etFabricCodeUnit);
+
+            btnAddItem.setVisibility(View.GONE);
+            etFabricItem.setVisibility(View.GONE);
+            etFabricCodeUnit.setVisibility(View.GONE);
+            etFabricQuantity.setVisibility(View.GONE);
+
+            etWastage.setText(getString(R.string.wastage) + ":" + jobCardItem.getWastage());
+            etCuttingCompleteDate.setText(jobCardItem.getCuttingCompleteDate());
+
             disableView(etWastage);
             disableView(etWastageUnit);
-        }
+            disableView(etCuttingCompleteDate);
 
+            btnCreateJobCard.setVisibility(View.INVISIBLE);
+
+        }
     }
 
     private void setValues() {
