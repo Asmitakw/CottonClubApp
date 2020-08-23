@@ -127,15 +127,15 @@ public class CuttingInChargeViewJobCardFragment extends Fragment implements View
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         jobCardItem = dataSnapshot.getValue(JobCardItem.class);
                         assert jobCardItem != null;
-                        if (AppSession.getInstance().getSaveLoggedInUser(requireActivity()).equals(Constants.CUTTING_IN_CHARGE_KM)) {
+                        if (AppSession.getInstance().getSaveLoggedInUser(getActivity()).equals(Constants.CUTTING_IN_CHARGE_KM)) {
                             if (jobCardItem.getBrand().equals(Constants.KIDS_MAGIC)) {
                                 jobCardList.add(jobCardItem);
                             }
-                        } else if (AppSession.getInstance().getSaveLoggedInUser(requireActivity()).equals(Constants.CUTTING_IN_CHARGE_BB)) {
+                        } else if (AppSession.getInstance().getSaveLoggedInUser(getActivity()).equals(Constants.CUTTING_IN_CHARGE_BB)) {
                             if (jobCardItem.getBrand().equals(Constants.BBABY)) {
                                 jobCardList.add(jobCardItem);
                             }
-                        } else if (AppSession.getInstance().getSaveLoggedInUser(requireActivity()).equals(Constants.CUTTING_IN_CHARGE_CB)) {
+                        } else if (AppSession.getInstance().getSaveLoggedInUser(getActivity()).equals(Constants.CUTTING_IN_CHARGE_CB)) {
                             if (jobCardItem.getBrand().equals(Constants.COTTON_BLUE)) {
                                 jobCardList.add(jobCardItem);
                             }

@@ -97,7 +97,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     private View viewS;
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference cuttingInChargeJobCardRef = mRootRef.child("JobCard");
-    private DatabaseReference parentRef = cuttingInChargeJobCardRef.child("1").child("Fabric Consumed");
+    private DatabaseReference parentRef;
 
     private String getQuantity, getDesignCode;
     private Menu customizedMenu;
@@ -110,6 +110,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     private RecyclerView rvFabricItem;
     private FabricListAdapter fabricListAdapter;
     private boolean isImageShowing = true;
+    private long maxId = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +133,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
             selectedBrand = jobCardItem.getBrand();
             selectedDesignType = sizeListItem.getDesignType();
         }
-
+        parentRef = cuttingInChargeJobCardRef.child(jobCardItem.getJobCardId()).child("Fabric Consumed");
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
 
@@ -333,23 +334,28 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
     private void addFabricConsumedDetails(Map<String, Object> users) {
 
+        ArrayList<FabricListItem> fabricListItemArrayList = new ArrayList<>();
+
         for (Map.Entry<String, Object> entry : users.entrySet()) {
-            FabricListItem fabricListItem1 = new FabricListItem();
             Map singleUser = (Map) entry.getValue();
 
+            FabricListItem fabricListItem1 = new FabricListItem();
             fabricListItem1.setFabricCode((String) singleUser.get("fabricCode"));
             fabricListItem1.setFabricUnit((String) singleUser.get("fabricUnit"));
             fabricListItem1.setFabricQuantity((String) singleUser.get("fabricQuantity"));
-            fabricCodeList.add(fabricListItem1);
+            fabricListItemArrayList.add(fabricListItem1);
         }
 
-        fabricListAdapter = new FabricListAdapter(CuttingInChargeViewJobCardDetails.this, fabricCodeList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CuttingInChargeViewJobCardDetails.this);
+    fabricListAdapter = new FabricListAdapter(CuttingInChargeViewJobCardDetails .this, fabricListItemArrayList);
+
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(CuttingInChargeViewJobCardDetails.this);
         rvFabricItem.setLayoutManager(mLayoutManager);
-        rvFabricItem.setItemAnimator(new DefaultItemAnimator());
+        rvFabricItem.setItemAnimator(new
+
+    DefaultItemAnimator());
         rvFabricItem.setAdapter(fabricListAdapter);
 
-    }
+}
 
     private void validate() {
 
@@ -476,7 +482,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                 fabricListItem = new FabricListItem();
                 fabricListItem.setFabricCode(etFabricItem.getText().toString());
                 fabricListItem.setFabricUnit(etFabricCodeUnit.getText().toString());
-                fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString() + etFabricCodeUnit.getText().toString());
+                fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString());
                 fabricCodeList.add(fabricListItem);
                 etFabricItem.setText("");
                 etFabricQuantity.setText("");
@@ -1906,4 +1912,3 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         }
     }
 }
-
