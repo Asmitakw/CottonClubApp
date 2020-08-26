@@ -40,8 +40,8 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_job_card"
             android:drawablePadding="@dimen/dimen_15"
-            android:text="Job Card Number: PQ40321"
             android:singleLine="true"
+            android:text="Job Card Number: PQ40321"
             android:textCursorDrawable="@drawable/cursor_drawable" />
 
         <View
@@ -99,23 +99,19 @@
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlPrinterIssueDate"
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etPrinterIssueDate"
+            style="@style/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:drawableStart="@drawable/ic_delivery_date"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:drawablePadding="@dimen/dimen_15"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/please_select_printer_issue_date" />
 
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etPrinterIssueDate"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_delivery_date"
-                android:drawableEnd="@drawable/ic_calendar"
-                android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/please_select_printer_issue_date" />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
@@ -189,13 +185,6 @@
                 android:background="@color/colorGreyDark" />
         </LinearLayout>
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlPrinterReceiveDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
             <com.cottonclub.custom_views.CustomEditViewRegular
                 android:id="@+id/etPrinterReceiveDate"
                 style="@style/EditText"
@@ -204,9 +193,9 @@
                 android:drawableStart="@drawable/ic_delivery_date"
                 android:drawableEnd="@drawable/ic_calendar"
                 android:drawablePadding="@dimen/dimen_15"
+                android:editable="false"
+                android:focusableInTouchMode="false"
                 android:hint="@string/please_select_printer_receive_date" />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
@@ -249,7 +238,7 @@
             android:orientation="vertical">
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etApprovedQuantity"
+                android:id="@+id/etApprovedQuantityToEmbroidery"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -370,12 +359,6 @@
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlMakerIssueDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
             <com.cottonclub.custom_views.CustomEditViewRegular
                 android:id="@+id/etMakerIssueDate"
                 style="@style/EditText"
@@ -384,9 +367,9 @@
                 android:drawableStart="@drawable/ic_delivery_date"
                 android:drawableEnd="@drawable/ic_calendar"
                 android:drawablePadding="@dimen/dimen_15"
+                android:editable="false"
+                android:focusableInTouchMode="false"
                 android:hint="@string/maker_issue_date" />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <!--<View
             android:layout_width="match_parent"

@@ -1573,7 +1573,7 @@ public class CreateAlterRequestFragment extends Fragment implements View.OnClick
                                 + " "
                                 + getString(R.string.created)
                                 + " "
-                                + alterRequestItem.getBrandName(),String.valueOf(maxId));
+                                + alterRequestItem.getBrandName(), String.valueOf(maxId));
                         clearData();
                     }
                 });

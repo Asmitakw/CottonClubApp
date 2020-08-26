@@ -229,6 +229,13 @@
     <string name="is_alteration_required">Is Alteration Required?</string>
     <string name="setter_name">Setter Name</string>
     <string name="printer_name">Printer Name</string>
+    <string name="please_enter_printer_issue_Date">Please enter Printer Issue Date</string>
+    <string name="please_enter_printer_rcv_date">Please enter Printer Receive Date</string>
+    <string name="please_enter_shortage_quantity">Please enter Shortage Quantity</string>
+    <string name="please_enter_embroidery_quantity_rcv">Please enter Embroidery Quantity Received</string>
+    <string name="please_enter_checker_name">Please enter Checker Name</string>
+    <string name="please_enter_tot_aprv_qty_to_embroidery">Please enter Total Approved to Embroidery</string>
+    <string name="please_enter_maker_issue_date">Please enter Maker Issue Date</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>
