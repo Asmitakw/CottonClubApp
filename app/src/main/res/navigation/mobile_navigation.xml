@@ -57,4 +57,18 @@
         android:name="com.cottonclub.fragments.ui.cutting_incharge.view.CuttingInChargeViewAlterRequestFragment"
         android:label="@string/view_alter_request"
         tools:layout="@layout/fragment_view_alter_request" />
+
+    <fragment
+        android:id="@+id/nav_pm_view_job_card"
+        android:name="com.cottonclub.fragments.ui.production_manager.ProductionManagerViewJobCardFragment"
+        android:label="@string/view_job_card"
+        tools:layout="@layout/fragment_view_job_card" />
+
+    <fragment
+        android:id="@+id/nav_pm_view_alter_request"
+        android:name="com.cottonclub.fragments.ui.production_manager.ProductionManagerViewAlterRequestFragment"
+        android:label="@string/view_alter_request"
+        tools:layout="@layout/fragment_view_alter_request" />
+
+
 </navigation>

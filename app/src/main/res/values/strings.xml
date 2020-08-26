@@ -170,6 +170,11 @@
     <string name="cutting_in_charge_km"><b>Cutting In-charge</b> Kids Magic</string>
     <string name="cutting_in_charge_bb"><b>Cutting In-charge</b> Be Baby</string>
     <string name="cutting_in_charge_cb"><b>Cutting In-charge</b> Cotton Blue</string>
+    <string name="production_manager_km"><b>Production Manager</b> Kids Magic</string>
+    <string name="production_manager_bb"><b>Production Manager</b> Be Baby</string>
+    <string name="production_manager_cb"><b>Production Manager</b> Cotton Blue</string>
+
+
     <string name="job_card_details">Job Card Details</string>
     <string name="item">Item</string>
     <string name="cutting_complete_date">Cutting Complete Date</string>
@@ -204,6 +209,11 @@
     <string name="please_enter_valid_login_id">Please enter valid login ID</string>
     <string name="please_enter_valid_user_id">Please enter valid User ID</string>
     <string name="alter_request_with">Alter Request with</string>
+    <string name="updated">updated for</string>
+    <string name="date_time_of_generation_request"><![CDATA[Date & Time of Generating Request]]></string>
+    <string name="employee_name">Employee Name</string>
+    <string name="numbering">Numbering</string>
+    <string name="please_enter_employee_name">Please enter Employee name</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>

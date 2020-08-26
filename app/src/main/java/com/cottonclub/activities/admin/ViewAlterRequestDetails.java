@@ -408,6 +408,7 @@ public class ViewAlterRequestDetails extends AppCompatActivity implements View.O
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         clearData();
                         clearSizeFields();
+                        btnUpdateAlterRequest.setVisibility(View.VISIBLE);
                         etBrandName.setText(brandArray[position]);
                         if (position == 0) {
                             selectedBrand = Constants.KIDS_MAGIC;

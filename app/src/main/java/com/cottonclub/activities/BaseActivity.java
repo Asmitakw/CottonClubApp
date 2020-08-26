@@ -59,6 +59,7 @@ public class BaseActivity extends AppCompatActivity {
         MenuItem create_item = menu.findItem(R.id.create_item);
         MenuItem view_item = menu.findItem(R.id.view_item);
         MenuItem cutting_in_charge_view_item = menu.findItem(R.id.cutting_in_charge_view_item);
+        MenuItem production_manager_view_item = menu.findItem(R.id.production_manager_view_item);
 
         if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.ADMIN)) {
             //Admin Login
@@ -92,6 +93,34 @@ public class BaseActivity extends AppCompatActivity {
             create_item.setVisible(false);
             view_item.setVisible(false);
             cutting_in_charge_view_item.setVisible(true);
+
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.PRODUCTION_MANAGER_KM)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Cotton Blue Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.production_manager_km)));
+            create_item.setVisible(false);
+            view_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(false);
+            production_manager_view_item.setVisible(true);
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.PRODUCTION_MANAGER_BB)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Cotton Blue Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.production_manager_bb)));
+            create_item.setVisible(false);
+            view_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(false);
+            production_manager_view_item.setVisible(true);
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.PRODUCTION_MANAGER_CB)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Cotton Blue Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.production_manager_cb)));
+            create_item.setVisible(false);
+            view_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(false);
+            production_manager_view_item.setVisible(true);
         }
 
         nav_logout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -100,18 +129,18 @@ public class BaseActivity extends AppCompatActivity {
                 Helper.showOkCancelDialog(BaseActivity.this,
                         getString(R.string.do_want_to_logout_from_application),
                         getString(R.string.yes), getString(R.string.no), new DialogListener() {
-                    @Override
-                    public void onButtonClicked(int type) {
-                        if (Dialog.BUTTON_POSITIVE == type) {
-                            //AppSession.getInstance().clearSharedPreference(BaseActivity.this);
-                            //AppSession.getInstance().saveLoginStatus(BaseActivity.this, false);
-                            Intent mainIntent = new Intent(BaseActivity.this, LoginActivity.class);
-                            startActivity(mainIntent);
-                            //overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
-                            finish();
-                        }
-                    }
-                });
+                            @Override
+                            public void onButtonClicked(int type) {
+                                if (Dialog.BUTTON_POSITIVE == type) {
+                                    //AppSession.getInstance().clearSharedPreference(BaseActivity.this);
+                                    //AppSession.getInstance().saveLoginStatus(BaseActivity.this, false);
+                                    Intent mainIntent = new Intent(BaseActivity.this, LoginActivity.class);
+                                    startActivity(mainIntent);
+                                    //overridePendingTransition(R.anim.fade_in_act, R.anim.fade_out_act);
+                                    finish();
+                                }
+                            }
+                        });
                 return false;
             }
         });

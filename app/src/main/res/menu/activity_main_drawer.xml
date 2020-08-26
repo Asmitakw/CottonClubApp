@@ -46,6 +46,23 @@
         </menu>
     </item>
 
+    <item
+        android:id="@+id/production_manager_view_item"
+        android:title="@string/view"
+        android:visible="false">
+        <menu>
+
+            <item
+                android:id="@+id/nav_pm_view_job_card"
+                android:icon="@drawable/ic_view_job_card"
+                android:title="@string/view_job_card" />
+
+            <item
+                android:id="@+id/nav_pm_view_alter_request"
+                android:icon="@drawable/ic_view_alter_request"
+                android:title="@string/view_alter_request" />
+        </menu>
+    </item>
 
     <item
         android:id="@+id/view_item"

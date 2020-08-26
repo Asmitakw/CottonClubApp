@@ -14,6 +14,7 @@ import com.cottonclub.R;
 import com.cottonclub.interfaces.RecyclerViewClickListener;
 import com.cottonclub.models.FabricListItem;
 import com.cottonclub.utilities.AppSession;
+import com.cottonclub.utilities.Constants;
 
 import java.util.List;
 
@@ -59,14 +60,19 @@ public class FabricListAdapter extends RecyclerView.Adapter<FabricListAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final FabricListItem fabricListItem = fabricList.get(position);
 
-
         if (AppSession.getInstance().getIsUpdatedByCi(context).equals("true")) {
-            disableView(holder.etFabricItem);
-            disableView(holder.etFabricQuantity);
-            holder.ivDelete.setEnabled(false);
+
+            if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_KM)
+                    || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
+                    || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)) {
+
+                disableView(holder.etFabricItem);
+                disableView(holder.etFabricQuantity);
+                holder.ivDelete.setEnabled(false);
+            }
         }
         holder.etFabricItem.setText(fabricListItem.getFabricCode());
-        holder.etFabricQuantity.setText(fabricListItem.getFabricQuantity());
+        holder.etFabricQuantity.setText(fabricListItem.getFabricQuantity() + fabricListItem.getFabricUnit());
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

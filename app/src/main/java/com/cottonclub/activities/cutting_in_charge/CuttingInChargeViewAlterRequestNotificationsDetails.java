@@ -444,7 +444,7 @@ public class CuttingInChargeViewAlterRequestNotificationsDetails extends AppComp
 
                 fabricListItem = new FabricListItem();
                 fabricListItem.setFabricCode(etFabricItem.getText().toString());
-                fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString() + etFabricCodeUnit.getText().toString());
+                fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString());
                 fabricCodeList.add(fabricListItem);
                 etFabricItem.setText("");
                 etFabricQuantity.setText("");

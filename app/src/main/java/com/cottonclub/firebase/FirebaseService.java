@@ -12,6 +12,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.cottonclub.R;
+import com.cottonclub.activities.BaseActivity;
 import com.cottonclub.activities.LoginActivity;
 import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewAlterRequestNotificationsDetails;
 import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewJobCardNotificationsDetails;
@@ -42,24 +43,35 @@ public class FirebaseService extends FirebaseMessagingService {
         this.context = this;
         if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_KM)
                 || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
-                || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)) {
+                || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)
+                || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.ADMIN)) {
 
-            AppSession.getInstance().saveNotificationTitle(context,remoteMessage.getNotification().getTitle());
-            AppSession.getInstance().saveNotificationBody(context,remoteMessage.getNotification().getBody());
-            AppSession.getInstance().saveNotificationTag(context,remoteMessage.getNotification().getTag());
+            AppSession.getInstance().saveNotificationTitle(context, remoteMessage.getNotification().getTitle());
+            AppSession.getInstance().saveNotificationBody(context, remoteMessage.getNotification().getBody());
+            AppSession.getInstance().saveNotificationTag(context, remoteMessage.getNotification().getTag());
             Intent intent = null;
 
             if (AppSession.getInstance().getLoginStatus(this)) {
                 if (Objects.requireNonNull(Objects.requireNonNull(remoteMessage.getNotification()).getBody()).contains("Job Card")) {
-                    AppSession.getInstance().saveNotificationContent(context,remoteMessage.getNotification().getBody());
-                    Bundle bundle = new Bundle();
-                    bundle.putString("position", remoteMessage.getNotification().getTag());
-                    intent = new Intent(context, CuttingInChargeViewJobCardNotificationsDetails.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("extraWithOrder", bundle);
-                    AppSession.getInstance().saveIsNotified(context, true);
+
+                    if(notificationMessage.contains("created")){
+                        AppSession.getInstance().saveNotificationContent(context, remoteMessage.getNotification().getBody());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("position", remoteMessage.getNotification().getTag());
+                        intent = new Intent(context, CuttingInChargeViewJobCardNotificationsDetails.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("extraWithOrder", bundle);
+                        AppSession.getInstance().saveIsNotified(context, true);
+                    }else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("position", remoteMessage.getNotification().getTag());
+                        intent = new Intent(context, BaseActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("extraWithOrder", bundle);
+                    }
+
                 } else if (Objects.requireNonNull(Objects.requireNonNull(remoteMessage.getNotification()).getBody()).contains("Alter Request")) {
-                    AppSession.getInstance().saveNotificationContent(context,remoteMessage.getNotification().getBody());
+                    AppSession.getInstance().saveNotificationContent(context, remoteMessage.getNotification().getBody());
                     Bundle bundle = new Bundle();
                     bundle.putString("position", remoteMessage.getNotification().getTag());
                     intent = new Intent(context, CuttingInChargeViewAlterRequestNotificationsDetails.class);
@@ -86,15 +98,22 @@ public class FirebaseService extends FirebaseMessagingService {
                 }
                 notificationMessage = remoteMessage.getNotification().getBody();
 
-                if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_KM)
-                        && notificationMessage.endsWith(Constants.KIDS_MAGIC)) {
-                    manager.notify(0, builder.build());
-                } else if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
-                        && notificationMessage.endsWith(Constants.BBABY)) {
-                    manager.notify(0, builder.build());
-                } else if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)
-                        && notificationMessage.endsWith(Constants.COTTON_BLUE)) {
-                    manager.notify(0, builder.build());
+                if (notificationMessage.contains("updated")) {
+
+                    if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.ADMIN)) {
+                        manager.notify(0, builder.build());
+                    }
+                } else {
+                    if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_KM)
+                            && notificationMessage.endsWith(Constants.KIDS_MAGIC)) {
+                        manager.notify(0, builder.build());
+                    } else if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
+                            && notificationMessage.endsWith(Constants.BBABY)) {
+                        manager.notify(0, builder.build());
+                    } else if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)
+                            && notificationMessage.endsWith(Constants.COTTON_BLUE)) {
+                        manager.notify(0, builder.build());
+                    }
                 }
             }
 

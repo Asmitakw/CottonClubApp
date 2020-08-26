@@ -59,7 +59,7 @@ import java.util.Objects;
 public class CuttingInChargeViewJobCardNotificationsDetails extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etFabricType, etBrandName, etDesignNumber, etJobCardNumber,
-            etCuttingIssueDate, etSelectSize, etMasterName, etQuantity, etFabricUnit;
+            etCuttingIssueDate, etSelectSize, etMasterName, etQuantity;
 
     private TextView tvDateOrderCreation;
 
@@ -189,10 +189,6 @@ public class CuttingInChargeViewJobCardNotificationsDetails extends AppCompatAct
 
         etFabricType = findViewById(R.id.etFabricType);
         etFabricType.setText(jobCardItem.getFabricType());
-
-        etFabricUnit = findViewById(R.id.etFabricUnit);
-        etFabricUnit.setText(jobCardItem.getFabricUnit());
-        etFabricUnit.setOnClickListener(this);
 
         etCuttingIssueDate = findViewById(R.id.etCuttingIssueDate);
         etCuttingIssueDate.setText(jobCardItem.getCuttingIssueDate());
@@ -1510,7 +1506,6 @@ public class CuttingInChargeViewJobCardNotificationsDetails extends AppCompatAct
         disableView(etSelectSize);
         disableView(etTotalNumberPieces);
         disableView(etMasterName);
-        disableView(etFabricUnit);
         disableView(etCuttingIssueDate);
 
         disableView(etKidsMagicMNSize2);

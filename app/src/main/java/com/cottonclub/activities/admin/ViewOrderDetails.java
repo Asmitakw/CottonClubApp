@@ -422,6 +422,7 @@ public class ViewOrderDetails extends AppCompatActivity implements View.OnClickL
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         clearData();
                         clearSizeFields();
+                        btnUpdateOrder.setVisibility(View.VISIBLE);
                         etBrandName.setText(brandArray[position]);
                         if (position == 0) {
                             selectedBrand = Constants.KIDS_MAGIC;

@@ -30,6 +30,8 @@ public class JobCardItem implements Parcelable {
     private String jobCardUpdatedByCuttingInChargeDate;
     private FabricListItem fabricListItem;
 
+    private String jobCardUpdatedByAdminDate;
+
     protected JobCardItem(Parcel in) {
         jobCardId = in.readString();
         jobCardCreateDate = in.readString();
@@ -53,6 +55,7 @@ public class JobCardItem implements Parcelable {
         wastage = in.readString();
         wastageUnit = in.readString();
         cuttingCompleteDate = in.readString();
+        jobCardUpdatedByAdminDate = in.readString();
     }
 
     public JobCardItem() {
@@ -227,6 +230,7 @@ public class JobCardItem implements Parcelable {
         parcel.writeString(wastage);
         parcel.writeString(wastageUnit);
         parcel.writeString(cuttingCompleteDate);
+        parcel.writeString(jobCardUpdatedByAdminDate);
     }
 
     public String getJobCardId() {
@@ -291,5 +295,13 @@ public class JobCardItem implements Parcelable {
 
     public void setIsUpdatedByCuttingInCharge(String isUpdatedByCuttingInCharge) {
         this.isUpdatedByCuttingInCharge = isUpdatedByCuttingInCharge;
+    }
+
+    public String getJobCardUpdatedByAdminDate() {
+        return jobCardUpdatedByAdminDate;
+    }
+
+    public void setJobCardUpdatedByAdminDate(String jobCardUpdatedByAdminDate) {
+        this.jobCardUpdatedByAdminDate = jobCardUpdatedByAdminDate;
     }
 }

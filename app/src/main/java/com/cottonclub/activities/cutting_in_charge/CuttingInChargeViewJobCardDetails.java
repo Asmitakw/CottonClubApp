@@ -315,20 +315,22 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
             }
         });
 
-        parentRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot fabricSnapshot : dataSnapshot.getChildren()) {
-                    //fabricListItem = fabricSnapshot.getValue(FabricListItem.class);
-                    addFabricConsumedDetails((Map<String, Object>) dataSnapshot.getValue());
+        if(jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
+            parentRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot fabricSnapshot : dataSnapshot.getChildren()) {
+                        //fabricListItem = fabricSnapshot.getValue(FabricListItem.class);
+                        addFabricConsumedDetails((Map<String, Object>) dataSnapshot.getValue());
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG", "onCancelled", databaseError.toException());
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w("TAG", "onCancelled", databaseError.toException());
+                }
+            });
+        }
     }
 
     private void addFabricConsumedDetails(Map<String, Object> users) {
@@ -357,7 +359,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     private void validate() {
 
         if (fabricCodeList.isEmpty()) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_an_item));
+            Helper.showOkDialog(this, getString(R.string.please_enter_fabric_code));
             etFabricItem.requestFocus();
             return;
         }
@@ -400,6 +402,12 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 mDialog.dismiss();
+                Helper.sendNotification(CuttingInChargeViewJobCardDetails.this, getString(R.string.job_card_with)
+                        + jobCardItem.getJobCardNumber()
+                        + " "
+                        + getString(R.string.updated)
+                        + " "
+                        + jobCardItem.getBrand(),String.valueOf(maxId));
                 Helper.showOkClickDialog(CuttingInChargeViewJobCardDetails.this, getString(R.string.job_card_updated_successfully), new DialogListener() {
                     @Override
                     public void onButtonClicked(int type) {

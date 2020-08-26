@@ -19,46 +19,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.admin.ViewJobCardDetails">
-
-        </activity>
+        <activity android:name=".activities.production_manager_details.CreateProductionManagerRequest"></activity>
+        <activity android:name=".activities.admin.ViewJobCardDetails"></activity>
         <activity
             android:name=".activities.admin.ViewOrderDetails"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.admin.ViewAlterRequestDetails"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardDetails"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestNotificationsDetails"
-            android:screenOrientation="portrait">
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardNotificationsDetails"
             android:screenOrientation="portrait">
 
         </activity>
+
+
         <activity
             android:name=".activities.BaseActivity"
             android:label="@string/title_activity_main"

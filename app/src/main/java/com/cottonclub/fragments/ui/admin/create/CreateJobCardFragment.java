@@ -24,6 +24,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cottonclub.R;
+import com.cottonclub.activities.BaseActivity;
+import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewJobCardDetails;
+import com.cottonclub.interfaces.DialogListener;
 import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.OrderItem;
 import com.cottonclub.models.SizeListItem;
@@ -353,7 +356,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
     }
 
     private void sendJobCardDetails() {
-
         isClicked = false;
         uploadFileToStorage();
     }
@@ -411,13 +413,20 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
                                             @Override
                                             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                                 mDialog.dismiss();
-                                                Helper.showOkDialog(getActivity(), getString(R.string.job_card_created_successfully));
+                                                Helper.showOkClickDialog(getActivity(), getString(R.string.job_card_created_successfully), new DialogListener() {
+                                                    @Override
+                                                    public void onButtonClicked(int type) {
+                                                        Intent homeIntent = new Intent(getActivity(), BaseActivity.class);
+                                                        startActivity(homeIntent);
+
+                                                    }
+                                                });
                                                 Helper.sendNotification(getActivity(), getString(R.string.job_card_with)
                                                         + jobCardItem.getJobCardNumber()
                                                         + " "
                                                         + getString(R.string.created)
                                                         + " "
-                                                        + jobCardItem.getBrand(),String.valueOf(maxId));
+                                                        + jobCardItem.getBrand(), String.valueOf(maxId));
                                                 clearData();
                                             }
                                         });

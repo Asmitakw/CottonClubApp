@@ -40,7 +40,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (etUserId.getText().toString().equals(Constants.ADMIN)
                         || etUserId.getText().toString().equals(Constants.CUTTING_IN_CHARGE_KM)
                         || etUserId.getText().toString().equals(Constants.CUTTING_IN_CHARGE_BB)
-                        || etUserId.getText().toString().equals(Constants.CUTTING_IN_CHARGE_CB)) {
+                        || etUserId.getText().toString().equals(Constants.CUTTING_IN_CHARGE_CB)
+                        || etUserId.getText().toString().equals(Constants.PRODUCTION_MANAGER_KM)
+                        || etUserId.getText().toString().equals(Constants.PRODUCTION_MANAGER_BB)
+                        || etUserId.getText().toString().equals(Constants.PRODUCTION_MANAGER_CB)) {
                     Intent mainIntent = new Intent(LoginActivity.this, BaseActivity.class);
                     startActivity(mainIntent);
                     AppSession.getInstance().setSaveLoggedInUser(LoginActivity.this, etUserId.getText().toString());
