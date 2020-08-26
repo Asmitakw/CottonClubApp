@@ -213,7 +213,22 @@
     <string name="date_time_of_generation_request"><![CDATA[Date & Time of Generating Request]]></string>
     <string name="employee_name">Employee Name</string>
     <string name="numbering">Numbering</string>
-    <string name="please_enter_employee_name">Please enter Employee name</string>
+    <string name="please_enter_employee_name">Please Enter Employee Name</string>
+    <string name="please_enter_printer_name">Please Enter Printer Name</string>
+    <string name="please_select_printer_issue_date">Printer Issue Date</string>
+    <string name="please_select_printer_receive_date">Printer Receive Date</string>
+    <string name="shortage_quantity">Shortage Quantity</string>
+    <string name="approved_quantity_issued_to_embroidery">Approved Quantity to Embroidery</string>
+    <string name="embroidery_qty_rcv">Embroidery Quantity Received</string>
+    <string name="checker_name">Checker Name</string>
+    <string name="tot_approved_quantity">Total Approved Quantity</string>
+    <string name="maker_issue_date">Maker Issue Date</string>
+    <string name="rcv_maker_date">Receive from Maker Date</string>
+    <string name="checker_name_rcv_marker">Checker Name [Received from Maker]</string>
+    <string name="tot_approved_quantity_by_checking_team">Approved Quantity By Checking Team</string>
+    <string name="is_alteration_required">Is Alteration Required?</string>
+    <string name="setter_name">Setter Name</string>
+    <string name="printer_name">Printer Name</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>
