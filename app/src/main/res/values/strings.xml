@@ -211,7 +211,7 @@
     <string name="alter_request_with">Alter Request with</string>
     <string name="updated">updated for</string>
     <string name="date_time_of_generation_request"><![CDATA[Date & Time of Generating Request]]></string>
-    <string name="employee_name">Employee Name</string>
+    <string name="employee_name">Numbering Employee Name</string>
     <string name="numbering">Numbering</string>
     <string name="please_enter_employee_name">Please Enter Employee Name</string>
     <string name="please_enter_printer_name">Please Enter Printer Name</string>
@@ -236,6 +236,8 @@
     <string name="please_enter_checker_name">Please enter Checker Name</string>
     <string name="please_enter_tot_aprv_qty_to_embroidery">Please enter Total Approved to Embroidery</string>
     <string name="please_enter_maker_issue_date">Please enter Maker Issue Date</string>
+    <string name="maker_name">Maker Name</string>
+    <string name="embroider_name">Embroider Name</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>

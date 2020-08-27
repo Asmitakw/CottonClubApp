@@ -1,10 +1,12 @@
 package com.cottonclub.activities.production_manager_details;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,25 +16,35 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.cottonclub.R;
+import com.cottonclub.models.JobCardItem;
+import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Helper;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateProductionManagerRequest extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etEmployeeName, etPrinterName, etPrinterIssueDate, etParts, etOtherParts,
             etPrinterReceiveDate, etShortageQuantity, etApprovedQuantityToEmbroidery, etAlterQuantity,
-            etEmbroideryQuantityRcv, etCheckerName, etTotApprovedQuantity, etMakerIssueDate;
+            etEmbroideryQuantityRcv, etCheckerName, etTotApprovedQuantity, etMakerIssueDate,etJobCardNumber;
     private TextInputLayout tlNumbering;
-    private Button btnUpdateAlterRequest;
+    private Button btnUpdateJobCard,btnViewJobCardDetails;
     private Dialog mDialog;
     private DatePickerDialog datePickerDialog;
     private String[] partsArray;
     private LinearLayout llOtherParts;
     private boolean isOtherPartsDetailsVisible = false;
+    private JobCardItem jobCardItem;
+    private SizeListItem sizeListItem;
+    private String getQuantity, getDesignCode,selectedBrand,selectedDesignType;
+    private ArrayList<JobCardItem> jobCardList = new ArrayList<>();
+    private int position;
+    private TextView tvDateOrderCreation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +55,37 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
     }
 
     private void initialise() {
+        Bundle bundle = getIntent().getBundleExtra("extraWithOrder");
+        if (bundle != null) {
+            jobCardItem = bundle.getParcelable("jobCard");
+            sizeListItem = bundle.getParcelable("size");
+            getQuantity = jobCardItem.getQuantity();
+            position = bundle.getInt("position");
+            getDesignCode = bundle.getString("designCode");
+            selectedBrand = jobCardItem.getBrand();
+            selectedDesignType = sizeListItem.getDesignType();
+        }
+        jobCardList.add(jobCardItem);
         if (partsArray == null)
             partsArray = getResources().getStringArray(R.array.parts);
+
+        tvDateOrderCreation = findViewById(R.id.tvDateOrderCreation);
+        tvDateOrderCreation.setText(Helper.getCurrentTime());
 
         etEmployeeName = findViewById(R.id.etEmployeeName);
         etPrinterName = findViewById(R.id.etPrinterName);
         etPrinterIssueDate = findViewById(R.id.etPrinterIssueDate);
+        etPrinterIssueDate.setOnClickListener(this);
         etParts = findViewById(R.id.etParts);
         etParts.setOnClickListener(this);
+        etJobCardNumber = findViewById(R.id.etJobCardNumber);
+        etJobCardNumber.setText(String.format("%s:%s", getString(R.string.job_card_number), jobCardItem.getJobCardNumber()));
 
         llOtherParts = findViewById(R.id.llOtherParts);
 
         etOtherParts = findViewById(R.id.etOtherParts);
         etPrinterReceiveDate = findViewById(R.id.etPrinterReceiveDate);
+        etPrinterReceiveDate.setOnClickListener(this);
         etShortageQuantity = findViewById(R.id.etShortageQuantity);
         etApprovedQuantityToEmbroidery = findViewById(R.id.etApprovedQuantityToEmbroidery);
         etAlterQuantity = findViewById(R.id.etAlterQuantity);
@@ -63,8 +93,13 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
         etCheckerName = findViewById(R.id.etCheckerName);
         etTotApprovedQuantity = findViewById(R.id.etTotApprovedQuantity);
         etMakerIssueDate = findViewById(R.id.etMakerIssueDate);
+        etMakerIssueDate.setOnClickListener(this);
 
-        btnUpdateAlterRequest = findViewById(R.id.btnUpdateAlterRequest);
+        btnUpdateJobCard = findViewById(R.id.btnUpdateJobCard);
+        btnUpdateJobCard.setOnClickListener(this);
+
+        btnViewJobCardDetails = findViewById(R.id.btnViewJobCardDetails);
+        btnViewJobCardDetails.setOnClickListener(this);
     }
 
     @Override
@@ -153,6 +188,22 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
                     }
                 });
                 break;
+
+            case R.id.btnUpdateJobCard:
+                validate();
+                break;
+
+            case R.id.btnViewJobCardDetails:
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("jobCard", jobCardList.get(position));
+                bundle.putString("designCode", getDesignCode);
+                bundle.putParcelable("size", jobCardList.get(position).getSizeItem());
+                bundle.putParcelable("fabricConsumed", jobCardList.get(position).getFabricListItem());
+
+                Intent order_details_intent = new Intent(this, ProductionManagerJobCardDetails.class);
+                order_details_intent.putExtra("extraWithOrder", bundle);
+                startActivity(order_details_intent);
+                break;
         }
     }
 
@@ -236,6 +287,12 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
             etMakerIssueDate.requestFocus();
             return;
         }
+
+        updateJobCardByPM();
+
+    }
+
+    private void updateJobCardByPM(){
 
     }
 }

@@ -130,15 +130,21 @@ public class ProductionManagerViewJobCardFragment extends Fragment implements Vi
                         assert jobCardItem != null;
                         if (AppSession.getInstance().getSaveLoggedInUser(getActivity()).equals(Constants.PRODUCTION_MANAGER_KM)) {
                             if (jobCardItem.getBrand().equals(Constants.KIDS_MAGIC)) {
-                                jobCardList.add(jobCardItem);
+                                if(jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
+                                    jobCardList.add(jobCardItem);
+                                }
                             }
                         } else if (AppSession.getInstance().getSaveLoggedInUser(getActivity()).equals(Constants.PRODUCTION_MANAGER_BB)) {
                             if (jobCardItem.getBrand().equals(Constants.BBABY)) {
-                                jobCardList.add(jobCardItem);
+                                if(jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
+                                    jobCardList.add(jobCardItem);
+                                }
                             }
                         } else if (AppSession.getInstance().getSaveLoggedInUser(getActivity()).equals(Constants.PRODUCTION_MANAGER_CB)) {
                             if (jobCardItem.getBrand().equals(Constants.COTTON_BLUE)) {
-                                jobCardList.add(jobCardItem);
+                                if(jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
+                                    jobCardList.add(jobCardItem);
+                                }
                             }
                         }
                     }
@@ -150,6 +156,7 @@ public class ProductionManagerViewJobCardFragment extends Fragment implements Vi
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("jobCard", jobCardList.get(position));
                         bundle.putString("designCode", jobCardList.get(position).getDesignCode());
+                        bundle.putInt("position", position);
                         bundle.putParcelable("size", jobCardList.get(position).getSizeItem());
                         bundle.putParcelable("fabricConsumed", jobCardList.get(position).getFabricListItem());
 

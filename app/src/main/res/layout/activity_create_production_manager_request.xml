@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,6 +10,44 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvViewJobCardDetails"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_eighty"
+            app:cardPreventCornerOverlap="true">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etJobCardNumber"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:layout_marginBottom="@dimen/dimen_10"
+                android:paddingStart="@dimen/dimen_15"
+                android:singleLine="true"
+                android:text="Job Card Number: PQ40321"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
+
+
+            <com.cottonclub.custom_views.CustomButtonBold
+                android:id="@+id/btnViewJobCardDetails"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_border"
+                android:drawableEnd="@drawable/ic_right_arrow"
+                android:gravity="center|start"
+                android:paddingStart="@dimen/dimen_15"
+                android:paddingTop="@dimen/dimen_20"
+                android:text="@string/view_job_card_details"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/dimen_20">
+
+            </com.cottonclub.custom_views.CustomButtonBold>
+
+        </androidx.cardview.widget.CardView>
+
 
         <com.cottonclub.custom_views.CustomTextView
             style="@style/CustomMediumText"
@@ -33,23 +72,6 @@
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
 
-        <com.cottonclub.custom_views.CustomEditViewRegular
-            android:id="@+id/etJobCardNumber"
-            style="@style/EditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_job_card"
-            android:drawablePadding="@dimen/dimen_15"
-            android:singleLine="true"
-            android:text="Job Card Number: PQ40321"
-            android:textCursorDrawable="@drawable/cursor_drawable" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorGreyDark" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tlNumbering"
@@ -86,7 +108,7 @@
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_employee"
+                android:drawableStart="@drawable/ic_checker"
                 android:drawablePadding="@dimen/dimen_15"
                 android:hint="@string/printer_name" />
 
@@ -112,7 +134,6 @@
             android:focusableInTouchMode="false"
             android:hint="@string/please_select_printer_issue_date" />
 
-
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -132,7 +153,6 @@
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_10"
                 android:drawableStart="@drawable/ic_parts"
                 android:drawableEnd="@drawable/ic_drop_down"
                 android:drawableRight="@drawable/ic_drop_down"
@@ -170,7 +190,6 @@
                     style="@style/EditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_10"
                     android:drawableStart="@drawable/ic_other_parts"
                     android:drawablePadding="@dimen/dimen_15"
                     android:hint="@string/other_parts"
@@ -185,17 +204,17 @@
                 android:background="@color/colorGreyDark" />
         </LinearLayout>
 
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etPrinterReceiveDate"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_delivery_date"
-                android:drawableEnd="@drawable/ic_calendar"
-                android:drawablePadding="@dimen/dimen_15"
-                android:editable="false"
-                android:focusableInTouchMode="false"
-                android:hint="@string/please_select_printer_receive_date" />
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etPrinterReceiveDate"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_delivery_date"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:drawablePadding="@dimen/dimen_15"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/please_select_printer_receive_date" />
 
         <View
             android:layout_width="match_parent"
@@ -242,9 +261,34 @@
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_quantity"
+                android:drawableStart="@drawable/ic_embroidery"
                 android:drawablePadding="@dimen/dimen_15"
                 android:hint="@string/approved_quantity_issued_to_embroidery" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/colorGreyDark" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlEmbroiderName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etEmbroiderName"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_employee"
+                android:drawablePadding="@dimen/dimen_15"
+                android:hint="@string/embroider_name" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -294,7 +338,7 @@
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_quantity"
+                android:drawableStart="@drawable/ic_embroidery_quantity"
                 android:drawablePadding="@dimen/dimen_15"
                 android:hint="@string/embroidery_qty_rcv" />
 
@@ -359,17 +403,33 @@
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
 
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etMakerIssueDate"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_delivery_date"
-                android:drawableEnd="@drawable/ic_calendar"
-                android:drawablePadding="@dimen/dimen_15"
-                android:editable="false"
-                android:focusableInTouchMode="false"
-                android:hint="@string/maker_issue_date" />
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etMakerIssueDate"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_delivery_date"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:drawablePadding="@dimen/dimen_15"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/maker_issue_date" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/colorGreyDark" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etMakerName"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_checker"
+            android:drawablePadding="@dimen/dimen_15"
+            android:hint="@string/maker_name" />
 
         <!--<View
             android:layout_width="match_parent"
@@ -494,7 +554,7 @@
             android:background="@color/colorGreyDark" />
 
         <com.cottonclub.custom_views.CustomButtonRegular
-            android:id="@+id/btnUpdateAlterRequest"
+            android:id="@+id/btnUpdateJobCard"
             style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

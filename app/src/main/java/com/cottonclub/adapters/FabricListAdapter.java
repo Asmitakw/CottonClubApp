@@ -64,7 +64,10 @@ public class FabricListAdapter extends RecyclerView.Adapter<FabricListAdapter.Vi
 
             if (AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_KM)
                     || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_BB)
-                    || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)) {
+                    || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.CUTTING_IN_CHARGE_CB)
+                    || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.PRODUCTION_MANAGER_KM)
+                    || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.PRODUCTION_MANAGER_BB)
+                    || AppSession.getInstance().getSaveLoggedInUser(context).equals(Constants.PRODUCTION_MANAGER_CB)) {
 
                 disableView(holder.etFabricItem);
                 disableView(holder.etFabricQuantity);
