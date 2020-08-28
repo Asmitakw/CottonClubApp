@@ -173,6 +173,9 @@
     <string name="production_manager_km"><b>Production Manager</b> Kids Magic</string>
     <string name="production_manager_bb"><b>Production Manager</b> Be Baby</string>
     <string name="production_manager_cb"><b>Production Manager</b> Cotton Blue</string>
+    <string name="finishing_in_charge_km"><b>Finishing In Charge</b> Kids Magic</string>
+    <string name="finishing_in_charge_bb"><b>Finishing In Charge</b> Be Baby</string>
+    <string name="finishing_in_charge_cb"><b>Finishing In Charge</b> Cotton Blue</string>
 
 
     <string name="job_card_details">Job Card Details</string>
@@ -238,6 +241,7 @@
     <string name="please_enter_maker_issue_date">Please enter Maker Issue Date</string>
     <string name="maker_name">Maker Name</string>
     <string name="embroider_name">Embroider Name</string>
+    <string name="received_from_maker_date">Received from Maker Date</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>

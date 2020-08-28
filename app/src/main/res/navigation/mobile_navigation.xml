@@ -70,5 +70,16 @@
         android:label="@string/view_alter_request"
         tools:layout="@layout/fragment_view_alter_request" />
 
+    <fragment
+        android:id="@+id/nav_fi_view_alter_request"
+        android:name="com.cottonclub.fragments.ui.finishing_incharge.FinishingInChargeViewAlterRequestFragment"
+        android:label="@string/view_alter_request"
+        tools:layout="@layout/fragment_view_alter_request" />
+
+    <fragment
+        android:id="@+id/nav_fi_view_job_card"
+        android:name="com.cottonclub.fragments.ui.finishing_incharge.FinishingInChargeViewJobCardFragment"
+        android:label="@string/view_job_card_details"
+        tools:layout="@layout/fragment_view_job_card" />
 
 </navigation>

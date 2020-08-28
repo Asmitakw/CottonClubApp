@@ -54,6 +54,13 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".activities.finishing_in_charge.FinishingInChargeJobCardDetails"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activities.finishing_in_charge.CreateFinishingInChargeManagerRequest"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".activities.BaseActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />

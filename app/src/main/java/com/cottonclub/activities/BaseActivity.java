@@ -60,6 +60,7 @@ public class BaseActivity extends AppCompatActivity {
         MenuItem view_item = menu.findItem(R.id.view_item);
         MenuItem cutting_in_charge_view_item = menu.findItem(R.id.cutting_in_charge_view_item);
         MenuItem production_manager_view_item = menu.findItem(R.id.production_manager_view_item);
+        MenuItem finishing_in_charge_view_item = menu.findItem(R.id.finishing_in_charge_view_item);
 
         if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.ADMIN)) {
             //Admin Login
@@ -121,6 +122,37 @@ public class BaseActivity extends AppCompatActivity {
             view_item.setVisible(false);
             cutting_in_charge_view_item.setVisible(false);
             production_manager_view_item.setVisible(true);
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.FINISHING_IN_CHARGE_KM)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Cotton Blue Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.finishing_in_charge_km)));
+            create_item.setVisible(false);
+            view_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(false);
+            production_manager_view_item.setVisible(false);
+            finishing_in_charge_view_item.setVisible(true);
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.FINISHING_IN_CHARGE_BB)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Cotton Blue Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.finishing_in_charge_bb)));
+            create_item.setVisible(false);
+            view_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(false);
+            production_manager_view_item.setVisible(false);
+            finishing_in_charge_view_item.setVisible(true);
+        } else if (AppSession.getInstance().getSaveLoggedInUser(BaseActivity.this).equals(Constants.FINISHING_IN_CHARGE_CB)) {
+            tvLoggedInAs = header.findViewById(R.id.tvLoggedInAs);
+            //Cutting In-charge Cotton Blue Login
+            tvLoggedInAs.setText(String.format("%s", getString(R.string.logged_in_as)
+                    + getString(R.string.finishing_in_charge_cb)));
+            create_item.setVisible(false);
+
+            view_item.setVisible(false);
+            cutting_in_charge_view_item.setVisible(false);
+            production_manager_view_item.setVisible(false);
+            finishing_in_charge_view_item.setVisible(true);
         }
 
         nav_logout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

@@ -71,57 +71,8 @@
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
 
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlNumbering"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etEmployeeName"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_employee"
-                android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/employee_name" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorGreyDark" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlPrinterName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etPrinterName"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_checker"
-                android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/printer_name" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorGreyDark" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlPrinterIssueDate"
+            android:id="@+id/tlReceivedFromMakerDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -136,7 +87,7 @@
                 android:drawablePadding="@dimen/dimen_15"
                 android:editable="false"
                 android:focusableInTouchMode="false"
-                android:hint="@string/please_select_printer_issue_date" />
+                android:hint="@string/received_from_maker_date" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
