@@ -242,6 +242,10 @@
     <string name="maker_name">Maker Name</string>
     <string name="embroider_name">Embroider Name</string>
     <string name="received_from_maker_date">Received from Maker Date</string>
+    <string name="wastage_percent">Wastage Percent: </string>
+    <string name="percent">%</string>
+    <string name="total_fabric_consumed">Total Fabric Consumed:</string>
+    <string name="total_wastage">Total Wastage:</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>

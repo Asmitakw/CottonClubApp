@@ -246,35 +246,6 @@
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_master" />
-
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etMasterName"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:hint="@string/master_name"
-                android:singleLine="true"
-                android:textCursorDrawable="@drawable/cursor_drawable" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorGreyDark" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -381,6 +352,43 @@
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
 
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etMasterName"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_master"
+            android:drawablePadding="@dimen/dimen_15"
+            android:hint="@string/master_name"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorGreyDark" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etCuttingCompleteDate"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_delivery_date"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:drawablePadding="@dimen/dimen_15"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/cutting_complete_date"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorGreyDark" />
+
         <com.cottonclub.custom_views.CustomTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -452,38 +460,6 @@
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFabricItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <com.cottonclub.custom_views.CustomButtonRegular
-            android:id="@+id/btnAddItem"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_forty"
-            android:background="@drawable/rounded_button_light"
-            android:text="@string/add_item"
-            android:textColor="@color/colorWhite" />
-
-        <com.cottonclub.custom_views.CustomEditViewRegular
-            android:id="@+id/etCuttingCompleteDate"
-            style="@style/EditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_delivery_date"
-            android:drawableEnd="@drawable/ic_calendar"
-            android:drawablePadding="@dimen/dimen_15"
-            android:editable="false"
-            android:focusableInTouchMode="false"
-            android:hint="@string/cutting_complete_date"
-            android:textCursorDrawable="@drawable/cursor_drawable" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorGreyDark" />
-
         <LinearLayout
             android:id="@+id/llWastageLayout"
             android:layout_width="match_parent"
@@ -521,10 +497,72 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/viewWastage"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFabricItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.cottonclub.custom_views.CustomButtonRegular
+            android:id="@+id/btnAddItem"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_forty"
+            android:background="@drawable/rounded_button_light"
+            android:text="@string/add_item"
+            android:textColor="@color/colorWhite" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorGreyDark" />
+
+        <LinearLayout
+            android:id="@+id/llTotalQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomTextView
+                android:id="@+id/tvTotalFabricConsumed"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_master"
+                android:drawablePadding="@dimen/dimen_15"
+                android:hint="@string/total_fabric_consumed"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/colorGreyDark" />
+
+            <com.cottonclub.custom_views.CustomTextView
+                android:id="@+id/tvTotalWastage"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_master"
+                android:drawablePadding="@dimen/dimen_15"
+                android:hint="@string/total_wastage"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/colorGreyDark" />
+
+        </LinearLayout>
 
         <com.cottonclub.custom_views.CustomButtonRegular
             android:id="@+id/btnCreateJobCard"

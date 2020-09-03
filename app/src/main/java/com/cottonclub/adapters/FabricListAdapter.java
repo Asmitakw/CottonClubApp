@@ -25,16 +25,14 @@ import java.util.List;
 public class FabricListAdapter extends RecyclerView.Adapter<FabricListAdapter.ViewHolder> {
     private List<FabricListItem> fabricList;
     private Context context;
-    private RecyclerViewClickListener recyclerViewClickListener;
 
     public FabricListAdapter(Context context, List<FabricListItem> fabricList) {
         this.fabricList = fabricList;
         this.context = context;
-        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        EditText etFabricItem, etFabricQuantity;
+        EditText etFabricItem, etFabricQuantity,etWastage,etWastageUnit,etWastagePercent;
         ImageView ivDelete;
 
         //set onclick listener to the entire view
@@ -42,7 +40,10 @@ public class FabricListAdapter extends RecyclerView.Adapter<FabricListAdapter.Vi
             super(view);
             etFabricItem = view.findViewById(R.id.etFabricItem);
             etFabricQuantity = view.findViewById(R.id.etFabricQuantity);
+            etWastage = view.findViewById(R.id.etWastage);
+            etWastageUnit = view.findViewById(R.id.etWastageUnit);
             ivDelete = view.findViewById(R.id.ivDelete);
+            etWastagePercent = view.findViewById(R.id.etWastagePercent);
         }
 
     }
@@ -71,11 +72,23 @@ public class FabricListAdapter extends RecyclerView.Adapter<FabricListAdapter.Vi
 
                 disableView(holder.etFabricItem);
                 disableView(holder.etFabricQuantity);
+                disableView(holder.etWastage);
+                disableView(holder.etWastageUnit);
                 holder.ivDelete.setEnabled(false);
+                holder.etWastagePercent.setVisibility(View.VISIBLE);
+                int wastage_percent = Math.round (Float.parseFloat((fabricListItem.getWastage()))
+                / Float.parseFloat((fabricListItem.getFabricQuantity())) * 100);
+                holder.etWastagePercent.setText(String.format("%s%s",
+                        context.getString(R.string.wastage_percent), String.format("%s%s", String.valueOf(wastage_percent),
+                        context.getString(R.string.percent))));
             }
         }
         holder.etFabricItem.setText(fabricListItem.getFabricCode());
-        holder.etFabricQuantity.setText(fabricListItem.getFabricQuantity() + fabricListItem.getFabricUnit());
+        holder.etFabricQuantity.setText(String.format("%s%s", fabricListItem.getFabricQuantity(),
+                fabricListItem.getFabricUnit()));
+        holder.etWastage.setText(fabricListItem.getWastage());
+        holder.etWastageUnit.setText(fabricListItem.getFabricUnit());
+
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

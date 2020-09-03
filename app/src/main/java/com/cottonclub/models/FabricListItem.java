@@ -8,12 +8,16 @@ public class FabricListItem implements Parcelable {
     private String fabricQuantity;
     private String fabricUnit;
     private String isUpdated;
+    private String wastage;
+    private String wastageUnit;
 
     protected FabricListItem(Parcel in) {
         fabricCode = in.readString();
         fabricQuantity = in.readString();
         fabricUnit = in.readString();
         isUpdated = in.readString();
+        wastage = in.readString();
+        wastageUnit = in.readString();
     }
 
     public FabricListItem(){
@@ -67,6 +71,8 @@ public class FabricListItem implements Parcelable {
         parcel.writeString(fabricQuantity);
         parcel.writeString(fabricUnit);
         parcel.writeString(isUpdated);
+        parcel.writeString(wastage);
+        parcel.writeString(wastageUnit);
     }
 
     public String getIsUpdated() {
@@ -75,5 +81,21 @@ public class FabricListItem implements Parcelable {
 
     public void setIsUpdated(String isUpdated) {
         this.isUpdated = isUpdated;
+    }
+
+    public String getWastage() {
+        return wastage;
+    }
+
+    public void setWastage(String wastage) {
+        this.wastage = wastage;
+    }
+
+    public String getWastageUnit() {
+        return wastageUnit;
+    }
+
+    public void setWastageUnit(String wastageUnit) {
+        this.wastageUnit = wastageUnit;
     }
 }

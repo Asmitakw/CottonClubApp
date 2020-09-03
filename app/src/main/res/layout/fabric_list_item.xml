@@ -50,4 +50,64 @@
         android:layout_height="1dp"
         android:layout_margin="@dimen/dimen_10"
         android:background="@color/colorGrey" />
+
+
+    <LinearLayout
+        android:id="@+id/llWastageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etWastage"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_wastage"
+            android:drawablePadding="@dimen/dimen_15"
+            android:hint="@string/wastage"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etWastageUnit"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_kgs"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:drawablePadding="@dimen/dimen_10"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/kgs"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewWastage"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="@color/colorGreyDark" />
+
+    <com.cottonclub.custom_views.CustomEditViewRegular
+        android:id="@+id/etWastagePercent"
+        style="@style/EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableStart="@drawable/ic_wastage"
+        android:drawablePadding="@dimen/dimen_15"
+        android:hint="@string/wastage_percent"
+        android:inputType="number"
+        android:editable="false"
+        android:focusableInTouchMode="false"
+        android:singleLine="true"
+        android:visibility="gone"
+        android:textCursorDrawable="@drawable/cursor_drawable" />
 </LinearLayout>

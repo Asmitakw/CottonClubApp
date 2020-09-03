@@ -1,7 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -52,23 +52,6 @@
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
 
-        <com.cottonclub.custom_views.CustomEditViewRegular
-            android:id="@+id/etJobCardNumber"
-            style="@style/EditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_job_card"
-            android:drawablePadding="@dimen/dimen_15"
-            android:hint="@string/job_card_number"
-            android:singleLine="true"
-            android:textCursorDrawable="@drawable/cursor_drawable" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorGreyDark" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,6 +88,23 @@
                 android:textCursorDrawable="@drawable/cursor_drawable" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorGreyDark" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etJobCardNumber"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_job_card"
+            android:drawablePadding="@dimen/dimen_15"
+            android:hint="@string/job_card_number"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
 
         <View
             android:layout_width="match_parent"
@@ -184,25 +184,19 @@
         <!--BbabyNB912-->
         <include layout="@layout/be_baby_nb_9_12" />
 
-        <LinearLayout
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etTotalNumberPieces"
+            style="@style/EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:drawableStart="@drawable/ic_total_no_pieces"
+            android:drawablePadding="@dimen/dimen_15"
+            android:hint="@string/tot_no_pieces"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
 
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etTotalNumberPieces"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_total_no_pieces"
-                android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/tot_no_pieces"
-                android:inputType="number"
-                android:singleLine="true"
-                android:textCursorDrawable="@drawable/cursor_drawable" />
-
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -210,38 +204,38 @@
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
+        <!--  <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="5dp"
+              android:orientation="horizontal">
 
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etMasterName"
-                style="@style/EditText"
-                android:layout_width="@dimen/dimen_305"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_25"
-                android:drawableStart="@drawable/ic_master"
-                android:drawablePadding="@dimen/dimen_10"
-                android:hint="@string/master_name"
-                android:singleLine="true"
-                android:textCursorDrawable="@drawable/cursor_drawable" />
+              <com.cottonclub.custom_views.CustomEditViewRegular
+                  android:id="@+id/etMasterName"
+                  style="@style/EditText"
+                  android:layout_width="@dimen/dimen_305"
+                  android:layout_height="wrap_content"
+                  android:layout_marginEnd="@dimen/dimen_25"
+                  android:drawableStart="@drawable/ic_master"
+                  android:drawablePadding="@dimen/dimen_10"
+                  android:hint="@string/master_name"
+                  android:singleLine="true"
+                  android:textCursorDrawable="@drawable/cursor_drawable" />
 
-            <ImageView
-                android:id="@+id/ivMasterList"
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_marginStart="@dimen/dimen_8"
-                android:layout_marginTop="12dp"
-                android:src="@drawable/ic_drop_down_round_button" />
-        </LinearLayout>
+              <ImageView
+                  android:id="@+id/ivMasterList"
+                  android:layout_width="@dimen/small_icon"
+                  android:layout_height="@dimen/small_icon"
+                  android:layout_marginStart="@dimen/dimen_8"
+                  android:layout_marginTop="12dp"
+                  android:src="@drawable/ic_drop_down_round_button" />
+          </LinearLayout>-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorGreyDark" />
+        <!-- <View
+             android:layout_width="match_parent"
+             android:layout_height="0.5dp"
+             android:layout_margin="10dp"
+             android:background="@color/colorGreyDark" />-->
 
         <com.cottonclub.custom_views.CustomEditViewRegular
             android:id="@+id/etFabricType"
@@ -332,8 +326,8 @@
             android:id="@+id/llFabricConsumed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <com.cottonclub.custom_views.CustomTextView
                 android:layout_width="wrap_content"
@@ -370,7 +364,6 @@
                     <com.cottonclub.custom_views.CustomEditViewRegular
                         android:id="@+id/etFabricQuantity"
                         style="@style/EditText"
-                        tools:ignore="NestedWeights"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -380,7 +373,8 @@
                         android:hint="@string/quantity"
                         android:inputType="number"
                         android:singleLine="true"
-                        android:textCursorDrawable="@drawable/cursor_drawable" />
+                        android:textCursorDrawable="@drawable/cursor_drawable"
+                        tools:ignore="NestedWeights" />
 
                     <com.cottonclub.custom_views.CustomEditViewRegular
                         android:id="@+id/etFabricCodeUnit"

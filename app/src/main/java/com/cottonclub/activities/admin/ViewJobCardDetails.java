@@ -73,7 +73,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ViewJobCardDetails extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etFabricType, etBrandName, etDesignNumber, etJobCardNumber,
-            etCuttingIssueDate, etSelectSize, etMasterName, etQuantity;
+            etCuttingIssueDate, etSelectSize, etQuantity;
 
     private TextView tvDateOrderCreation;
 
@@ -114,7 +114,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
     private String getQuantity, getDesignCode;
     private Menu customizedMenu;
     private String designCode;
-    private ImageView ivJobCardFile, ivCancelFile, ivUploadFile, ivMasterList;
+    private ImageView ivJobCardFile, ivCancelFile, ivUploadFile;
     private Button btnCreateJobCard;
     private StorageReference storageRef;
     private FirebaseStorage storage;
@@ -212,8 +212,8 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         etTotalNumberPieces = findViewById(R.id.etTotalNumberPieces);
         etTotalNumberPieces.setText(jobCardItem.getTotalPieces());
 
-        etMasterName = findViewById(R.id.etMasterName);
-        etMasterName.setText(jobCardItem.getMasterName());
+        /*etMasterName = findViewById(R.id.etMasterName);
+        etMasterName.setText(jobCardItem.getMasterName());*/
 
         etFabricType = findViewById(R.id.etFabricType);
         etFabricType.setText(jobCardItem.getFabricType());
@@ -325,8 +325,8 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         etWastage = findViewById(R.id.etWastage);
         etWastageUnit = findViewById(R.id.etWastageUnit);
 
-        ivMasterList = findViewById(R.id.ivMasterList);
-        ivMasterList.setOnClickListener(this);
+        /*ivMasterList = findViewById(R.id.ivMasterList);
+        ivMasterList.setOnClickListener(this);*/
 
         setDefaultSizeByQuantity();
         setDefaultTextWatcher();
@@ -432,11 +432,11 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
             etSelectSize.requestFocus();
             return;
         }
-        if (TextUtils.isEmpty(etMasterName.getText().toString().trim())) {
+        /*if (TextUtils.isEmpty(etMasterName.getText().toString().trim())) {
             Helper.showOkDialog(this, getString(R.string.please_enter_master_name));
             etMasterName.requestFocus();
             return;
-        }
+        }*/
 
         if (TextUtils.isEmpty(etCuttingIssueDate.getText().toString().trim())) {
             Helper.showOkDialog(this, getString(R.string.cutting_issue_date));
@@ -494,7 +494,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         String quantity = etQuantity.getText().toString();
         String selectSize = etSelectSize.getText().toString();
         String totalPieces = etTotalNumberPieces.getText().toString();
-        String masterName = etMasterName.getText().toString();
+      //  String masterName = etMasterName.getText().toString();
 
         sendSizeDetails();
         if (isClicked) {
@@ -511,7 +511,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
             jobCardItem.setSize(selectSize);
             jobCardItem.setQuantity(quantity);
             jobCardItem.setTotalPieces(totalPieces);
-            jobCardItem.setMasterName(masterName);
+            //jobCardItem.setMasterName(masterName);
             jobCardItem.setJobCardFilePath(jobCardItem.getJobCardFilePath());
             jobCardItem.setSizeItem(sizeListItem);
 
@@ -587,7 +587,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                                         String selectSize = etSelectSize.getText().toString();
                                         String totalPieces = etTotalNumberPieces.getText().toString();
                                         String fabricType = etFabricType.getText().toString();
-                                        String masterName = etMasterName.getText().toString();
+                                       // String masterName = etMasterName.getText().toString();
                                         String cuttingIssueDate = etCuttingIssueDate.getText().toString();
                                         String jobCardFilePath = downloadPhotoUrl.toString();
 
@@ -602,7 +602,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                                         jobCardItem.setSize(selectSize);
                                         jobCardItem.setTotalPieces(totalPieces);
                                         jobCardItem.setFabricType(fabricType);
-                                        jobCardItem.setMasterName(masterName);
+                                       // jobCardItem.setMasterName(masterName);
                                         jobCardItem.setCuttingIssueDate(cuttingIssueDate);
                                         jobCardItem.setJobCardFilePath(jobCardFilePath);
                                         jobCardItem.setSizeItem(sizeListItem);
@@ -691,7 +691,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         return super.onOptionsItemSelected(item);
     }
 
-    private void getMasterListing() {
+    /*private void getMasterListing() {
         mDialog = Helper.showProgressDialog(ViewJobCardDetails.this);
         jobCardRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -705,7 +705,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                             masterList.add(jobCardItem);
                         }
                     }
-                    ivMasterList.performClick();
+                    //ivMasterList.performClick();
                 }
             }
 
@@ -714,7 +714,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
 
             }
         });
-    }
+    }*/
 
     @Override
     public void onClick(View view) {
@@ -774,7 +774,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
 
                 break;
 
-            case R.id.ivMasterList:
+           /* case R.id.ivMasterList:
                 isClicked = true;
                 if (masterList.size() == 0) {
                     getMasterListing();
@@ -803,7 +803,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
                         }
                     });
                 }
-                break;
+                break;*/
 
             case R.id.ivCancelFile:
                 llFileLayout.setVisibility(View.GONE);
@@ -1957,7 +1957,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         disableView(etQuantity);
         disableView(etSelectSize);
         disableView(etTotalNumberPieces);
-        disableView(etMasterName);
+        //disableView(etMasterName);
         disableView(etCuttingIssueDate);
         ivCancelFile.setVisibility(View.GONE);
 
@@ -2025,7 +2025,7 @@ public class ViewJobCardDetails extends AppCompatActivity implements View.OnClic
         enableView(etQuantity);
         enableView(etSelectSize);
         enableView(etTotalNumberPieces);
-        enableView(etMasterName);
+      //  enableView(etMasterName);
         enableView(etCuttingIssueDate);
         ivCancelFile.setVisibility(View.VISIBLE);
 
