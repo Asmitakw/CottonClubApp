@@ -31,6 +31,8 @@ public class JobCardItem implements Parcelable {
     private FabricListItem fabricListItem;
 
     private String jobCardUpdatedByAdminDate;
+    private String totalFabricConsumed;
+    private String totalWastage;
 
     protected JobCardItem(Parcel in) {
         jobCardId = in.readString();
@@ -56,6 +58,8 @@ public class JobCardItem implements Parcelable {
         wastageUnit = in.readString();
         cuttingCompleteDate = in.readString();
         jobCardUpdatedByAdminDate = in.readString();
+        totalFabricConsumed = in.readString();
+        totalWastage = in.readString();
     }
 
     public JobCardItem() {
@@ -231,6 +235,8 @@ public class JobCardItem implements Parcelable {
         parcel.writeString(wastageUnit);
         parcel.writeString(cuttingCompleteDate);
         parcel.writeString(jobCardUpdatedByAdminDate);
+        parcel.writeString(totalFabricConsumed);
+        parcel.writeString(totalWastage);
     }
 
     public String getJobCardId() {
@@ -303,5 +309,21 @@ public class JobCardItem implements Parcelable {
 
     public void setJobCardUpdatedByAdminDate(String jobCardUpdatedByAdminDate) {
         this.jobCardUpdatedByAdminDate = jobCardUpdatedByAdminDate;
+    }
+
+    public String getTotalFabricConsumed() {
+        return totalFabricConsumed;
+    }
+
+    public void setTotalFabricConsumed(String totalFabricConsumed) {
+        this.totalFabricConsumed = totalFabricConsumed;
+    }
+
+    public String getTotalWastage() {
+        return totalWastage;
+    }
+
+    public void setTotalWastage(String totalWastage) {
+        this.totalWastage = totalWastage;
     }
 }

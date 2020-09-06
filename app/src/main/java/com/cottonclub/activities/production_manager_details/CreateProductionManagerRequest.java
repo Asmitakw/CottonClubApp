@@ -8,7 +8,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cottonclub.R;
+import com.cottonclub.activities.cutting_in_charge.CuttingInChargeViewJobCardDetails;
 import com.cottonclub.models.JobCardItem;
 import com.cottonclub.models.SizeListItem;
 import com.cottonclub.utilities.Helper;
@@ -29,11 +32,14 @@ import java.util.Calendar;
 
 public class CreateProductionManagerRequest extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText etEmployeeName, etPrinterName, etPrinterIssueDate, etParts, etOtherParts,
-            etPrinterReceiveDate, etShortageQuantity, etApprovedQuantityToEmbroidery, etAlterQuantity,
-            etEmbroideryQuantityRcv, etCheckerName, etTotApprovedQuantity, etMakerIssueDate,etJobCardNumber;
+    private EditText etQuantityReceivedFromAdmin, etPrinterName, etPrinterIssueDate, etParts, etOtherParts,
+            etPrinterReceiveDate, etApprovedQuantityIssuedToEmbroidery,
+            etCurrentAlterQuantityAfterIssuedToMaker,
+            etCurrentAlterQuantity, etEmbroiderName, etReceivedQuantityToEmbroidery, etApprovedQuantityIssuedToMaker,
+            etMakerName, etMakerIssueDate, etJobCardNumber;
+
     private TextInputLayout tlNumbering;
-    private Button btnUpdateJobCard,btnViewJobCardDetails;
+    private Button btnUpdateJobCard, btnViewJobCardDetails;
     private Dialog mDialog;
     private DatePickerDialog datePickerDialog;
     private String[] partsArray;
@@ -41,17 +47,17 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
     private boolean isOtherPartsDetailsVisible = false;
     private JobCardItem jobCardItem;
     private SizeListItem sizeListItem;
-    private String getQuantity, getDesignCode,selectedBrand,selectedDesignType;
+    private String getQuantity, getDesignCode, selectedBrand, selectedDesignType;
     private ArrayList<JobCardItem> jobCardList = new ArrayList<>();
     private int position;
     private TextView tvDateOrderCreation;
+    private TextWatcher textWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_production_manager_request);
         initialise();
-        tlNumbering = findViewById(R.id.tlNumbering);
     }
 
     private void initialise() {
@@ -69,29 +75,87 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
         if (partsArray == null)
             partsArray = getResources().getStringArray(R.array.parts);
 
-        tvDateOrderCreation = findViewById(R.id.tvDateOrderCreation);
-        tvDateOrderCreation.setText(Helper.getCurrentTime());
-
-        etEmployeeName = findViewById(R.id.etEmployeeName);
-        etPrinterName = findViewById(R.id.etPrinterName);
-        etPrinterIssueDate = findViewById(R.id.etPrinterIssueDate);
-        etPrinterIssueDate.setOnClickListener(this);
-        etParts = findViewById(R.id.etParts);
-        etParts.setOnClickListener(this);
         etJobCardNumber = findViewById(R.id.etJobCardNumber);
         etJobCardNumber.setText(String.format("%s:%s", getString(R.string.job_card_number), jobCardItem.getJobCardNumber()));
 
-        llOtherParts = findViewById(R.id.llOtherParts);
+        tvDateOrderCreation = findViewById(R.id.tvDateOrderCreation);
+        tvDateOrderCreation.setText(Helper.getCurrentTime());
 
+        etQuantityReceivedFromAdmin = findViewById(R.id.etQuantityReceivedFromAdmin);
+        etQuantityReceivedFromAdmin.setText(getQuantity);
+        etQuantityReceivedFromAdmin.setEnabled(false);
+
+        etPrinterName = findViewById(R.id.etPrinterName);
+
+        etPrinterIssueDate = findViewById(R.id.etPrinterIssueDate);
+        etPrinterIssueDate.setOnClickListener(this);
+
+        etParts = findViewById(R.id.etParts);
+        etParts.setOnClickListener(this);
+
+        llOtherParts = findViewById(R.id.llOtherParts);
         etOtherParts = findViewById(R.id.etOtherParts);
+
         etPrinterReceiveDate = findViewById(R.id.etPrinterReceiveDate);
         etPrinterReceiveDate.setOnClickListener(this);
-        etShortageQuantity = findViewById(R.id.etShortageQuantity);
-        etApprovedQuantityToEmbroidery = findViewById(R.id.etApprovedQuantityToEmbroidery);
-        etAlterQuantity = findViewById(R.id.etAlterQuantity);
-        etEmbroideryQuantityRcv = findViewById(R.id.etEmbroideryQuantityRcv);
-        etCheckerName = findViewById(R.id.etCheckerName);
-        etTotApprovedQuantity = findViewById(R.id.etTotApprovedQuantity);
+
+        etApprovedQuantityIssuedToEmbroidery = findViewById(R.id.etApprovedQuantityIssuedToEmbroidery);
+        etCurrentAlterQuantity = findViewById(R.id.etCurrentAlterQuantity);
+
+        etApprovedQuantityIssuedToEmbroidery.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (!TextUtils.isEmpty(etQuantityReceivedFromAdmin.getText().toString()) &&
+
+                        !TextUtils.isEmpty(etApprovedQuantityIssuedToEmbroidery.getText().toString())) {
+
+                        int currentAlterAfterPrinting = Integer.parseInt(etQuantityReceivedFromAdmin.getText().toString().trim()) -
+                                Integer.parseInt(etApprovedQuantityIssuedToEmbroidery.getText().toString().trim());
+                        etCurrentAlterQuantity.setText(String.valueOf(currentAlterAfterPrinting));
+                }
+            }
+        });
+
+        etEmbroiderName = findViewById(R.id.etEmbroiderName);
+        etReceivedQuantityToEmbroidery = findViewById(R.id.etReceivedQuantityToEmbroidery);
+        etApprovedQuantityIssuedToMaker = findViewById(R.id.etApprovedQuantityIssuedToMaker);
+        etCurrentAlterQuantityAfterIssuedToMaker = findViewById(R.id.etCurrentAlterQuantityAfterIssuedToMaker);
+        etApprovedQuantityIssuedToMaker.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!TextUtils.isEmpty(etReceivedQuantityToEmbroidery.getText().toString()) &&
+
+                        !TextUtils.isEmpty(etApprovedQuantityIssuedToMaker.getText().toString())) {
+
+                    int currentAlterAfterMaker = Integer.parseInt(etReceivedQuantityToEmbroidery.getText().toString().trim()) -
+                            Integer.parseInt(etApprovedQuantityIssuedToMaker.getText().toString().trim());
+                    etCurrentAlterQuantityAfterIssuedToMaker.setText(String.valueOf(currentAlterAfterMaker));
+                }
+            }
+        });
+        etMakerName = findViewById(R.id.etMakerName);
+
         etMakerIssueDate = findViewById(R.id.etMakerIssueDate);
         etMakerIssueDate.setOnClickListener(this);
 
@@ -198,21 +262,16 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
                 bundle.putParcelable("jobCard", jobCardList.get(position));
                 bundle.putString("designCode", getDesignCode);
                 bundle.putParcelable("size", jobCardList.get(position).getSizeItem());
-                bundle.putParcelable("fabricConsumed", jobCardList.get(position).getFabricListItem());
 
-                Intent order_details_intent = new Intent(this, ProductionManagerJobCardDetails.class);
+                Intent order_details_intent = new Intent(this, CuttingInChargeViewJobCardDetails.class);
                 order_details_intent.putExtra("extraWithOrder", bundle);
                 startActivity(order_details_intent);
                 break;
         }
     }
 
-    private void validate(){
-        if (TextUtils.isEmpty(etEmployeeName.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_employee_name));
-            etEmployeeName.requestFocus();
-            return;
-        }
+    private void validate() {
+
 
         if (TextUtils.isEmpty(etPrinterName.getText().toString().trim())) {
             Helper.showOkDialog(this, getString(R.string.please_enter_printer_name));
@@ -246,41 +305,13 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
             return;
         }
 
-        if (TextUtils.isEmpty(etShortageQuantity.getText().toString().trim())) {
+
+        if (TextUtils.isEmpty(etApprovedQuantityIssuedToEmbroidery.getText().toString().trim())) {
             Helper.showOkDialog(this, getString(R.string.please_enter_shortage_quantity));
-            etShortageQuantity.requestFocus();
+            etApprovedQuantityIssuedToEmbroidery.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(etApprovedQuantityToEmbroidery.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_shortage_quantity));
-            etApprovedQuantityToEmbroidery.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etAlterQuantity.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_alter_quantity));
-            etAlterQuantity.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etEmbroideryQuantityRcv.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_embroidery_quantity_rcv));
-            etEmbroideryQuantityRcv.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etCheckerName.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_checker_name));
-            etCheckerName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(etTotApprovedQuantity.getText().toString().trim())) {
-            Helper.showOkDialog(this, getString(R.string.please_enter_tot_aprv_qty_to_embroidery));
-            etTotApprovedQuantity.requestFocus();
-            return;
-        }
 
         if (TextUtils.isEmpty(etMakerIssueDate.getText().toString().trim())) {
             Helper.showOkDialog(this, getString(R.string.please_enter_maker_issue_date));
@@ -292,7 +323,7 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
 
     }
 
-    private void updateJobCardByPM(){
+    private void updateJobCardByPM() {
 
     }
 }

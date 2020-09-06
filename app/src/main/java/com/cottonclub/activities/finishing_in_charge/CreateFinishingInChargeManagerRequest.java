@@ -1,3 +1,4 @@
+/*
 package com.cottonclub.activities.finishing_in_charge;
 
 import android.annotation.SuppressLint;
@@ -50,7 +51,6 @@ public class CreateFinishingInChargeManagerRequest extends AppCompatActivity imp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_production_manager_request);
         initialise();
-        tlNumbering = findViewById(R.id.tlNumbering);
     }
 
     private void initialise() {
@@ -294,4 +294,4 @@ public class CreateFinishingInChargeManagerRequest extends AppCompatActivity imp
     private void updateJobCardByPM(){
 
     }
-}
+}*/

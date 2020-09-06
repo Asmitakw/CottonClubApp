@@ -223,7 +223,7 @@
             android:orientation="vertical">
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etApprovedQuantityToEmbroidery"
+                android:id="@+id/etApprovedQuantityIssuedToEmbroidery"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

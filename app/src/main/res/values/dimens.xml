@@ -34,6 +34,7 @@
     <dimen name="dimen_400">400dp</dimen>
     <dimen name="dimen_forty">40dp</dimen>
     <dimen name="dimen_35">35dp</dimen>
+    <dimen name="dimen_30">30dp</dimen>
     <dimen name="dimen_50">50dp</dimen>
     <dimen name="dimen_twenty">20dp</dimen>
     <dimen name="dimen_5">5dp</dimen>

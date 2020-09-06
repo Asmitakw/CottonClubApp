@@ -73,19 +73,21 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlNumbering"
+            android:id="@+id/tlQuantityReceivedFromAdmin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etEmployeeName"
+                android:id="@+id/etQuantityReceivedFromAdmin"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_employee"
+                android:drawableStart="@drawable/ic_quantity"
                 android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/employee_name" />
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/printing_quantity" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -239,19 +241,19 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlShortageQuantity"
+            android:id="@+id/tlApprovedQuantityIssuedToEmbroidery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etShortageQuantity"
+                android:id="@+id/etApprovedQuantityIssuedToEmbroidery"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_quantity"
                 android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/shortage_quantity"
+                android:hint="@string/approved_quantity_issued_to_embroidery"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -266,19 +268,22 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlApprovedQuantity"
+            android:id="@+id/tlCurrentAlterQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etApprovedQuantityToEmbroidery"
+                android:id="@+id/etCurrentAlterQuantity"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_embroidery"
                 android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/approved_quantity_issued_to_embroidery"
+                android:textSize="16sp"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/current_alter_quantity"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -316,48 +321,20 @@
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
 
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlAlterQuantity"
+            android:id="@+id/tlReceivedQuantityToEmbroidery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etAlterQuantity"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_quantity"
-                android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/alter_quantity"
-                android:inputType="number" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorGreyDark" />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlEmbroideryQuantityRcv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etEmbroideryQuantityRcv"
+                android:id="@+id/etReceivedQuantityToEmbroidery"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_embroidery_quantity"
                 android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/embroidery_qty_rcv" />
+                android:hint="@string/received_quantity_to_embroidery" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -371,45 +348,19 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlCheckerName"
+            android:id="@+id/tlApprovedQuantityIssuedToMaker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etCheckerName"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_checker"
-                android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/checker_name" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorGreyDark" />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlTotApprovedQuantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etTotApprovedQuantity"
+                android:id="@+id/etApprovedQuantityIssuedToMaker"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_quantity"
                 android:drawablePadding="@dimen/dimen_15"
-                android:hint="@string/tot_approved_quantity"
+                android:hint="@string/approved_quantity_issued_to_maker"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -422,22 +373,21 @@
             android:background="@color/colorGreyDark" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tlMakerIssueDate"
+            android:id="@+id/tlCurrentAlterQuantityAfterIssuedToMaker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <com.cottonclub.custom_views.CustomEditViewRegular
-                android:id="@+id/etMakerIssueDate"
+                android:id="@+id/etCurrentAlterQuantityAfterIssuedToMaker"
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_delivery_date"
-                android:drawableEnd="@drawable/ic_calendar"
+                android:drawableStart="@drawable/ic_embroidery"
                 android:drawablePadding="@dimen/dimen_15"
-                android:editable="false"
-                android:focusableInTouchMode="false"
-                android:hint="@string/maker_issue_date" />
+                android:hint="@string/current_alter_quantity_after_issued_to_maker"
+                android:inputType="number"
+                android:textSize="16sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -467,9 +417,38 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="0.5dp"
             android:layout_margin="10dp"
             android:background="@color/colorGreyDark" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlMakerIssueDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etMakerIssueDate"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_delivery_date"
+                android:drawableEnd="@drawable/ic_calendar"
+                android:drawablePadding="@dimen/dimen_15"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/maker_issue_date" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/colorGreyDark" />
+
 
         <com.cottonclub.custom_views.CustomButtonRegular
             android:id="@+id/btnUpdateJobCard"

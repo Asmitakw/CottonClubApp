@@ -11,6 +11,7 @@ public class FabricListItem implements Parcelable {
     private String wastage;
     private String wastageUnit;
 
+
     protected FabricListItem(Parcel in) {
         fabricCode = in.readString();
         fabricQuantity = in.readString();

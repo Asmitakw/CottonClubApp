@@ -534,7 +534,7 @@
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_master"
+                android:drawableStart="@drawable/ic_total_fabric_consumed"
                 android:drawablePadding="@dimen/dimen_15"
                 android:hint="@string/total_fabric_consumed"
                 android:textCursorDrawable="@drawable/cursor_drawable" />
@@ -551,7 +551,7 @@
                 style="@style/EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_master"
+                android:drawableStart="@drawable/ic_total_wastage"
                 android:drawablePadding="@dimen/dimen_15"
                 android:hint="@string/total_wastage"
                 android:textCursorDrawable="@drawable/cursor_drawable" />

@@ -115,6 +115,8 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
     private long maxId = 1;
     private View viewWastage;
     ArrayList<FabricListItem> fabricListItemList = new ArrayList<>();
+    private int totalQuantity = 0;
+    private int totalWastage = 0;
 
 
     @Override
@@ -128,6 +130,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         initialise();
         setValues();
         setViewsDisabled();
+
     }
 
     private void initialise() {
@@ -289,6 +292,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
         etFabricItem = findViewById(R.id.etFabricItem);
         etFabricQuantity = findViewById(R.id.etFabricQuantity);
+
         rvFabricItem = findViewById(R.id.rvFabricItem);
 
         fabricListAdapter = new FabricListAdapter(CuttingInChargeViewJobCardDetails.this, fabricCodeList);
@@ -311,7 +315,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         llTotalQuantity = findViewById(R.id.llTotalQuantity);
 
         tvTotalWastage = findViewById(R.id.tvTotalWastage);
-        tvTotalFabricConsumed = findViewById(R.id.tvTotalWastage);
+        tvTotalFabricConsumed = findViewById(R.id.tvTotalFabricConsumed);
 
     }
 
@@ -332,7 +336,9 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                     for (DataSnapshot fabricSnapshot : dataSnapshot.getChildren()) {
                         //fabricListItem = fabricSnapshot.getValue(FabricListItem.class);
                         addFabricConsumedDetails((Map<String, Object>) dataSnapshot.getValue());
+
                     }
+
                 }
 
                 @Override
@@ -341,6 +347,8 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                 }
             });
         }
+
+
     }
 
     private void addFabricConsumedDetails(Map<String, Object> users) {
@@ -357,7 +365,8 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
             fabricListItem1.setWastage((String) singleUser.get("wastage"));
             fabricListItem1.setWastageUnit((String) singleUser.get("wastageUnit"));
             fabricListItemArrayList.add(fabricListItem1);
-            fabricListItemList.add(fabricListItem);
+            fabricListItemList.addAll(fabricListItemArrayList);
+
         }
 
         fabricListAdapter = new FabricListAdapter(CuttingInChargeViewJobCardDetails.this, fabricListItemArrayList);
@@ -366,6 +375,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         rvFabricItem.setLayoutManager(mLayoutManager);
         rvFabricItem.setItemAnimator(new DefaultItemAnimator());
         rvFabricItem.setAdapter(fabricListAdapter);
+
 
     }
 
@@ -400,6 +410,9 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         jobCardItem.setFabricListItem(fabricListItem);
         jobCardItem.setJobCardUpdatedByCuttingInChargeDate(currentDate);
         jobCardItem.setIsUpdatedByCuttingInCharge("true");
+        jobCardItem.setTotalFabricConsumed(String.valueOf(totalQuantity));
+        jobCardItem.setMasterName(etMasterName.getText().toString());
+        jobCardItem.setTotalWastage(String.valueOf(totalWastage));
 
         cuttingInChargeJobCardRef.child(jobCardItem.getJobCardId()).setValue(jobCardItem, new DatabaseReference.CompletionListener() {
             @Override
@@ -500,8 +513,11 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
                 fabricListItem.setFabricQuantity(etFabricQuantity.getText().toString());
                 fabricListItem.setWastage(etWastage.getText().toString());
                 fabricListItem.setWastageUnit(etWastageUnit.getText().toString());
-                fabricCodeList.add(fabricListItem);
 
+                totalQuantity += Integer.parseInt(etFabricQuantity.getText().toString());
+                totalWastage += Integer.parseInt(etWastage.getText().toString());
+
+                fabricCodeList.add(fabricListItem);
                 etFabricItem.setText("");
                 etFabricQuantity.setText("");
                 etWastage.setText("");
@@ -557,19 +573,6 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
 
     }
 
-    private String getTotalQuantity() {
-        String sum = String.valueOf(0);
-        ArrayList tot = new ArrayList<>();
-
-        for (int i = 0; i < fabricListItemList.size(); i++) {
-            tot.addAll(Collections.singleton(fabricListItemList.get(i).getFabricQuantity()));
-        }
-
-        for (int i = 0; i < tot.size(); i++) {
-            sum += tot.get(i);
-        }
-        return sum;
-    }
 
     private void showSelectReceiversDialog() {
         boolean[] checkedReceivers = new boolean[fabricTypeArray.length];
@@ -1601,6 +1604,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         disableView(etBbaby36);
         disableView(etBbaby69);
         disableView(etBbaby912);
+        disableView(etMasterName);
 
         if (jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
             AppSession.getInstance()
@@ -1619,20 +1623,23 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
             etWastageUnit.setVisibility(View.GONE);
             viewWastage.setVisibility(View.GONE);
             llTotalQuantity.setVisibility(View.VISIBLE);
-            tvTotalFabricConsumed.setText(getTotalQuantity());
-
+            tvTotalFabricConsumed.setText(String.format("%s%s%s",
+                    getString(R.string.total_fabric_consumed),
+                    jobCardItem.getTotalFabricConsumed(), " Kgs"));
+            tvTotalWastage.setText(String.format("%s%s%s",
+                    getString(R.string.total_wastage),
+                    jobCardItem.getTotalWastage(), " Kgs"));
             etCuttingCompleteDate.setText(jobCardItem.getCuttingCompleteDate());
-
             disableView(etWastage);
             disableView(etWastageUnit);
             disableView(etCuttingCompleteDate);
-
             btnCreateJobCard.setVisibility(View.INVISIBLE);
-
         }
     }
 
     private void setValues() {
+        etMasterName.setText(jobCardItem.getMasterName());
+
         etKidsMagicMNSize2.setText(sizeListItem.getSize2());
 
         etKidsMagicMNSize3.setText(sizeListItem.getSize3());

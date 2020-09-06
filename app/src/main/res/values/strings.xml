@@ -246,6 +246,11 @@
     <string name="percent">%</string>
     <string name="total_fabric_consumed">Total Fabric Consumed:</string>
     <string name="total_wastage">Total Wastage:</string>
+    <string name="current_alter_quantity">Current Alter Quantity [After Printing]</string>
+    <string name="received_quantity_to_embroidery">Received Quantity To Embroidery</string>
+    <string name="approved_quantity_issued_to_maker">Approved Quantity Issued To Maker</string>
+    <string name="current_alter_quantity_after_issued_to_maker">Current Alter Quantity [After Issued by Maker]</string>
+    <string name="printing_quantity">Printing Quantity</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>
