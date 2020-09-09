@@ -34,6 +34,8 @@ public class JobCardItem implements Parcelable {
     private String totalFabricConsumed;
     private String totalWastage;
 
+
+
     protected JobCardItem(Parcel in) {
         jobCardId = in.readString();
         jobCardCreateDate = in.readString();
@@ -326,4 +328,5 @@ public class JobCardItem implements Parcelable {
     public void setTotalWastage(String totalWastage) {
         this.totalWastage = totalWastage;
     }
+
 }

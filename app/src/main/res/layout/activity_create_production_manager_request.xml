@@ -232,6 +232,33 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/colorGreyDark" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlPrintingReceivedQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etPrintingReceivedQuantity"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_quantity"
+                android:drawablePadding="@dimen/dimen_15"
+                android:inputType="number"
+                android:hint="@string/printing__received_quantity" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -280,14 +307,12 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_embroidery"
                 android:drawablePadding="@dimen/dimen_15"
-                android:textSize="16sp"
                 android:editable="false"
                 android:focusableInTouchMode="false"
                 android:hint="@string/current_alter_quantity"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <View
             android:layout_width="match_parent"
@@ -313,7 +338,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -334,10 +358,10 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_embroidery_quantity"
                 android:drawablePadding="@dimen/dimen_15"
+                android:inputType="number"
                 android:hint="@string/received_quantity_to_embroidery" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <View
             android:layout_width="match_parent"
@@ -345,7 +369,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
-
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tlApprovedQuantityIssuedToMaker"
@@ -386,8 +409,7 @@
                 android:drawableStart="@drawable/ic_embroidery"
                 android:drawablePadding="@dimen/dimen_15"
                 android:hint="@string/current_alter_quantity_after_issued_to_maker"
-                android:inputType="number"
-                android:textSize="16sp" />
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -442,13 +464,26 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etAddNote"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_eighty"
+            android:background="@drawable/rounded_border"
+            android:drawableStart="@drawable/ic_edit_green"
+            android:drawablePadding="@dimen/dimen_15"
+            android:hint="@string/add_note"
+            android:maxLines="10"
+            android:paddingStart="@dimen/dimen_5"
+            android:paddingEnd="@dimen/dimen_5" />
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:background="@color/colorGreyDark" />
-
 
         <com.cottonclub.custom_views.CustomButtonRegular
             android:id="@+id/btnUpdateJobCard"

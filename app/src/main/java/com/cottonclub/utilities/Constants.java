@@ -13,9 +13,13 @@ public class Constants {
     public static String PRODUCTION_MANAGER_BB = "1005";
     public static String PRODUCTION_MANAGER_CB = "1006";
 
-    public static String FINISHING_IN_CHARGE_KM = "1007";
-    public static String FINISHING_IN_CHARGE_BB = "1008";
-    public static String FINISHING_IN_CHARGE_CB = "1009";
+    public static String RECEIVING_IN_CHARGE_KM = "1007";
+    public static String RECEIVING_IN_CHARGE_BB = "1008";
+    public static String RECEIVING_IN_CHARGE_CB = "1009";
+
+    public static String FINISHING_IN_CHARGE_KM = "1010";
+    public static String FINISHING_IN_CHARGE_BB = "1011";
+    public static String FINISHING_IN_CHARGE_CB = "1012";
 
     public static String EMPTY_STRING = " ";
     public static String KIDS_MAGIC = "Kids Magic";
@@ -36,6 +40,4 @@ public class Constants {
     public static String PANT = "P";
     public static String KMSB = "KMS(B)";
     public static String KMSG = "KMS(G)";
-
-
 }

@@ -130,7 +130,6 @@ public class CreateJobCardFragment extends Fragment implements View.OnClickListe
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-
         if (brandArray == null)
             brandArray = getResources().getStringArray(R.array.brand);
 

@@ -1369,7 +1369,7 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
     }
 
     private void sendOrderDetails() {
-
+        mDialog = Helper.showProgressDialog(getActivity());
         isClicked = false;
 
         SimpleDateFormat format = new SimpleDateFormat("d");
@@ -1377,8 +1377,6 @@ public class CreateOrderFragment extends Fragment implements View.OnClickListene
         format = new SimpleDateFormat("d MMM");
 
         String currentDate = format.format(new Date());
-
-        mDialog = Helper.showProgressDialog(getActivity());
         String orderCreationDate = tvDateOrderCreation.getText().toString();
         String partyName = etPartyName.getText().toString();
 

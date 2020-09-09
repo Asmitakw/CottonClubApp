@@ -1604,7 +1604,6 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         disableView(etBbaby36);
         disableView(etBbaby69);
         disableView(etBbaby912);
-        disableView(etMasterName);
 
         if (jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
             AppSession.getInstance()

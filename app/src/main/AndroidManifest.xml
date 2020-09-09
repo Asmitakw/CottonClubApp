@@ -19,49 +19,43 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".activities.receiving_in_charge.CreateReceivingInChargeRequest"></activity>
         <activity
             android:name=".activities.production_manager_details.CreateProductionManagerRequest"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.admin.ViewJobCardDetails"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.admin.ViewOrderDetails"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.admin.ViewAlterRequestDetails"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardDetails"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestDetails"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.cutting_in_charge.CuttingInChargeViewAlterRequestNotificationsDetails"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.cutting_in_charge.CuttingInChargeViewJobCardNotificationsDetails"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.production_manager_details.ProductionManagerJobCardDetails"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.finishing_in_charge.FinishingInChargeJobCardDetails"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.finishing_in_charge.CreateFinishingInChargeManagerRequest"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.BaseActivity"
             android:label="@string/title_activity_main"

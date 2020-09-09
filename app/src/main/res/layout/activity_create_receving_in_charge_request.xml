@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.receiving_in_charge.CreateReceivingInChargeRequest">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_20"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvViewJobCardDetails"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_eighty"
+            app:cardPreventCornerOverlap="true">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etJobCardNumber"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5"
+                android:layout_marginBottom="@dimen/dimen_10"
+                android:paddingStart="@dimen/dimen_15"
+                android:singleLine="true"
+                android:text="Job Card Number: PQ40321"
+                android:textCursorDrawable="@drawable/cursor_drawable" />
+
+            <com.cottonclub.custom_views.CustomButtonBold
+                android:id="@+id/btnViewJobCardDetails"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_border"
+                android:drawableEnd="@drawable/ic_right_arrow"
+                android:gravity="center|start"
+                android:paddingStart="@dimen/dimen_15"
+                android:paddingTop="@dimen/dimen_20"
+                android:text="@string/view_job_card_details"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/dimen_20">
+
+            </com.cottonclub.custom_views.CustomButtonBold>
+
+        </androidx.cardview.widget.CardView>
+
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:background="@drawable/rectangle_border">
+
+            <HorizontalScrollView
+                android:id="@+id/hscrll1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/RelativeLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TableLayout
+                        android:id="@+id/table_main"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"></TableLayout>
+                </RelativeLayout>
+            </HorizontalScrollView>
+        </ScrollView>
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etTotalColor1"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginBottom="@dimen/dimen_5"
+            android:drawableStart="@drawable/ic_one"
+            android:drawablePadding="@dimen/dimen_15"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/total_color_one"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="@dimen/dimen_5"
+            android:background="@color/colorPrimaryDark" />
+
+        <com.cottonclub.custom_views.CustomEditViewRegular
+            android:id="@+id/etTotalColor2"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginBottom="@dimen/dimen_5"
+            android:drawableStart="@drawable/ic_two"
+            android:drawablePadding="@dimen/dimen_15"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/total_color_two"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textCursorDrawable="@drawable/cursor_drawable" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="@dimen/dimen_5"
+            android:background="@color/colorGreyDark" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlCheckerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etCheckerName"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_checker"
+                android:drawablePadding="@dimen/dimen_15"
+                android:hint="@string/checker_name" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="@dimen/dimen_5"
+            android:background="@color/colorGreyDark" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlApprovedQuantityTransferToSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etApprovedQuantityTransferToSetting"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_embroidery_quantity"
+                android:drawablePadding="@dimen/dimen_15"
+                android:hint="@string/approved_quantity_transfer_to_setting"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="@dimen/dimen_5"
+            android:background="@color/colorGreyDark" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlApprovedQuantityTransferToIroning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etApprovedQuantityTransferToIroning"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_quantity"
+                android:drawablePadding="@dimen/dimen_15"
+                android:hint="@string/approved_quantity_transfer_to_ironing"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_margin="@dimen/dimen_5"
+            android:background="@color/colorGreyDark" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlUnsetQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.cottonclub.custom_views.CustomEditViewRegular
+                android:id="@+id/etUnsetQuantity"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_quantity"
+                android:drawablePadding="@dimen/dimen_15"
+                android:hint="@string/unset_quantity"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="@dimen/dimen_5"
+            android:background="@color/colorGreyDark" />
+
+        <com.cottonclub.custom_views.CustomButtonRegular
+            android:id="@+id/btnUpdate"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_hundred"
+            android:layout_marginBottom="@dimen/dimen_forty"
+            android:background="@drawable/rounded_button"
+            android:text="@string/update"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:visibility="visible" />
+    </LinearLayout>
+</ScrollView>
