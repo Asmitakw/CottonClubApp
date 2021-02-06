@@ -65,12 +65,13 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
     private SizeListItem sizeListItem;
     private String getQuantity, getDesignCode, selectedBrand, selectedDesignType;
     private ArrayList<JobCardItem> jobCardList = new ArrayList<>();
+    private ArrayList<ProductionManagerItem> productionManagerList = new ArrayList<>();
     private int position;
     private TextView tvDateOrderCreation;
     private TextWatcher textWatcher;
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference productionManagerJobCardRef = mRootRef.child("ProductionManager");
-    private long maxId = 1;
+    private DatabaseReference jobCardRef = mRootRef.child("JobCard");
+    private long maxId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,9 +143,9 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
 
                         !TextUtils.isEmpty(etApprovedQuantityIssuedToEmbroidery.getText().toString())) {
 
-                    int currentAlterAfterPrinting = Integer.parseInt(etPrintingReceivedQuantity.getText().toString().trim()) -
+                    int currentAlterAfterPrinting = Integer.parseInt(etQuantityReceivedFromAdmin.getText().toString().trim()) -
                             Integer.parseInt(etApprovedQuantityIssuedToEmbroidery.getText().toString().trim());
-                    etCurrentAlterQuantity.setText((currentAlterAfterPrinting));
+                    etCurrentAlterQuantity.setText((String.valueOf(currentAlterAfterPrinting)));
                 }
             }
         });
@@ -170,7 +171,7 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
 
                         !TextUtils.isEmpty(etApprovedQuantityIssuedToMaker.getText().toString())) {
 
-                    int currentAlterAfterMaker = Integer.parseInt(etReceivedQuantityToEmbroidery.getText().toString().trim()) -
+                    int currentAlterAfterMaker = Integer.parseInt(etApprovedQuantityIssuedToEmbroidery.getText().toString().trim()) -
                             Integer.parseInt(etApprovedQuantityIssuedToMaker.getText().toString().trim());
                     etCurrentAlterQuantityAfterIssuedToMaker.setText(String.valueOf(currentAlterAfterMaker));
                 }
@@ -196,13 +197,23 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         if (jobCardItem.getIsUpdatedByCuttingInCharge().equals("true")) {
-            productionManagerJobCardRef.addValueEventListener(new ValueEventListener() {
+            jobCardRef.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        maxId = (dataSnapshot.getChildrenCount());
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        maxId = (snapshot.getChildrenCount());
                     }
 
+                    if (jobCardItem.getIsUpdatedByProductionManager().equals("true")) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            productionManagerItem = dataSnapshot.getValue(ProductionManagerItem.class);
+                            productionManagerList.add(productionManagerItem);
+                        }
+
+                        int pos = Integer.parseInt(jobCardItem.getJobCardId()) - 1;
+                        productionManagerItem = productionManagerList.get(pos);
+                        setProductionManagerValues();
+                    }
                 }
 
                 @Override
@@ -210,6 +221,28 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
                     Log.w("TAG", "onCancelled", databaseError.toException());
                 }
             });
+        }
+
+
+    }
+
+    private void setProductionManagerValues() {
+        if (productionManagerList.size() > 0) {
+            etPrinterName.setText(productionManagerItem.getPrinterName());
+            etPrinterIssueDate.setText(productionManagerItem.getPrinterIssueDate());
+            etParts.setText(productionManagerItem.getSelectParts());
+            etOtherParts.setText(productionManagerItem.getOtherParts());
+            etPrinterReceiveDate.setText(productionManagerItem.getPrinterReceiveDate());
+            etPrintingReceivedQuantity.setText(productionManagerItem.getPrintingReceiveQuantity());
+            etApprovedQuantityIssuedToEmbroidery.setText(productionManagerItem.getApprovedQuantityToEmbroidery());
+            etCurrentAlterQuantity.setText(productionManagerItem.getCurrentAlterQuantityAfterPrinting());
+            etEmbroiderName.setText(productionManagerItem.getEmbroiderName());
+            etReceivedQuantityToEmbroidery.setText(productionManagerItem.getReceivedQuantityToEmbroider());
+            etApprovedQuantityIssuedToMaker.setText(productionManagerItem.getApprovedQuantityIssuedToMaker());
+            etCurrentAlterQuantityAfterIssuedToMaker.setText(productionManagerItem.getCurrentAlterQuantityAfterEmbroidery());
+            etMakerName.setText(productionManagerItem.getMakerName());
+            etMakerIssueDate.setText(productionManagerItem.getMakerIssueDate());
+            etAddNote.setText(productionManagerItem.getNote());
         }
     }
 
@@ -234,8 +267,7 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
                                         + "/" + year);
                             }
                         }, year, month, day);
-                datePickerDialog.getDatePicker().setMinDate(System
-                        .currentTimeMillis() - 1000);
+
                 datePickerDialog.show();
                 break;
 
@@ -267,6 +299,7 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
                 year2 = c2.get(Calendar.YEAR);
                 month2 = c2.get(Calendar.MONTH);
                 day2 = c2.get(Calendar.DAY_OF_MONTH);
+
                 datePickerDialog = new DatePickerDialog(CreateProductionManagerRequest.this,
                         new DatePickerDialog.OnDateSetListener() {
                             @SuppressLint("SetTextI18n")
@@ -278,8 +311,8 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
                                         + "/" + year);
                             }
                         }, year2, month2, day2);
-                datePickerDialog.getDatePicker().setMinDate(System
-                        .currentTimeMillis() - 1000);
+                /*datePickerDialog.getDatePicker().setMinDate(System
+                        .currentTimeMillis() - 1000);*/
                 datePickerDialog.show();
                 break;
 
@@ -301,7 +334,8 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
                 break;
 
             case R.id.btnUpdateJobCard:
-                validate();
+                updateJobCardByPM();
+                // validate();
                 break;
 
             case R.id.btnViewJobCardDetails:
@@ -389,7 +423,6 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
             return;
         }
 
-        updateJobCardByPM();
 
     }
 
@@ -421,24 +454,24 @@ public class CreateProductionManagerRequest extends AppCompatActivity implements
         String makerIssueDate = etMakerIssueDate.getText().toString();
         String additionalNote = etAddNote.getText().toString();
 
-        productionManagerItem.setPrinterName(printerName);
-        productionManagerItem.setPrinterIssueDate(printerIssueDate);
-        productionManagerItem.setSelectParts(parts);
-        productionManagerItem.setOtherParts(otherParts);
-        productionManagerItem.setPrinterReceiveDate(printerReceiveDate);
-        productionManagerItem.setPrintingReceiveQuantity(printerReceivedQuantity);
-        productionManagerItem.setApprovedQuantityToEmbroidery(printerApprovedQuantityToEmbroidery);
-        productionManagerItem.setCurrentAlterQuantityAfterPrinting(currentAlterAfterPrinter);
-        productionManagerItem.setEmbroiderName(embroiderName);
-        productionManagerItem.setReceivedQuantityToEmbroider(receivedQuantityToEmbroidery);
-        productionManagerItem.setApprovedQuantityIssuedToMaker(approvedQuantityIssuedToMaker);
-        productionManagerItem.setCurrentAlterQuantityAfterEmbroidery(currentAlterQuantityAfterEmbroidery);
-        productionManagerItem.setMakerName(makerName);
-        productionManagerItem.setMakerIssueDate(makerIssueDate);
-        productionManagerItem.setNote(additionalNote);
-        productionManagerItem.setIsUpdatedByProductionManager("true");
+        jobCardItem.setPrinterName(printerName);
+        jobCardItem.setPrinterIssueDate(printerIssueDate);
+        jobCardItem.setSelectParts(parts);
+        jobCardItem.setOtherParts(otherParts);
+        jobCardItem.setPrinterReceiveDate(printerReceiveDate);
+        jobCardItem.setPrintingReceiveQuantity(printerReceivedQuantity);
+        jobCardItem.setApprovedQuantityToEmbroidery(printerApprovedQuantityToEmbroidery);
+        jobCardItem.setCurrentAlterQuantityAfterPrinting(currentAlterAfterPrinter);
+        jobCardItem.setEmbroiderName(embroiderName);
+        jobCardItem.setReceivedQuantityToEmbroider(receivedQuantityToEmbroidery);
+        jobCardItem.setApprovedQuantityIssuedToMaker(approvedQuantityIssuedToMaker);
+        jobCardItem.setCurrentAlterQuantityAfterEmbroidery(currentAlterQuantityAfterEmbroidery);
+        jobCardItem.setMakerName(makerName);
+        jobCardItem.setMakerIssueDate(makerIssueDate);
+        jobCardItem.setNote(additionalNote);
+        jobCardItem.setIsUpdatedByProductionManager("true");
 
-        productionManagerJobCardRef.child(String.valueOf(maxId + 1)).setValue(productionManagerItem, new DatabaseReference.CompletionListener() {
+        jobCardRef.child(jobCardItem.getJobCardId()).setValue(jobCardItem, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 mDialog.dismiss();

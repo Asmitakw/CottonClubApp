@@ -410,6 +410,7 @@ public class CuttingInChargeViewJobCardDetails extends AppCompatActivity impleme
         jobCardItem.setFabricListItem(fabricListItem);
         jobCardItem.setJobCardUpdatedByCuttingInChargeDate(currentDate);
         jobCardItem.setIsUpdatedByCuttingInCharge("true");
+        jobCardItem.setIsUpdatedByProductionManager("false");
         jobCardItem.setTotalFabricConsumed(String.valueOf(totalQuantity));
         jobCardItem.setMasterName(etMasterName.getText().toString());
         jobCardItem.setTotalWastage(String.valueOf(totalWastage));

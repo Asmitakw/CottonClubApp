@@ -2,6 +2,7 @@ package com.cottonclub.models;
 
 public class ProductionManagerItem {
 
+    private String productionManagerId;
     private String printerName;
     private String printerIssueDate;
     private String selectParts;
@@ -145,5 +146,13 @@ public class ProductionManagerItem {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getProductionManagerId() {
+        return productionManagerId;
+    }
+
+    public void setProductionManagerId(String productionManagerId) {
+        this.productionManagerId = productionManagerId;
     }
 }

@@ -207,6 +207,12 @@ public class ViewOrderDetails extends AppCompatActivity implements View.OnClickL
         etKMSG5 = findViewById(R.id.etKMSG5);
 
         btnUpdateOrder = findViewById(R.id.btnUpdateOrder);
+        btnUpdateOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validate();
+            }
+        });
         llBBabyS3XLParent = findViewById(R.id.llBBabyS3XLParent);
         llBBabyNB912Parent = findViewById(R.id.llBBabyNB912Parent);
 
@@ -234,16 +240,6 @@ public class ViewOrderDetails extends AppCompatActivity implements View.OnClickL
         setUiByBrand();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        btnUpdateOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validate();
-            }
-        });
-    }
 
     private void validate() {
         if (TextUtils.isEmpty(etPartyName.getText().toString().trim())) {

@@ -267,6 +267,7 @@
     <string name="approved_quantity_transfer_to_ironing">Approved Quantity Transfer To Ironing</string>
     <string name="unset_quantity">Unset Quantity</string>
     <string name="update">Update</string>
+    <string name="size">Size</string>
 
     <string-array name="brand">
         <item>Kids Magic</item>
